@@ -114,6 +114,14 @@ const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",m
 
 let currentUser=null;
 let currentLimit=null;
+let hasPendingApplication=false;
+
+function setSubmitState(){
+  const btn=$("submitBtn");
+  btn.disabled=hasPendingApplication;
+  btn.textContent=hasPendingApplication ? "Menunggu Persetujuan" : "Ajukan Limit";
+  btn.style.opacity=hasPendingApplication ? ".65" : "1";
+}
 
 function message(text,type="success"){
   $("message").textContent=text;
@@ -171,6 +179,17 @@ async function loadHistory(){
     snap.forEach(d=>rows.push({id:d.id,...d.data()}));
     rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
+    const latest=rows[0]||null;
+    hasPendingApplication=!!latest && latest.status==="MENUNGGU";
+    setSubmitState();
+
+    // Status kartu utama mengikuti pengajuan terakhir jika masih menunggu/ditolak/disetujui.
+    if(latest?.status){
+      $("status").textContent=latest.status;
+      $("status").className="status "+
+        (latest.status==="DISETUJUI"?"ok":latest.status==="DITOLAK"?"no":"");
+    }
+
     if(!rows.length){
       $("history").innerHTML='<div class="empty">Belum ada pengajuan limit.</div>';
       return;
@@ -201,34 +220,45 @@ async function loadHistory(){
 }
 
 $("submitBtn").onclick=async()=>{
+  if(hasPendingApplication){
+    message("Masih ada pengajuan yang sedang menunggu persetujuan.","error");
+    return;
+  }
+
   const nominal=Number($("amount").value);
   if(!nominal || nominal<100000){
     message("Masukkan pengajuan minimal Rp100.000.","error");
     return;
   }
 
-  // Cek pengajuan terakhir dari koleksi limitApplications.
-  // Tidak memakai status pada /limits karena dokumen tersebut dikelola Superadmin.
-  const latestSnap = await getDocs(query(
-    collection(db,"limitApplications"),
-    where("ownerUid","==",currentUser.uid)
-  ));
-  let latest = null;
-  latestSnap.forEach(d=>{
-    const x=d.data();
-    const t=x.createdAt?.toMillis?.() || 0;
-    if(!latest || t > (latest.createdAt?.toMillis?.() || 0)){
-      latest={id:d.id,...x};
-    }
-  });
-
-  if(latest?.status==="MENUNGGU"){
-    message("Masih ada pengajuan yang sedang menunggu persetujuan.","error");
-    return;
-  }
-
+  // Kunci tombol SEBELUM membaca Firestore agar tap berulang tidak
+  // membuat beberapa dokumen pengajuan secara bersamaan.
   $("submitBtn").disabled=true;
+  $("submitBtn").textContent="Memeriksa...";
+  $("submitBtn").style.opacity=".65";
+
   try{
+    const latestSnap=await getDocs(query(
+      collection(db,"limitApplications"),
+      where("ownerUid","==",currentUser.uid)
+    ));
+
+    let latest=null;
+    latestSnap.forEach(d=>{
+      const x=d.data();
+      const t=x.createdAt?.toMillis?.()||0;
+      if(!latest || t>(latest.createdAt?.toMillis?.()||0)){
+        latest={id:d.id,...x};
+      }
+    });
+
+    if(latest?.status==="MENUNGGU"){
+      hasPendingApplication=true;
+      setSubmitState();
+      message("Masih ada pengajuan yang sedang menunggu persetujuan.","error");
+      return;
+    }
+
     await addDoc(collection(db,"limitApplications"),{
       ownerUid:currentUser.uid,
       nominalPengajuan:nominal,
@@ -236,17 +266,17 @@ $("submitBtn").onclick=async()=>{
       createdAt:serverTimestamp()
     });
 
-    // Owner hanya membuat pengajuan.
-    // Dokumen /limits/{ownerUid} diubah oleh Superadmin saat menyetujui/menolak.
     $("amount").value="";
+    hasPendingApplication=true;
+    setSubmitState();
     message("Pengajuan limit berhasil dikirim ke Superadmin.");
     await loadLimit();
     await loadHistory();
   }catch(e){
     console.error(e);
     message("Pengajuan gagal. Periksa Firestore Rules.","error");
-  }finally{
-    $("submitBtn").disabled=false;
+    hasPendingApplication=false;
+    setSubmitState();
   }
 };
 
