@@ -1,41 +1,382 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Supplier | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Supplier</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Supplier</h2><p class="note">Daftar supplier yang dapat digunakan Owner.</p></section>
-<section class="list"><div class="item"><b>Supplier belum tersedia</b><small>Data supplier akan terhubung ke Firebase.</small></div></section>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Supplier | FIXZY BUSINESS</title>
+<style>
+:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626;--blue:#2563eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.app{width:100%;max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand h1{font-size:17px;margin:0;font-weight:900;color:var(--yellow)}
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.home{color:#fff;text-decoration:none;font-size:23px;padding:6px}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hero h2{font-size:20px;margin:0 0 5px}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+.stat{background:#f8f8f8;border-radius:13px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:10px;font-weight:700}
+.stat b{display:block;margin-top:5px;font-size:19px}
+.filters{display:flex;gap:8px;overflow:auto}
+.filter{border:1px solid var(--border);background:#fff;border-radius:999px;padding:9px 13px;font-weight:800;font-size:11px;white-space:nowrap;cursor:pointer}
+.filter.active{background:#111;color:var(--yellow);border-color:#111}
+.supplier{border:1px solid var(--border);border-radius:17px;background:#fff;padding:15px;margin-bottom:12px}
+.supplier-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.supplier-name{font-size:17px;font-weight:900}
+.supplier-phone{font-size:11px;color:var(--muted);margin-top:3px}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900}
+.wait{background:#fef3c7;color:#92400e}.sent{background:#dbeafe;color:#1e40af}.available{background:#dcfce7;color:#166534}
+.product-table{width:100%;border-collapse:collapse;margin-top:12px}
+.product-table th,.product-table td{padding:9px 5px;border-bottom:1px solid var(--border);font-size:12px;text-align:left;vertical-align:top}
+.product-table th{font-size:10px;color:var(--muted);text-transform:uppercase}
+.product-table td:last-child,.product-table th:last-child{text-align:right}
+.total{display:flex;justify-content:space-between;gap:10px;margin-top:10px;font-weight:900;font-size:13px}
+.orders-in-group{margin-top:11px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.6}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{border:0;border-radius:11px;padding:11px 13px;font-weight:900;font-size:12px;cursor:pointer;text-decoration:none;text-align:center}
+.btn.green{background:var(--green);color:#fff}.btn.blue{background:var(--blue);color:#fff}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn:disabled{opacity:.55;cursor:not-allowed}
+.empty,.loading{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}
+.message{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}
+.message.show{display:block}.okmsg{background:#dcfce7;color:#166534}.errmsg{background:#fee2e2;color:#991b1b}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}
+.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px;color:var(--yellow)}
+.nav.active{color:var(--yellow)}
+@media(max-width:600px){
+ .top{padding:16px 15px 66px}.content{margin-top:-42px}
+ .stats{grid-template-columns:repeat(3,1fr)}
+ .stat{padding:10px 8px}.stat b{font-size:16px}
+ .supplier{padding:13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <div class="brand-left">
+      <div class="logo"><img src="logofixzy.png" alt="FIXZY"></div>
+      <div><h1>FIXZY BUSINESS</h1><small>Gabungan Order Supplier</small></div>
+    </div>
+    <a class="home" href="index.html">⌂</a>
+  </div>
+</header>
+
+<main class="content">
+  <section class="card hero">
+    <div>
+      <h2>Gabungan Order Supplier</h2>
+      <p class="note">Pesanan Owner yang masih menunggu persetujuan digabung berdasarkan supplier. Kirim satu order ke setiap supplier, lalu tandai tersedia setelah supplier mengonfirmasi barang.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="stats">
+      <div class="stat"><small>Order Pending</small><b id="statOrders">0</b></div>
+      <div class="stat"><small>Supplier</small><b id="statSuppliers">0</b></div>
+      <div class="stat"><small>Total PCS</small><b id="statQty">0</b></div>
+    </div>
+  </section>
+
+  <div id="message" class="message"></div>
+
+  <section class="card">
+    <div class="filters">
+      <button class="filter active" data-filter="SEMUA">Semua</button>
+      <button class="filter" data-filter="BELUM">Belum Dikirim</button>
+      <button class="filter" data-filter="DIKIRIM">Sudah Dikirim</button>
+      <button class="filter" data-filter="TERSEDIA">Tersedia</button>
+    </div>
+  </section>
+
+  <section id="loading" class="loading">Memuat pesanan pending...</section>
+  <section id="groups"></section>
 </main>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+  <a class="nav" href="index.html"><i>⌂</i>Beranda</a>
+  <a class="nav" href="produk.html"><i>🛒</i>Belanja</a>
+  <a class="nav" href="tagihan.html"><i>🧾</i>Tagihan</a>
+  <a class="nav active" href="supplier.html"><i>🏭</i>Supplier</a>
+  <a class="nav" href="profil.html"><i>👤</i>Profil</a>
+</nav>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore,collection,getDocs,doc,getDoc,updateDoc,writeBatch,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+  projectId:"teknisi-ponsel-maja",
+  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId:"835618012205",
+  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const $=id=>document.getElementById(id);
+
+const SUPPLIERS={
+  DERIS:{name:"Deris",phone:"0838881160"},
+  ZEVAN:{name:"ZEVAN",phone:"081362292115"},
+  CADANGAN:{name:"Supplier Cadangan",phone:""}
+};
+
+let orders=[];
+let groups=[];
+let activeFilter="SEMUA";
+let busy=false;
+
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function norm(v){return String(v??"").trim().toUpperCase();}
+function qtyOf(it){return Number(it?.qty??it?.jumlah??1)||0;}
+function supplierInfo(v){
+ const s=norm(v);
+ if(s.includes("ZEVAN")) return SUPPLIERS.ZEVAN;
+ if(s.includes("DERIS")) return SUPPLIERS.DERIS;
+ if(s.includes("CADANGAN")) return SUPPLIERS.CADANGAN;
+ return {name:String(v||"Supplier Belum Ditentukan"),phone:""};
+}
+function productName(it){return String(it?.nama??it?.name??it?.produk??"Produk");}
+function productKey(it){
+ return String(it?.produkId??it?.id??"")+"|"+productName(it).trim().toUpperCase();
+}
+function showMessage(t,ok=true){
+ const e=$("message");e.textContent=t;e.className="message show "+(ok?"okmsg":"errmsg");
+ setTimeout(()=>e.className="message",4500);
+}
+function statusOfGroup(g){
+ const statuses=g.orders.map(o=>norm(o.procurementStatus||"BELUM_DIKIRIM"));
+ if(statuses.every(s=>s==="TERSEDIA")) return "TERSEDIA";
+ if(statuses.some(s=>s==="DIKIRIM_SUPPLIER"||s==="TERSEDIA")) return "DIKIRIM";
+ return "BELUM";
+}
+function badge(g){
+ const s=statusOfGroup(g);
+ if(s==="TERSEDIA") return '<span class="badge available">TERSEDIA</span>';
+ if(s==="DIKIRIM") return '<span class="badge sent">SUDAH DIKIRIM</span>';
+ return '<span class="badge wait">BELUM DIKIRIM</span>';
+}
+
+function buildGroups(){
+ const map=new Map();
+ orders.forEach(order=>{
+   const items=Array.isArray(order.items)?order.items:[];
+   items.forEach((item,index)=>{
+     const sp=supplierInfo(item.supplier||item.supplierName||item.suplier||"");
+     const key=sp.name.toUpperCase();
+     if(!map.has(key)) map.set(key,{
+       key,
+       supplier:sp,
+       orders:[],
+       products:new Map()
+     });
+     const g=map.get(key);
+     if(!g.orders.some(o=>o.id===order.id)) g.orders.push(order);
+     const pk=productKey(item);
+     if(!g.products.has(pk)){
+       g.products.set(pk,{name:productName(item),qty:0,orders:[]});
+     }
+     const p=g.products.get(pk);
+     p.qty+=qtyOf(item);
+     if(!p.orders.some(x=>x.id===order.id)) p.orders.push(order);
+   });
+ });
+ groups=[...map.values()];
+}
+
+function render(){
+ buildGroups();
+ const filtered=groups.filter(g=>{
+   if(activeFilter==="SEMUA") return true;
+   return statusOfGroup(g)===activeFilter;
+ });
+ $("statOrders").textContent=orders.length;
+ $("statSuppliers").textContent=groups.length;
+ $("statQty").textContent=[...groups].reduce((n,g)=>n+[...g.products.values()].reduce((a,p)=>a+p.qty,0),0);
+
+ if(!filtered.length){
+   $("groups").innerHTML='<div class="card empty">Tidak ada order supplier pada kategori ini.</div>';
+   return;
+ }
+
+ $("groups").innerHTML=filtered.map(g=>{
+   const totalQty=[...g.products.values()].reduce((n,p)=>n+p.qty,0);
+   const sent=statusOfGroup(g)!=="BELUM";
+   const available=statusOfGroup(g)==="TERSEDIA";
+   const rows=[...g.products.values()].map(p=>`
+     <tr><td>${esc(p.name)}</td><td>${p.orders.length}</td><td><b>${p.qty}</b> pcs</td></tr>
+   `).join("");
+
+   const orderList=g.orders.map(o=>esc(o.nomorPesanan||o.id)).join(", ");
+
+   let buttons="";
+   if(!sent){
+     buttons+=`<button class="btn green" data-action="send" data-supplier="${esc(g.key)}">💬 Kirim ke WhatsApp</button>`;
+   }else if(!available){
+     buttons+=`<button class="btn yellow" data-action="available" data-supplier="${esc(g.key)}">✓ Barang Tersedia</button>`;
+   }else{
+     buttons+=`<button class="btn light" disabled>✓ Barang Sudah Tersedia</button>`;
+   }
+
+   if(g.supplier.phone){
+     buttons+=`<a class="btn light" target="_blank" href="https://wa.me/${g.supplier.phone.replace(/\D/g,"")}">Buka WhatsApp</a>`;
+   }else{
+     buttons+=`<button class="btn light" data-action="open-wa" data-supplier="${esc(g.key)}">💬 Buka WhatsApp</button>`;
+   }
+
+   return `<article class="supplier">
+     <div class="supplier-head">
+       <div>
+         <div class="supplier-name">${esc(g.supplier.name)}</div>
+         <div class="supplier-phone">${g.supplier.phone?esc(g.supplier.phone):"Nomor supplier tidak disimpan — buka WhatsApp secara manual"}</div>
+       </div>
+       ${badge(g)}
+     </div>
+     <table class="product-table">
+       <thead><tr><th>Produk</th><th>Order</th><th>Total</th></tr></thead>
+       <tbody>${rows}</tbody>
+     </table>
+     <div class="total"><span>Total Barang</span><span>${totalQty} pcs</span></div>
+     <div class="orders-in-group"><b>Pesanan:</b> ${orderList}</div>
+     <div class="actions">${buttons}</div>
+   </article>`;
+ }).join("");
+}
+
+async function load(){
+ $("loading").style.display="block";
+ $("groups").innerHTML="";
+ try{
+   const snap=await getDocs(collection(db,"orders"));
+   orders=snap.docs.map(d=>({id:d.id,...d.data()}))
+     .filter(o=>norm(o.status)==="MENUNGGU_PERSETUJUAN");
+   $("loading").style.display="none";
+   render();
+ }catch(e){
+   console.error(e);
+   $("loading").style.display="none";
+   $("groups").innerHTML=`<div class="card empty">Gagal memuat pesanan.<br><small>${esc(e.message)}</small></div>`;
+ }
+}
+
+function messageFor(g){
+ let text=`Halo ${g.supplier.name},\n\nFIXZY BUSINESS ingin melakukan order barang:\n\n`;
+ [...g.products.values()].forEach((p,i)=>{
+   text+=`${i+1}. ${p.name} × ${p.qty} pcs\n`;
+ });
+ const total=[...g.products.values()].reduce((n,p)=>n+p.qty,0);
+ text+=`\nTotal: ${total} pcs\n\nMohon diinformasikan ketersediaan barang dan proses pengirimannya.\n\nTerima kasih.\nFIXZY BUSINESS`;
+ return text;
+}
+
+async function sendGroup(g){
+ if(busy)return;
+ if(!g.supplier.phone){
+   const msg=messageFor(g);
+   await navigator.clipboard?.writeText(msg).catch(()=>{});
+   alert("Supplier Cadangan tidak memiliki nomor tersimpan. Pesan order sudah disiapkan. Silakan buka WhatsApp dan kirim ke supplier.");
+   return;
+ }
+ const url=`https://wa.me/${g.supplier.phone.replace(/\D/g,"")}?text=${encodeURIComponent(messageFor(g))}`;
+ window.open(url,"_blank");
+
+ if(confirm("WhatsApp supplier sudah dibuka. Tandai order ini sebagai SUDAH DIKIRIM ke supplier?")){
+   busy=true;
+   try{
+     const batch=writeBatch(db);
+     g.orders.forEach(o=>{
+       batch.update(doc(db,"orders",o.id),{
+         procurementStatus:"DIKIRIM_SUPPLIER",
+         supplierOrderSentAt:serverTimestamp(),
+         supplierOrderSentTo:g.supplier.name
+       });
+     });
+     await batch.commit();
+     showMessage(`Order ${g.supplier.name} ditandai sudah dikirim.`);
+     await load();
+   }catch(e){showMessage(e.message||"Gagal menyimpan status.",false);}
+   finally{busy=false;}
+ }
+}
+
+async function markAvailable(g){
+ if(busy)return;
+ if(!confirm(`Tandai semua barang dari ${g.supplier.name} sebagai TERSEDIA? Setelah ini pesanan dapat diproses untuk persetujuan.`))return;
+ busy=true;
+ try{
+   const batch=writeBatch(db);
+   g.orders.forEach(o=>{
+     batch.update(doc(db,"orders",o.id),{
+       procurementStatus:"TERSEDIA",
+       supplierConfirmedAt:serverTimestamp(),
+       supplierConfirmedBy:auth.currentUser.uid
+     });
+   });
+   await batch.commit();
+   showMessage(`Barang dari ${g.supplier.name} ditandai TERSEDIA.`);
+   await load();
+ }catch(e){showMessage(e.message||"Gagal menyimpan status.",false);}
+ finally{busy=false;}
+}
+
+$("groups").addEventListener("click",e=>{
+ const btn=e.target.closest("[data-action]");
+ if(!btn)return;
+ const g=groups.find(x=>x.key===btn.dataset.supplier);
+ if(!g)return;
+ if(btn.dataset.action==="send") sendGroup(g);
+ if(btn.dataset.action==="available") markAvailable(g);
+ if(btn.dataset.action==="open-wa"){
+   const msg=messageFor(g);
+   navigator.clipboard?.writeText(msg).catch(()=>{});
+   alert("Pesan order sudah disalin. Buka WhatsApp dan pilih supplier yang dituju.");
+ }
+});
+
+document.querySelectorAll(".filter").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+   document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+   btn.classList.add("active");
+   activeFilter=btn.dataset.filter;
+   render();
+ });
+});
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){location.href="index.html";return;}
+ try{
+   const snap=await getDoc(doc(db,"users",user.uid));
+   if(!snap.exists()||snap.data().role!=="superadmin"){
+     alert("Akses hanya untuk Superadmin.");
+     location.href="index.html";
+     return;
+   }
+   await load();
+ }catch(e){
+   console.error(e);
+   alert("Gagal memeriksa akses Superadmin.");
+   location.href="index.html";
+ }
+});
+</script>
+</body>
+</html>
