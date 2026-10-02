@@ -277,7 +277,7 @@ input:focus,select:focus{
           <small>Owner</small>
         </div>
       </div>
-      <button class="back" type="button" onclick="history.back()">Kembali</button>
+      <button class="back" type="button" onclick="location.reload()">↻ Refresh</button>
     </div>
   </header>
 
@@ -578,3 +578,30 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 </body>
 </html>
+<style id="fixzy-topup-final-standard">
+/* Panel saldo Top Up mengikuti standar Index */
+.balance{
+  background:#fff !important;
+  border:1px solid #e7eaf0 !important;
+  color:#101828 !important;
+}
+.balance .label{
+  color:#667085 !important;
+}
+.balance .balance-amount,
+.balance .amount{
+  color:#101828 !important;
+}
+
+/* Tombol header = Refresh */
+.header .back{
+  width:auto !important;
+  min-width:96px;
+  padding:0 14px !important;
+  font-size:14px !important;
+  font-weight:800;
+  border:1px solid #333 !important;
+  background:#1b1b1b !important;
+  color:#fff !important;
+}
+</style>
