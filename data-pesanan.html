@@ -231,6 +231,22 @@ function getOwnerName(order){
   return order.ownerName || order.namaOwner || order.businessName || order.namaUsaha || order.ownerUid || "-";
 }
 
+function formatAddress(value){
+  if(!value) return "Belum ada alamat";
+  if(typeof value === "string") return value;
+  if(typeof value === "object"){
+    const nama = value.nama || value.namaPenerima || value.penerima || "";
+    const telepon = value.telepon || value.noHp || value.nomorHp || value.phone || "";
+    const alamat = value.alamat || value.address || value.alamatLengkap || "";
+    const parts=[];
+    if(nama) parts.push(`<b>${esc(nama)}</b>`);
+    if(telepon) parts.push(`<span>${esc(telepon)}</span>`);
+    if(alamat) parts.push(`<span>${esc(alamat)}</span>`);
+    return parts.join("<br>") || "Belum ada alamat";
+  }
+  return String(value);
+}
+
 function renderStats(){
   const c={wait:0,approved:0,shipping:0,done:0};
   for(const o of allOrders){
@@ -312,7 +328,7 @@ function render(){
 
         <div class="address">
           <b>Alamat Pengiriman</b>
-          ${esc(order.alamatPengiriman||order.address||"Belum ada alamat")}
+          ${formatAddress(order.alamatPengiriman ?? order.address)}
         </div>
 
         <div class="actions">${actions || '<span class="note">Tidak ada aksi untuk status ini.</span>'}</div>
