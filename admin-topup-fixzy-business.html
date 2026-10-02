@@ -98,11 +98,11 @@ function showLoginMsg(text,type="error"){
 }
 
 async function verifySuperadmin(user){
- const userSnap = await getDoc(doc(db,"users",user.uid));
- if(!userSnap.exists()) return false;
-
- const profile = userSnap.data() || {};
- return profile.role === "superadmin";
+  // Superadmin ditentukan oleh Firebase Custom Claim.
+  // Ini harus sama dengan yang dipakai Firestore Rules:
+  // request.auth.token.role == "superadmin"
+  const tokenResult = await user.getIdTokenResult(true);
+  return tokenResult.claims?.role === "superadmin";
 }
 
 $("logout").onclick=()=>signOut(auth);
@@ -232,8 +232,8 @@ onAuthStateChanged(async user=>{
      $("app").style.display="block";
      await loadTopups();
    }else{
+     showLoginMsg("Akun login tidak memiliki Custom Claim role = superadmin. Silakan logout lalu login kembali setelah role Superadmin diaktifkan.","error");
      await signOut(auth);
-     showLoginMsg("Akun ini bukan Superadmin.");
    }
  }catch(e){
    await signOut(auth);
