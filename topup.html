@@ -88,7 +88,7 @@ input:focus,select:focus{border-color:var(--fixzy-yellow)!important;box-shadow:0
 <div class="page">
   <header class="header">
     <div class="headrow">
-      <button class="back" onclick="location.href='index.html'">‹</button>
+      <button class="back" type="button" onclick="location.href='index.html'">‹</button>
       <div><h1>Top Up Saldo</h1><small>Saldo Pribadi FIXZY BUSINESS</small></div>
     </div>
   </header>
@@ -165,7 +165,7 @@ input:focus,select:focus{border-color:var(--fixzy-yellow)!important;box-shadow:0
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, query, where,
   limit, getDocs, serverTimestamp
@@ -183,6 +183,9 @@ const firebaseConfig = {
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
+
+// Pertahankan sesi login saat berpindah halaman.
+await setPersistence(auth, browserLocalPersistence);
 let currentUser=null;
 
 const $=id=>document.getElementById(id);
