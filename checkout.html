@@ -89,7 +89,7 @@ textarea{min-height:90px}
 <input type="radio" name="pay" value="LIMIT">
 <div><b>Limit / Tempo</b><small id="limit">Memuat...</small></div>
 </label>
-<small style="color:#667085">Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.</small>
+<small id="tempoInfo" style="display:block;color:#667085;margin-top:8px">Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.</small>
 </section>
 
 <section class="panel">
@@ -169,7 +169,7 @@ function parseMoney(value){
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
 
-let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0;
+let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0,tempoHari=0;
 
 function cartKey(){return"fixzy_cart_"+user.uid}
 function saveCart(){localStorage.setItem(cartKey(),JSON.stringify(cart))}
@@ -179,6 +179,21 @@ const raw=method==="LIMIT"
 :(x.hargaCash??x.hargaTunai??x.tunai??x.cash??x.harga??0);
 return parseMoney(raw);
 }
+function getTempoHari(qty){
+if(qty>=10) return 30;
+if(qty>=5) return 15;
+if(qty>=3) return 7;
+return 0;
+}
+
+function tempoLabel(qty){
+const d=getTempoHari(qty);
+if(d===30) return "Tempo 30 hari (minimal 10 pcs)";
+if(d===15) return "Tempo 15 hari (minimal 5 pcs)";
+if(d===7) return "Tempo 7 hari (minimal 3 pcs)";
+return "Tempo tersedia mulai minimal 3 pcs";
+}
+
 function message(type,text){$("msg").innerHTML=`<div class="msg ${type}">${esc(text)}</div>`}
 
 function render(){
@@ -211,6 +226,15 @@ return `<div class="item">
 
 $("qty").textContent=totalQty+" pcs";
 $("total").textContent=rupiah(total);
+tempoHari=getTempoHari(totalQty);
+const payMethod=document.querySelector("[name=pay]:checked")?.value||"SALDO_PRIBADI";
+if(payMethod==="LIMIT"){
+  $("tempoInfo").textContent=tempoHari
+    ? tempoLabel(totalQty)+". Jatuh tempo dihitung dari saat pesanan disetujui."
+    : "Limit / Tempo minimal 3 pcs. 3–4 pcs = 7 hari, 5–9 pcs = 15 hari, minimal 10 pcs = 30 hari.";
+}else{
+  $("tempoInfo").textContent="Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.";
+}
 
 document.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{
 const i=Number(b.dataset.minus);
@@ -286,6 +310,11 @@ if(method==="LIMIT"&&total>limit){
 message("warn","Limit tersedia tidak mencukupi.");
 return;
 }
+if(method==="LIMIT"&&totalQty<3){
+message("warn","Pembelian dengan Limit / Tempo minimal 3 pcs.");
+return;
+}
+tempoHari=method==="LIMIT" ? getTempoHari(totalQty) : 0;
 
 const button=$("order");
 button.disabled=true;
@@ -317,6 +346,7 @@ items,
 total:Number(total),
 totalQty:Number(totalQty),
 metodePembayaran:method,
+tempoHari:Number(tempoHari),
 alamatPengiriman:{...address},
 status:"MENUNGGU_PERSETUJUAN",
 createdAt:serverTimestamp()
