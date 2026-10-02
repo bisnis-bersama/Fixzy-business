@@ -207,7 +207,22 @@ $("submitBtn").onclick=async()=>{
     return;
   }
 
-  if(currentLimit?.status==="MENUNGGU"){
+  // Cek pengajuan terakhir dari koleksi limitApplications.
+  // Tidak memakai status pada /limits karena dokumen tersebut dikelola Superadmin.
+  const latestSnap = await getDocs(query(
+    collection(db,"limitApplications"),
+    where("ownerUid","==",currentUser.uid)
+  ));
+  let latest = null;
+  latestSnap.forEach(d=>{
+    const x=d.data();
+    const t=x.createdAt?.toMillis?.() || 0;
+    if(!latest || t > (latest.createdAt?.toMillis?.() || 0)){
+      latest={id:d.id,...x};
+    }
+  });
+
+  if(latest?.status==="MENUNGGU"){
     message("Masih ada pengajuan yang sedang menunggu persetujuan.","error");
     return;
   }
@@ -221,16 +236,8 @@ $("submitBtn").onclick=async()=>{
       createdAt:serverTimestamp()
     });
 
-    // Status pada dokumen limits menandai bahwa Owner sedang mengajukan.
-    await setDoc(doc(db,"limits",currentUser.uid),{
-      ownerUid:currentUser.uid,
-      limitDisetujui:Number(currentLimit?.limitDisetujui)||0,
-      limitTerpakai:Number(currentLimit?.limitTerpakai)||0,
-      limitTersedia:Number(currentLimit?.limitTersedia)||0,
-      status:"MENUNGGU",
-      updatedAt:serverTimestamp()
-    },{merge:true});
-
+    // Owner hanya membuat pengajuan.
+    // Dokumen /limits/{ownerUid} diubah oleh Superadmin saat menyetujui/menolak.
     $("amount").value="";
     message("Pengajuan limit berhasil dikirim ke Superadmin.");
     await loadLimit();
