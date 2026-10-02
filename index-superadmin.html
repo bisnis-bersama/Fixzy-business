@@ -103,6 +103,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 await setPersistence(auth, browserLocalPersistence);
+await auth.authStateReady();
 
 const rupiah = n => new Intl.NumberFormat("id-ID", {
   style:"currency", currency:"IDR", maximumFractionDigits:0
@@ -130,23 +131,39 @@ document.getElementById("loginForm").addEventListener("submit", async e => {
 document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth));
 
 document.querySelectorAll("[data-page]").forEach(btn=>btn.addEventListener("click",()=>location.href=btn.dataset.page));
-onAuthStateChanged(auth,async user=>{
- if(!user){showLogin(true);return;}
- showLogin(false);
- try{
-   const snap=await getDoc(doc(db,"users",user.uid));
-   const profile=snap.exists()?snap.data():{};
-   if(profile.role!=="superadmin"){location.replace("index.html");return;}
-   const ownerSnap=await getDocs(query(collection(db,"users"),where("role","==","owner")));
-   document.getElementById("ownerCount").textContent=ownerSnap.size;
-   const topSnap=await getDocs(query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU")));
-   document.getElementById("topupCount").textContent=topSnap.size;
- }catch(e){
-   console.error(e);
-   document.getElementById("ownerCount").textContent="-";
-   document.getElementById("topupCount").textContent="-";
- }
-});
+// Firebase harus selesai memulihkan sesi tersimpan sebelum halaman menentukan status login.
+await auth.authStateReady();
+
+async function handleAuth(user){
+  if(!user){showLogin(true);return;}
+  showLogin(false);
+  try{
+    const snap=await getDoc(doc(db,"users",user.uid));
+    const profile=snap.exists()?snap.data():{};
+    if(profile.role!=="superadmin"){location.replace("index.html");return;}
+
+    const ownerSnap=await getDocs(
+      query(collection(db,"users"),where("role","==","owner"))
+    );
+    document.getElementById("ownerCount").textContent=ownerSnap.size;
+
+    const topSnap=await getDocs(
+      query(
+        collection(db,"walletTransactions"),
+        where("type","==","TOPUP"),
+        where("status","==","MENUNGGU")
+      )
+    );
+    document.getElementById("topupCount").textContent=topSnap.size;
+  }catch(e){
+    console.error("FIXZY Superadmin auth/load:",e);
+    document.getElementById("ownerCount").textContent="-";
+    document.getElementById("topupCount").textContent="-";
+  }
+}
+
+await handleAuth(auth.currentUser);
+onAuthStateChanged(auth, handleAuth);
 </script>
 </body>
 </html>
