@@ -2,227 +2,246 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1426">
-<title>Superadmin | Top Up FIXZY BUSINESS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIXZY BUSINESS | Verifikasi Top Up</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5f8;color:#101828;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.page{max-width:720px;margin:auto;min-height:100vh;padding-bottom:35px}
-.header{background:#0b1426;color:#fff;padding:18px 18px 25px;border-radius:0 0 28px 28px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.head h1{font-size:20px;margin:0}.head small{color:#aeb9ca}
-.back{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}
-.content{padding:0 15px;margin-top:-6px}
-.card{background:#fff;border:1px solid #e6e9ef;border-radius:20px;margin-top:15px;padding:16px;box-shadow:0 7px 22px rgba(15,23,42,.05)}
-.title{font-weight:900;font-size:15px}.muted{font-size:12px;color:#667085}
-.item{border:1px solid #e4e7ec;border-radius:16px;padding:14px;margin-top:10px}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.amount{font-size:20px;font-weight:900}.name{font-weight:850}.meta{font-size:11px;color:#667085;line-height:1.55;margin-top:4px}
-.badge{font-size:10px;font-weight:900;border-radius:999px;padding:6px 8px;background:#fff7ed;color:#b54708}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-button{font:inherit;cursor:pointer}.approve,.reject{border:0;border-radius:11px;padding:11px;font-weight:900}
-.approve{background:#0b1426;color:#fff}.reject{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-button:disabled{opacity:.5;cursor:not-allowed}
-.empty{text-align:center;padding:25px 10px;color:#667085;font-size:12px}
-.msg{font-size:12px;margin-top:10px;line-height:1.5}.error{color:#b42318}.success{color:#15803d}
-.refresh{border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:8px 11px;font-weight:800}
+body{margin:0;background:#f3f5f8;color:#101828;font-family:Arial,sans-serif}
+.header{background:#07152b;color:#fff;padding:24px 18px 28px;border-radius:0 0 28px 28px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:58px;height:58px;border-radius:16px;object-fit:cover;background:#fff}
+.brand h1{font-size:22px;margin:0}.brand p{margin:5px 0 0;color:#aab6c8;font-size:13px}
+.wrap{max-width:720px;margin:auto;padding-bottom:40px}
+.card{background:#fff;border-radius:20px;margin:16px;padding:18px;box-shadow:0 5px 22px #10182812}
+.title{font-size:17px;font-weight:800;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#f8fafc;border-radius:14px;padding:13px}.stat small{color:#667085}.stat b{display:block;font-size:20px;margin-top:5px}
+.item{border:1px solid #eaecf0;border-radius:16px;padding:15px;margin-top:12px}
+.row{display:flex;justify-content:space-between;gap:12px}.amount{font-size:19px;font-weight:800}
+.muted{color:#667085;font-size:12px;line-height:1.55}
+.badge{background:#fff4e5;color:#b54708;padding:7px 10px;border-radius:20px;font-size:11px;font-weight:800;height:max-content}
+.detail{background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;font-size:12px;line-height:1.7}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
+.approve{background:#12b76a;color:#fff}.reject{background:#fee4e2;color:#b42318}
+.empty{text-align:center;color:#667085;padding:28px 10px}
+.msg{padding:11px 13px;border-radius:12px;font-size:12px;margin-top:10px;display:none}
+.success{display:block;background:#ecfdf3;color:#027a48}.error{display:block;background:#fef3f2;color:#b42318}
+.login{padding:18px}.login input{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:12px;margin:6px 0 10px;font-size:15px}
+.login button{width:100%;background:#07152b;color:#fff}
+.logout{float:right;background:#fff2;color:#fff;border:1px solid #ffffff44;padding:9px 12px}
+@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.row{align-items:flex-start}}
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
 <header class="header">
-  <div class="head">
-    <div>
-      <h1>Superadmin</h1>
-      <small>Verifikasi Top Up FIXZY BUSINESS</small>
-    </div>
-    <button class="back" onclick="location.href='index.html'">Dashboard</button>
+  <button class="logout" id="logout">Keluar</button>
+  <div class="brand">
+    <img src="logofixzy.png" onerror="this.style.display='none'">
+    <div><h1>FIXZY BUSINESS</h1><p>Superadmin • Verifikasi Top Up</p></div>
   </div>
 </header>
 
-<main class="content">
+<section class="card" id="loginCard">
+  <div class="title">Masuk Superadmin</div>
+  <div class="muted">Gunakan akun Firebase yang memiliki Custom Claim <b>role = superadmin</b>.</div>
+  <div class="login">
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button id="login">Masuk</button>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+</section>
+
+<main id="app" style="display:none">
   <section class="card">
-    <div class="row">
-      <div>
-        <div class="title">Pengajuan Top Up</div>
-        <div class="muted" id="count">Memuat...</div>
-      </div>
-      <button class="refresh" id="refresh">Refresh</button>
+    <div class="title">Ringkasan</div>
+    <div class="stats">
+      <div class="stat"><small>Menunggu</small><b id="count">0</b></div>
+      <div class="stat"><small>Total Pengajuan</small><b id="total">Rp0</b></div>
     </div>
-    <div id="list"><div class="empty">Memuat data...</div></div>
-    <div class="msg" id="msg"></div>
+    <div id="msg" class="msg"></div>
+  </section>
+
+  <section class="card">
+    <div class="title">Top Up Menunggu Verifikasi</div>
+    <div id="list"><div class="empty">Memuat...</div></div>
   </section>
 </main>
+</div>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getFirestore,collection,query,where,getDocs,doc,getDoc,
-  runTransaction,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
-  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
-  projectId:"teknisi-ponsel-maja",
-  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId:"835618012205",
-  appId:"1:835618012205:web:95d1a56c761d4ca4"
+ apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+ authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+ projectId:"teknisi-ponsel-maja",
+ storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+ messagingSenderId:"835618012205",
+ appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
-let currentUser=null;
-
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 
-async function isSuperadmin(){
-  const result=await currentUser.getIdTokenResult(true);
-  return result.claims.role==="superadmin";
+function showMsg(text,type="success"){
+ const el=$("msg");el.className="msg "+type;el.textContent=text;
+}
+function showLoginMsg(text,type="error"){
+ const el=$("loginMsg");el.className="msg "+type;el.textContent=text;
 }
 
-async function load(){
-  $("msg").textContent="";
-  const q=query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"));
-  const snap=await getDocs(q);
-
-  $("count").textContent=`${snap.size} pengajuan menunggu verifikasi`;
-  if(snap.empty){
-    $("list").innerHTML='<div class="empty">Tidak ada pengajuan top up.</div>';
-    return;
-  }
-
-  const rows=[];
-  snap.forEach(d=>rows.push({id:d.id,...d.data()}));
-  rows.sort((a,b)=>{
-    const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
-    const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
-    return tb-ta;
-  });
-
-  $("list").innerHTML="";
-  rows.forEach(x=>{
-    const dt=x.createdAt?.toDate?x.createdAt.toDate().toLocaleString("id-ID"):"Baru saja";
-    $("list").insertAdjacentHTML("beforeend",`
-      <div class="item" id="item-${esc(x.id)}">
-        <div class="row">
-          <div>
-            <div class="name">${esc(x.namaUsaha||"Owner")}</div>
-            <div class="amount">${rupiah(x.nominal)}</div>
-            <div class="meta">
-              UID: ${esc(x.ownerUid)}<br>
-              Metode: ${esc(x.metode||"-")}<br>
-              Referensi: ${esc(x.referensi||"-")}<br>
-              Diajukan: ${esc(dt)}
-            </div>
-          </div>
-          <span class="badge">MENUNGGU</span>
-        </div>
-        <div class="actions">
-          <button class="approve" data-id="${esc(x.id)}">SETUJUI</button>
-          <button class="reject" data-id="${esc(x.id)}">TOLAK</button>
-        </div>
-      </div>`);
-  });
-
-  document.querySelectorAll(".approve").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,true));
-  document.querySelectorAll(".reject").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,false));
+async function verifySuperadmin(user){
+ const token=await user.getIdTokenResult(true);
+ return token.claims.role==="superadmin";
 }
 
-async function processTopup(id,approve){
-  const item=$(`item-${id}`);
-  if(!item)return;
-  const buttons=item.querySelectorAll("button");
-  buttons.forEach(b=>b.disabled=true);
+$("login").onclick=async()=>{
+ try{
+   const email=$("email").value.trim(),password=$("password").value;
+   if(!email||!password) throw new Error("Email dan password wajib diisi.");
+   const cred=await signInWithEmailAndPassword(auth,email,password);
+   if(!(await verifySuperadmin(cred.user))){
+     await signOut(auth);
+     throw new Error("Akun ini bukan Superadmin.");
+   }
+ }catch(e){showLoginMsg(e.message||"Login gagal.");}
+};
 
-  try{
-    await runTransaction(db,async tx=>{
-      const txRef=doc(db,"walletTransactions",id);
-      const txSnap=await tx.get(txRef);
+$("logout").onclick=()=>signOut(auth);
 
-      if(!txSnap.exists())throw new Error("TRANSAKSI_TIDAK_ADA");
-      const data=txSnap.data();
-
-      if(data.type!=="TOPUP" || data.status!=="MENUNGGU"){
-        throw new Error("TRANSAKSI_SUDAH_DIPROSES");
-      }
-
-      if(!approve){
-        tx.update(txRef,{
-          status:"DITOLAK",
-          verifiedBy:currentUser.uid,
-          verifiedAt:serverTimestamp()
-        });
-        return;
-      }
-
-      const ownerUid=data.ownerUid;
-      const nominal=Number(data.nominal)||0;
-      if(nominal<=0)throw new Error("NOMINAL_TIDAK_VALID");
-
-      const walletRef=doc(db,"wallets",ownerUid);
-      const walletSnap=await tx.get(walletRef);
-      const wallet=walletSnap.exists()?walletSnap.data():{};
-      const sebelum=Number(wallet.saldoPribadi)||0;
-      const sesudah=sebelum+nominal;
-
-      if(walletSnap.exists()){
-        tx.update(walletRef,{
-          saldoPribadi:sesudah,
-          ownerUid,
-          updatedAt:serverTimestamp()
-        });
-      }else{
-        tx.set(walletRef,{
-          ownerUid,
-          saldoPribadi:sesudah,
-          status:"AKTIF",
-          createdAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-      }
-
-      tx.update(txRef,{
-        status:"DISETUJUI",
-        saldoSebelum:sebelum,
-        saldoSesudah:sesudah,
-        verifiedBy:currentUser.uid,
-        verifiedAt:serverTimestamp()
-      });
-    });
-
-    $("msg").className="msg success";
-    $("msg").textContent=approve?"Top up disetujui. Saldo Owner sudah bertambah.":"Pengajuan top up ditolak.";
-    await load();
-
-  }catch(err){
-    console.error(err);
-    $("msg").className="msg error";
-    $("msg").textContent="Gagal memproses: "+err.message;
-    buttons.forEach(b=>b.disabled=false);
-  }
+function formatDate(ts){
+ return ts?.toDate ? ts.toDate().toLocaleString("id-ID") : "-";
 }
 
-$("refresh").onclick=load;
+async function loadTopups(){
+ $("list").innerHTML='<div class="empty">Memuat data...</div>';
+ const q=query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"));
+ const snap=await getDocs(q);
+ const rows=[];
+ snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+ rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
-onAuthStateChanged(auth,async user=>{
-  if(!user){location.href="index.html";return}
-  currentUser=user;
-  try{
-    if(!(await isSuperadmin())){
-      $("list").innerHTML='<div class="empty">Akun ini bukan Superadmin.</div>';
-      return;
-    }
-    await load();
-  }catch(err){
-    console.error(err);
-    $("list").innerHTML='<div class="empty">Gagal memuat data.</div>';
-  }
+ $("count").textContent=rows.length;
+ $("total").textContent=rupiah(rows.reduce((s,x)=>s+(Number(x.nominal)||0),0));
+
+ if(!rows.length){
+   $("list").innerHTML='<div class="empty">Tidak ada Top Up yang menunggu verifikasi.</div>';
+   return;
+ }
+
+ $("list").innerHTML="";
+ rows.forEach(x=>{
+   const el=document.createElement("div");
+   el.className="item";
+   el.innerHTML=`
+    <div class="row">
+      <div>
+        <div class="amount">${rupiah(x.nominal)}</div>
+        <div class="muted">${formatDate(x.createdAt)} • ${x.metode||"-"}</div>
+      </div>
+      <span class="badge">MENUNGGU</span>
+    </div>
+    <div class="detail">
+      Owner UID: ${x.ownerUid||"-"}<br>
+      Kode unik: <b>${x.kodeUnik||"-"}</b><br>
+      Total transfer: <b>${rupiah(x.totalTransfer || ((Number(x.nominal)||0)+(Number(x.kodeUnik)||0)))}</b><br>
+      Referensi: ${x.referensi||"-"}
+    </div>
+    <div class="actions">
+      <button class="approve">SETUJUI</button>
+      <button class="reject">TOLAK</button>
+    </div>`;
+   el.querySelector(".approve").onclick=()=>processTopup(x,true,el);
+   el.querySelector(".reject").onclick=()=>processTopup(x,false,el);
+   $("list").appendChild(el);
+ });
+}
+
+async function processTopup(x,approved,el){
+ if(!confirm(approved ? "Setujui Top Up ini? Saldo Owner akan bertambah sesuai nominal Top Up." : "Tolak Top Up ini?")) return;
+ const btns=el.querySelectorAll("button");btns.forEach(b=>b.disabled=true);
+
+ try{
+   await runTransaction(db,async(tx)=>{
+     const txRef=doc(db,"walletTransactions",x.id);
+     const txSnap=await tx.get(txRef);
+     if(!txSnap.exists()) throw new Error("Transaksi tidak ditemukan.");
+     const current=txSnap.data();
+     if(current.status!=="MENUNGGU") throw new Error("Transaksi sudah diproses.");
+
+     if(!approved){
+       tx.update(txRef,{
+         status:"DITOLAK",
+         verifiedBy:auth.currentUser.uid,
+         verifiedAt:serverTimestamp()
+       });
+       return;
+     }
+
+     const walletRef=doc(db,"wallets",x.ownerUid);
+     const walletSnap=await tx.get(walletRef);
+     const oldBalance=walletSnap.exists()?Number(walletSnap.data().saldo||0):0;
+     const add=Number(current.nominal)||0;
+     const newBalance=oldBalance+add;
+
+     if(walletSnap.exists()){
+       tx.update(walletRef,{
+         saldo:newBalance,
+         ownerUid:x.ownerUid,
+         updatedAt:serverTimestamp()
+       });
+     }else{
+       tx.set(walletRef,{
+         ownerUid:x.ownerUid,
+         saldo:newBalance,
+         updatedAt:serverTimestamp()
+       });
+     }
+
+     tx.update(txRef,{
+       status:"DISETUJUI",
+       saldoSebelum:oldBalance,
+       saldoSesudah:newBalance,
+       verifiedBy:auth.currentUser.uid,
+       verifiedAt:serverTimestamp()
+     });
+   });
+
+   showMsg(approved ? "Top Up disetujui dan saldo Owner sudah ditambahkan." : "Top Up ditolak.");
+   await loadTopups();
+ }catch(e){
+   btns.forEach(b=>b.disabled=false);
+   showMsg(e.message||"Proses gagal.","error");
+ }
+}
+
+onAuthStateChanged(async user=>{
+ if(!user){
+   $("app").style.display="none";
+   $("loginCard").style.display="block";
+   return;
+ }
+ try{
+   if(await verifySuperadmin(user)){
+     $("loginCard").style.display="none";
+     $("app").style.display="block";
+     await loadTopups();
+   }else{
+     await signOut(auth);
+     showLoginMsg("Akun ini bukan Superadmin.");
+   }
+ }catch(e){
+   await signOut(auth);
+   showLoginMsg(e.message||"Akses Superadmin gagal.");
+ }
 });
 </script>
 </body>
