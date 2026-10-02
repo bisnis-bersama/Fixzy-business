@@ -108,7 +108,7 @@ button{font:inherit}
 <div class="overlay" id="loginOverlay">
   <div class="login">
     <h2>Masuk FIXZY BUSINESS</h2>
-    <p>Gunakan akun Owner atau Superadmin.</p>
+    <p>Gunakan akun Owner atau Superadmin. Hak akses dibaca dari data akun FIXZY BUSINESS.</p>
     <form id="loginForm">
       <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
       <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
@@ -168,16 +168,14 @@ document.querySelectorAll("[data-page]").forEach(btn=>{
 });
 
 async function loadOwnerDashboard(user){
-  const token = await user.getIdTokenResult(true);
-  const claimRole = token.claims.role || "";
-
-  // Owner dibaca dari users/{uid}.role.
-  // Superadmin tetap harus berasal dari Custom Claims.
+  // Role dibaca langsung dari users/{uid}.role.
+  // Dengan cara ini index.html mengenali akun yang sedang login
+  // berdasarkan data akun di Firestore, tanpa wajib memakai Custom Claims.
   const userSnap = await getDoc(doc(db,"users",user.uid));
   const profile = userSnap.exists() ? userSnap.data() : {};
 
   let role = "";
-  if(claimRole === "superadmin"){
+  if(profile.role === "superadmin"){
     role = "superadmin";
   } else if(profile.role === "owner" && profile.ownerUid === user.uid){
     role = "owner";
@@ -193,7 +191,7 @@ async function loadOwnerDashboard(user){
     : (profile.namaUsaha || profile.nama || "Owner");
 
   if(role==="superadmin"){
-    // Index superadmin khusus akan dibuat terpisah.
+    // Superadmin dikenali dari users/{uid}.role.
     el("personalBalance").textContent="SUPERADMIN";
     el("availableLimit").textContent="-";
     el("totalInvoice").textContent="-";
