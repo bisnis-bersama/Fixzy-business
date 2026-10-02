@@ -151,7 +151,8 @@ import {
   updateDoc,
   setDoc,
   runTransaction,
-  serverTimestamp
+  serverTimestamp,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -262,6 +263,26 @@ function renderStats(){
   $("sDone").textContent=c.done;
 }
 
+function getTempoHari(order){
+  const qty=Number(order?.totalQty||getItems(order).reduce((a,x)=>a+Number(x.qty||x.jumlah||1),0));
+  const saved=Number(order?.tempoHari||0);
+  if(saved>0)return saved;
+  if(qty>=10)return 30;
+  if(qty>=5)return 15;
+  if(qty>=3)return 7;
+  return 0;
+}
+function procurementReady(order){
+  return String(order?.procurementStatus||"").toUpperCase()==="TERSEDIA";
+}
+function procurementLabel(order){
+  const s=String(order?.procurementStatus||"").toUpperCase();
+  if(s==="TERSEDIA")return "BARANG TERSEDIA";
+  if(s==="DIKIRIM_SUPPLIER")return "MENUNGGU SUPPLIER";
+  if(s==="DIPROSES")return "DIPROSES";
+  return "BELUM KONFIRMASI SUPPLIER";
+}
+
 function render(){
   renderStats();
   const list = activeFilter==="SEMUA"
@@ -294,8 +315,12 @@ function render(){
 
     let actions="";
     if(s==="MENUNGGU_PERSETUJUAN"){
+      const ready=procurementReady(order);
       actions=`
-        <button class="btn green" data-action="approve" data-id="${esc(order.id)}">✓ SETUJUI</button>
+        ${ready
+          ? '<button class="btn green" data-action="approve" data-id="'+esc(order.id)+'">✓ SETUJUI</button>'
+          : '<button class="btn light" disabled>⏳ Belum tersedia</button>'}
+        <a class="btn yellow" href="supplier.html" style="text-decoration:none">🏭 Supplier</a>
         <button class="btn red" data-action="reject" data-id="${esc(order.id)}">✕ TOLAK</button>`;
     }else if(s==="DISETUJUI"){
       actions=`<button class="btn yellow" data-action="pack" data-id="${esc(order.id)}">📦 DIKEMAS</button>`;
@@ -324,6 +349,10 @@ function render(){
           <div class="info"><small>Dibuat</small><b>${esc(formatDate(order.createdAt))}</b></div>
         </div>
 
+        <div class="info-grid">
+          <div class="info"><small>Status Supplier</small><b>${esc(procurementLabel(order))}</b></div>
+          <div class="info"><small>Tempo</small><b>${payment==="LIMIT" ? (getTempoHari(order) ? getTempoHari(order)+" hari" : "Tidak memenuhi minimal") : "-"}</b></div>
+        </div>
         <div class="products">${products}</div>
 
         <div class="address">
@@ -357,6 +386,10 @@ async function loadOrders(){
 
 async function approveOrder(order){
   if(busy) return;
+  if(!procurementReady(order)){
+    showMessage("Pesanan belum bisa disetujui. Supplier harus mengonfirmasi barang tersedia terlebih dahulu.",false);
+    return;
+  }
   const total=Number(order.total||0);
   if(!total || total<0){showMessage("Total pesanan tidak valid.",false);return;}
 
@@ -376,6 +409,9 @@ async function approveOrder(order){
       if(!orderSnap.exists()) throw new Error("Pesanan sudah tidak ditemukan.");
 
       const current=orderSnap.data();
+       if(String(current.procurementStatus||"").toUpperCase()!=="TERSEDIA"){
+         throw new Error("Supplier belum mengonfirmasi barang tersedia.");
+       }
       if(normalizeStatus(current.status)!=="MENUNGGU_PERSETUJUAN"){
         throw new Error("Pesanan sudah diproses sebelumnya.");
       }
@@ -440,6 +476,9 @@ async function approveOrder(order){
           sisaTagihan:total,
           status:"BELUM_DIBAYAR",
           metodePembayaran:"LIMIT",
+          tempoHari:getTempoHari(current),
+          totalQty:Number(current.totalQty||getItems(current).reduce((a,x)=>a+Number(x.qty||x.jumlah||1),0)),
+          jatuhTempo:Timestamp.fromMillis(Date.now()+(getTempoHari(current)*24*60*60*1000)),
           createdAt:serverTimestamp()
         });
 
@@ -450,7 +489,9 @@ async function approveOrder(order){
           limitTerpakaiSebelum:terpakai,
           limitTerpakaiSesudah:baruTerpakai,
           invoiceId:invoiceRef.id,
-          approvedAt:serverTimestamp(),
+          tempoHari:getTempoHari(current),
+           jatuhTempo:Timestamp.fromMillis(Date.now()+(getTempoHari(current)*24*60*60*1000)),
+           approvedAt:serverTimestamp(),
           approvedBy:auth.currentUser.uid,
           updatedAt:serverTimestamp()
         });
