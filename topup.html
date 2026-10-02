@@ -34,6 +34,9 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
 .qrbox{margin-top:12px;border:1px dashed #cfd4dc;border-radius:15px;padding:12px;text-align:center;font-size:12px}
 .qrbox img{display:block;width:min(280px,100%);max-height:280px;object-fit:contain;margin:10px auto 2px;border-radius:10px}
 .qrfallback{display:none;color:#b42318;font-size:11px;margin-top:8px}
+.payment-details{margin-top:12px}
+.payment-placeholder{padding:14px;border:1px dashed #cfd4dc;border-radius:13px;text-align:center;color:#667085;font-size:12px}
+.detail-title{font-weight:800;font-size:14px;margin-bottom:8px}
 
 </style>
 </head>
@@ -52,45 +55,11 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
       <div class="amount" id="saldo">Rp0</div>
     </section>
 
-    <section class="card">
-      <div class="label">Pembayaran Top Up</div>
-      <div class="payment-note">Silakan transfer sesuai nominal top up ke salah satu rekening berikut. Setelah transfer, pilih metode dan kirim pengajuan.</div>
-
-      <div class="paybox">
-        <b>🏦 Bank Mandiri</b><br>
-        No. Rekening: 1340033268904<br>
-        A/N YUDI ALIYUDIN
-      </div>
-
-      <div class="paybox">
-        <b>🏦 Bank BCA</b><br>
-        No. Rekening: 4180734771<br>
-        A/N YUDI ALIYUDIN
-      </div>
-
-      <div class="paybox">
-        <b>🏦 Bank BRI</b><br>
-        No. Rekening: 004601060489505<br>
-        A/N YUDI ALIYUDIN
-      </div>
-
-      <div class="paybox">
-        <b>💳 DANA / GoPay</b><br>
-        No. HP: 082319264646<br>
-        A/N YUDI ALIYUDIN
-      </div>
-
-      <div class="paybox">
-        <b>🏦 SeaBank</b><br>
-        No. Rekening: 901341445605<br>
-        A/N YUDI ALIYUDIN
-      </div>
-
-      <div class="qrbox">
-        <b>QRIS</b>
-        <img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-        <div class="qrfallback">File <b>qris.jpg</b> belum tersedia di folder website.</div>
+    <section class="card payment-card">
+      <div class="label">Detail Pembayaran</div>
+      <div class="payment-note">Detail rekening atau QRIS akan muncul setelah memilih metode pembayaran.</div>
+      <div id="paymentDetails" class="payment-details">
+        <div class="payment-placeholder">Pilih metode pembayaran terlebih dahulu.</div>
       </div>
     </section>
 
@@ -140,7 +109,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, collection, addDoc, query, where,
-  orderBy, limit, getDocs, serverTimestamp
+  limit, getDocs, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -160,8 +129,45 @@ let currentUser=null;
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 
+const paymentDetails={
+  "Transfer Bank":`
+    <div class="detail-title">🏦 Rekening Bank</div>
+    <div class="paybox"><b>Bank Mandiri</b><br>No. Rekening: 1340033268904<br>A/N YUDI ALIYUDIN</div>
+    <div class="paybox"><b>Bank BCA</b><br>No. Rekening: 4180734771<br>A/N YUDI ALIYUDIN</div>
+    <div class="paybox"><b>Bank BRI</b><br>No. Rekening: 004601060489505<br>A/N YUDI ALIYUDIN</div>
+    <div class="paybox"><b>SeaBank</b><br>No. Rekening: 901341445605<br>A/N YUDI ALIYUDIN</div>
+  `,
+  "QRIS":`
+    <div class="detail-title">📲 QRIS</div>
+    <div class="qrbox">
+      <img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="qrfallback">File <b>qris.jpg</b> belum tersedia.</div>
+    </div>
+  `,
+  "E-Wallet":`
+    <div class="detail-title">💳 DANA / GoPay</div>
+    <div class="paybox"><b>DANA / GoPay</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>
+  `,
+  "Lainnya":`
+    <div class="detail-title">💬 Metode Lainnya</div>
+    <div class="paybox">Silakan hubungi Superadmin untuk mendapatkan instruksi pembayaran.</div>
+  `
+};
+
+function updatePaymentDetails(method){
+  const box=$("paymentDetails");
+  if(!box)return;
+  box.innerHTML=paymentDetails[method] ||
+    '<div class="payment-placeholder">Pilih metode pembayaran terlebih dahulu.</div>';
+}
+
 document.querySelectorAll("[data-value]").forEach(b=>{
   b.onclick=()=>{$("nominal").value=b.dataset.value}
+});
+
+$("metode").addEventListener("change",e=>{
+  updatePaymentDetails(e.target.value);
 });
 
 async function load(){
@@ -243,6 +249,7 @@ $("form").addEventListener("submit",async e=>{
     });
 
     $("form").reset();
+    updatePaymentDetails("");
     $("msg").className="msg success";
     $("msg").textContent="Pengajuan top up berhasil dikirim. Menunggu verifikasi Superadmin.";
     try{
