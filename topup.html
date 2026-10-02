@@ -227,6 +227,129 @@ input:focus,select:focus{
 }
 </style>
 
+
+<style id="fixzy-topup-header-final">
+.fixzy-page-header{
+  background:#111!important;
+  color:#fff!important;
+  border-bottom:2px solid #FFC107!important;
+  border-radius:0 0 58px 58px!important;
+  min-height:190px!important;
+  padding:28px 28px 54px!important;
+  box-sizing:border-box!important;
+}
+.fixzy-header-inner{
+  width:100%!important;
+  max-width:1100px!important;
+  margin:0 auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+}
+.fixzy-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:16px!important;
+  min-width:0!important;
+}
+.fixzy-logo{
+  width:82px!important;
+  height:82px!important;
+  object-fit:contain!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  flex:0 0 82px!important;
+}
+.fixzy-brand-text{min-width:0!important}
+.fixzy-title{
+  color:#FFC107!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  letter-spacing:-.4px!important;
+}
+.fixzy-owner-name{
+  color:#d5d8df!important;
+  font-size:18px!important;
+  margin-top:6px!important;
+}
+.fixzy-logout{
+  border:1px solid #333!important;
+  background:#1b1b1b!important;
+  color:#fff!important;
+  border-radius:18px!important;
+  padding:13px 22px!important;
+  font-size:16px!important;
+  white-space:nowrap!important;
+}
+@media(max-width:600px){
+  .fixzy-page-header{
+    min-height:190px!important;
+    padding:26px 28px 52px!important;
+    border-radius:0 0 54px 54px!important;
+  }
+  .fixzy-logo{
+    width:82px!important;
+    height:82px!important;
+    flex-basis:82px!important;
+  }
+  .fixzy-title{font-size:27px!important}
+  .fixzy-owner-name{font-size:17px!important}
+  .fixzy-logout{padding:12px 18px!important}
+}
+@media(max-width:430px){
+  .fixzy-page-header{
+    min-height:190px!important;
+    padding:24px 26px 50px!important;
+  }
+  .fixzy-brand{gap:13px!important}
+  .fixzy-logo{
+    width:78px!important;
+    height:78px!important;
+    flex-basis:78px!important;
+  }
+  .fixzy-title{
+    font-size:24px!important;
+    white-space:nowrap!important;
+  }
+  .fixzy-owner-name{font-size:15px!important}
+  .fixzy-logout{
+    font-size:14px!important;
+    padding:11px 15px!important;
+    border-radius:16px!important;
+  }
+}
+</style>
+
+
+<style id="fixzy-balance-overlap-index">
+/* Saldo mengikuti pola Index: panel putih menutup sebagian header hitam */
+.balance{
+  position:relative!important;
+  z-index:5!important;
+  margin-top:-54px!important;
+  background:#fff!important;
+  color:#111827!important;
+  border:1px solid #e5e7eb!important;
+  border-radius:34px!important;
+  box-shadow:0 12px 30px rgba(15,23,42,.10)!important;
+}
+.balance .label{
+  color:#64748b!important;
+}
+.balance .amount{
+  color:#111827!important;
+}
+@media(max-width:600px){
+  .balance{
+    margin-top:-52px!important;
+    border-radius:32px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="page">
@@ -240,7 +363,7 @@ input:focus,select:focus{
         <div class="fixzy-owner-name" id="ownerName">Owner</div>
       </div>
     </div>
-    <button type="button" class="fixzy-logout" id="logoutBtn">Keluar</button>
+    <button type="button" class="fixzy-logout" id="logoutBtn" onclick="history.back()">Kembali</button>
   </div>
 </header>
 
