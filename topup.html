@@ -383,6 +383,7 @@ const db=getFirestore(app);
 // Pertahankan sesi login saat berpindah halaman.
 await setPersistence(auth, browserLocalPersistence);
 let currentUser=null;
+let hasPendingTopup=false;
 
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
@@ -472,6 +473,23 @@ async function load(){
     if(x.type==="TOPUP") rows.push({id:d.id,...x});
   });
 
+  // Satu Owner hanya boleh mempunyai satu Top Up berstatus MENUNGGU.
+  hasPendingTopup = rows.some(x=>x.status === "MENUNGGU");
+  const controls = [
+    $("nominal"), $("metode"), $("referensi"), $("submit"),
+    ...document.querySelectorAll("[data-value]")
+  ];
+
+  controls.forEach(el=>{
+    if(el) el.disabled = hasPendingTopup;
+  });
+
+  if(hasPendingTopup){
+    $("submit").textContent="MENUNGGU VERIFIKASI";
+    $("msg").className="msg error";
+    $("msg").textContent="Masih ada Top Up yang MENUNGGU verifikasi. Selesaikan transaksi tersebut terlebih dahulu sebelum mengajukan Top Up baru.";
+  }
+
   rows.sort((a,b)=>{
     const ta=a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
     const tb=b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
@@ -499,6 +517,32 @@ async function load(){
 $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   $("msg").className="msg";$("msg").textContent="";
+
+  // Cek ulang langsung ke Firestore sebelum membuat transaksi baru.
+  // Ini mencegah pengajuan kedua meskipun halaman belum sempat refresh.
+  try{
+    const pendingCheck=query(
+      collection(db,"walletTransactions"),
+      where("ownerUid","==",currentUser.uid),
+      limit(50)
+    );
+    const pendingSnap=await getDocs(pendingCheck);
+    let pending=false;
+    pendingSnap.forEach(d=>{
+      const x=d.data();
+      if(x.type==="TOPUP" && x.status==="MENUNGGU") pending=true;
+    });
+    if(pending){
+      hasPendingTopup=true;
+      await load();
+      return;
+    }
+  }catch(checkErr){
+    console.error("Gagal memeriksa Top Up pending:",checkErr);
+    $("msg").className="msg error";
+    $("msg").textContent="Tidak dapat memeriksa status Top Up. Pengajuan dibatalkan demi keamanan.";
+    return;
+  }
 
   const nominal=Number($("nominal").value);
   const metode=$("metode").value;
@@ -552,8 +596,10 @@ $("form").addEventListener("submit",async e=>{
     $("msg").className="msg error";
     $("msg").textContent="Pengajuan gagal. Pastikan Rules sudah menggunakan versi transaksi yang aman.";
   }finally{
-    $("submit").disabled=false;
-    $("submit").textContent="AJUKAN TOP UP";
+    if(!hasPendingTopup){
+      $("submit").disabled=false;
+      $("submit").textContent="AJUKAN TOP UP";
+    }
   }
 });
 
