@@ -1,41 +1,342 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Checkout | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Checkout</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Checkout</h2><div class="item"><div class="row"><b>Produk pilihan</b><b>Rp0</b></div><small>Keranjang akan tampil di sini.</small></div></section>
-<section class="card"><h3>Metode Pembayaran</h3><select><option>Saldo Pribadi</option><option>Limit Kredit</option></select><label>Catatan</label><textarea placeholder="Catatan pesanan"></textarea><button class="btn yellow">Buat Pesanan</button></section>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111">
+<title>Checkout | FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#111;font-family:Arial,sans-serif}
+.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 76px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid #FFC107}
+.logo img{width:100%;height:100%;object-fit:contain}
+.brand h1{font-size:17px;margin:0;color:#FFC107;font-weight:900}
+.brand small{display:block;color:#ccc;margin-top:3px}
+.back{color:#fff;text-decoration:none;border:1px solid #444;padding:9px 11px;border-radius:10px;font-size:12px}
+.content{padding:0 15px;margin-top:-48px}
+.panel{background:#fff;border-radius:20px;padding:17px;margin-bottom:14px;box-shadow:0 8px 24px #0000000d}
+h2{font-size:16px;margin:0 0 13px}
+.item{border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin-bottom:9px}
+.itemtop{display:flex;justify-content:space-between;gap:10px}
+.name{font-weight:800;font-size:14px}
+.meta{font-size:11px;color:#667085;margin-top:4px;line-height:1.45}
+.price{font-weight:800;white-space:nowrap}
+.qty{display:flex;align-items:center;gap:7px;margin-top:9px}
+.qty button{border:1px solid #ddd;background:#f8f8f8;border-radius:8px;height:30px;padding:0 10px}
+.qty span{min-width:25px;text-align:center;font-weight:bold}
+.addr{background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:13px;font-size:12px;line-height:1.5}
+.addr b{font-size:14px}
+.btn{border:0;border-radius:11px;padding:12px 14px;font-weight:800;cursor:pointer}
+.yellow{background:#FFC107;color:#111}
+.light{background:#eef0f3}
+.full{width:100%;margin-top:10px}
+.pay{display:flex;gap:10px;align-items:center;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:8px 0}
+.pay input{accent-color:#111}
+.pay small{display:block;color:#667085;margin-top:3px}
+.row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px}
+.total{border-top:1px solid #eee;margin-top:7px;padding-top:12px;font-size:17px;font-weight:900}
+.msg{padding:12px;border-radius:12px;margin-bottom:12px;font-size:12px}
+.ok{background:#dcfce7;color:#166534}.warn{background:#fef3c7;color:#92400e}.err{background:#fee2e2;color:#991b1b}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.nav{border:0;background:transparent;color:#FFC107;font-size:10px;font-weight:800}
+.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:flex-end}
+.modal.show{display:flex}
+.box{background:#fff;width:min(560px,100%);margin:auto;border-radius:24px 24px 0 0;padding:20px}
+label{display:block;font-size:12px;font-weight:800;margin:10px 0 5px}
+input,textarea{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:11px;font:inherit}
+textarea{min-height:90px}
+.actions{display:flex;gap:8px;margin-top:14px}.actions button{flex:1}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+<div class="brand">
+<div class="brand-left">
+<div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+<div><h1>FIXZY BUSINESS</h1><small>Checkout</small></div>
+</div>
+<a class="back" href="produk.html">← Belanja</a>
+</div>
+</header>
+
+<main class="content">
+<div id="msg"></div>
+
+<section class="panel">
+<h2>Pesanan</h2>
+<div id="items"></div>
+</section>
+
+<section class="panel">
+<h2>Alamat Pengiriman</h2>
+<div id="addr"></div>
+<button class="btn yellow full" id="addrBtn">+ Tambah Alamat</button>
+</section>
+
+<section class="panel">
+<h2>Metode Pembayaran</h2>
+<label class="pay">
+<input type="radio" name="pay" value="SALDO_PRIBADI" checked>
+<div><b>Saldo Pribadi</b><small id="saldo">Memuat...</small></div>
+</label>
+<label class="pay">
+<input type="radio" name="pay" value="LIMIT">
+<div><b>Limit / Tempo</b><small id="limit">Memuat...</small></div>
+</label>
+<small style="color:#667085">Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.</small>
+</section>
+
+<section class="panel">
+<h2>Ringkasan</h2>
+<div class="row"><span>Total Barang</span><b id="qty">0 pcs</b></div>
+<div class="row total"><span>Total</span><span id="total">Rp0</span></div>
+<button class="btn yellow full" id="order">Buat Pesanan</button>
+</section>
 </main>
+</div>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+<button class="nav" onclick="location.href='index.html'"><i>⌂</i>Beranda</button>
+<button class="nav" onclick="location.href='produk.html'"><i>🛒</i>Belanja</button>
+<button class="nav" onclick="location.href='tagihan.html'"><i>🧾</i>Tagihan</button>
+<button class="nav" onclick="location.href='riwayat.html'"><i>↔</i>Riwayat</button>
+<button class="nav" onclick="location.href='profil.html'"><i>👤</i>Profil</button>
+</nav>
+
+<div class="modal" id="modal">
+<div class="box">
+<h2>Alamat Pengiriman</h2>
+<label>Nama Penerima</label><input id="an" placeholder="Nama penerima">
+<label>No. HP</label><input id="ap" placeholder="08xxxxxxxxxx">
+<label>Alamat Lengkap</label><textarea id="aa" placeholder="Alamat lengkap"></textarea>
+<div class="actions">
+<button class="btn light" id="cancel">Batal</button>
+<button class="btn yellow" id="save">Simpan</button>
+</div>
+</div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,addDoc,collection,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+projectId:"teknisi-ponsel-maja",
+storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+messagingSenderId:"835618012205",
+appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const $=id=>document.getElementById(id);
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0;
+
+function cartKey(){return"fixzy_cart_"+user.uid}
+function saveCart(){localStorage.setItem(cartKey(),JSON.stringify(cart))}
+function getPrice(x,method){
+return Number(method==="LIMIT"
+?(x.hargaTempo??x.tempo??x.harga_tempo??x.priceTempo??0)
+:(x.hargaCash??x.hargaTunai??x.tunai??x.cash??x.harga??0))||0;
+}
+function message(type,text){$("msg").innerHTML=`<div class="msg ${type}">${esc(text)}</div>`}
+
+function render(){
+const method=document.querySelector("[name=pay]:checked")?.value||"SALDO_PRIBADI";
+total=0;totalQty=0;
+
+if(!cart.length){
+$("items").innerHTML="<div style='text-align:center;color:#667085;padding:20px'>Keranjang kosong.</div>";
+$("order").disabled=true;
+}else{
+$("order").disabled=false;
+$("items").innerHTML=cart.map((x,i)=>{
+const q=Math.max(1,Number(x.qty)||1);
+const p=getPrice(x,method);
+const sub=p*q;
+total+=sub;totalQty+=q;
+return `<div class="item">
+<div class="itemtop">
+<div><div class="name">${esc(x.nama??x.name??x.produk??"-")}</div>
+<div class="meta">Kode: ${esc(x.kode??"-")}<br>Supplier: ${esc(x.supplier??"-")}<br>${rupiah(p)} / pcs</div></div>
+<div class="price">${rupiah(sub)}</div>
+</div>
+<div class="qty">
+<button data-minus="${i}">−</button><span>${q}</span><button data-plus="${i}">+</button>
+<button data-remove="${i}" style="margin-left:5px">Hapus</button>
+</div>
+</div>`;
+}).join("");
+}
+
+$("qty").textContent=totalQty+" pcs";
+$("total").textContent=rupiah(total);
+
+document.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{
+const i=Number(b.dataset.minus);
+cart[i].qty=Math.max(1,(Number(cart[i].qty)||1)-1);
+saveCart();render();
+});
+document.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{
+const i=Number(b.dataset.plus);
+cart[i].qty=(Number(cart[i].qty)||1)+1;
+saveCart();render();
+});
+document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{
+cart.splice(Number(b.dataset.remove),1);
+saveCart();render();
+});
+}
+
+function renderAddress(){
+if(!address){
+$("addr").innerHTML="<div style='color:#667085;font-size:12px'>Belum ada alamat pengiriman.</div>";
+$("addrBtn").textContent="+ Tambah Alamat";
+return;
+}
+$("addr").innerHTML=`<div class="addr"><b>${esc(address.nama)}</b><br>${esc(address.telepon)}<br>${esc(address.alamat)}</div>`;
+$("addrBtn").textContent="Ubah Alamat";
+}
+
+function openAddress(){
+$("an").value=address?.nama||"";
+$("ap").value=address?.telepon||"";
+$("aa").value=address?.alamat||"";
+$("modal").classList.add("show");
+}
+
+document.querySelectorAll("[name=pay]").forEach(r=>r.onchange=render);
+$("addrBtn").onclick=openAddress;
+$("cancel").onclick=()=>$("modal").classList.remove("show");
+
+$("save").onclick=async()=>{
+const a={
+nama:$("an").value.trim(),
+telepon:$("ap").value.trim(),
+alamat:$("aa").value.trim()
+};
+if(!a.nama||!a.telepon||!a.alamat){
+message("warn","Nama, nomor HP, dan alamat wajib diisi.");
+return;
+}
+try{
+await setDoc(doc(db,"users",user.uid),{alamatPengiriman:a},{merge:true});
+address=a;
+renderAddress();
+$("modal").classList.remove("show");
+message("ok","Alamat pengiriman berhasil disimpan.");
+}catch(e){
+console.error(e);
+message("err","Alamat gagal disimpan.");
+}
+};
+
+$("order").onclick=async()=>{
+if(!cart.length){message("warn","Keranjang masih kosong.");return}
+if(!address){message("warn","Tambahkan alamat pengiriman terlebih dahulu.");return}
+
+const method=document.querySelector("[name=pay]:checked").value;
+render();
+
+if(method==="SALDO_PRIBADI"&&total>saldo){
+message("warn","Saldo Pribadi tidak mencukupi.");
+return;
+}
+if(method==="LIMIT"&&total>limit){
+message("warn","Limit tersedia tidak mencukupi.");
+return;
+}
+
+const button=$("order");
+button.disabled=true;
+button.textContent="Mengirim Pesanan...";
+
+try{
+const nomor="ORD-"+Date.now().toString(36).toUpperCase()+"-"+Math.floor(100+Math.random()*900);
+
+const items=cart.map(x=>{
+const qty=Math.max(1,Number(x.qty)||1);
+const harga=getPrice(x,method);
+return{
+produkId:x.produkId??x.id??"",
+nama:String(x.nama??x.name??x.produk??"-"),
+kode:String(x.kode??""),
+supplier:String(x.supplier??""),
+qty,
+harga,
+subtotal:harga*qty,
+stokSaatPesan:Number(x.stok??x.sisa??0)||0,
+sourceSpreadsheet:x.sourceSpreadsheet??""
+};
+});
+
+await addDoc(collection(db,"orders"),{
+ownerUid:user.uid,
+nomorPesanan:nomor,
+items,
+total:Number(total),
+totalQty:Number(totalQty),
+metodePembayaran:method,
+alamatPengiriman:{...address},
+status:"MENUNGGU_PERSETUJUAN",
+createdAt:serverTimestamp()
+});
+
+localStorage.removeItem(cartKey());
+cart=[];
+render();
+button.textContent="Pesanan Dibuat";
+message("ok","Pesanan "+nomor+" berhasil dibuat dan menunggu persetujuan Superadmin.");
+window.scrollTo({top:0,behavior:"smooth"});
+}catch(e){
+console.error(e);
+message("err","Pesanan gagal dibuat: "+e.message);
+button.disabled=false;
+button.textContent="Buat Pesanan";
+}
+};
+
+onAuthStateChanged(auth,async u=>{
+if(!u){location.href="index.html";return}
+user=u;
+
+try{
+const[w,l,p]=await Promise.all([
+getDoc(doc(db,"wallets",u.uid)),
+getDoc(doc(db,"limits",u.uid)),
+getDoc(doc(db,"users",u.uid))
+]);
+
+saldo=w.exists()?Number(w.data().saldoPribadi||0):0;
+limit=l.exists()?Number(l.data().limitTersedia||0):0;
+address=p.exists()?(p.data().alamatPengiriman||null):null;
+
+$("saldo").textContent="Tersedia "+rupiah(saldo);
+$("limit").textContent="Tersedia "+rupiah(limit);
+
+try{cart=JSON.parse(localStorage.getItem(cartKey())||"[]")}catch(e){cart=[]}
+if(!Array.isArray(cart))cart=[];
+
+renderAddress();
+render();
+}catch(e){
+console.error(e);
+message("err","Gagal memuat data checkout.");
+}
+});
+</script>
+</body>
+</html>
