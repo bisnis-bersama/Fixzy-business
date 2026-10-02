@@ -274,7 +274,7 @@ input:focus,select:focus{
         <img src="logofixzy.png" alt="FIXZY BUSINESS" class="fixzy-logo">
         <div>
           <h1>FIXZY BUSINESS</h1>
-          <small>Owner</small>
+          <small id="ownerName">Owner</small>
         </div>
       </div>
       <button class="back" type="button" onclick="location.reload()">↻ Refresh</button>
@@ -448,6 +448,11 @@ $("metode").addEventListener("change",e=>{
 
 async function load(){
   if(!currentUser)return;
+
+  // Gunakan nama usaha/nama Owner yang sama seperti index.html.
+  const userSnap=await getDoc(doc(db,"users",currentUser.uid));
+  const profile=userSnap.exists() ? userSnap.data() : {};
+  $("ownerName").textContent=profile.namaUsaha || profile.nama || "Owner";
 
   const wallet=await getDoc(doc(db,"wallets",currentUser.uid));
   $("saldo").textContent=rupiah(wallet.exists() ? wallet.data().saldoPribadi : 0);
