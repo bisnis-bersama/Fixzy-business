@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1426">
+<title>Daftar Owner | FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#101828;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.page{max-width:520px;min-height:100vh;margin:auto;padding:22px 18px 30px}
+.head{text-align:center;padding:12px 0 20px}
+.logo{width:82px;height:82px;margin:auto;border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.12)}
+.logo img{width:100%;height:100%;object-fit:contain}
+h1{font-size:23px;margin:14px 0 5px}.sub{font-size:13px;color:#667085;margin:0}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:24px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.07)}
+label{display:block;font-size:12px;font-weight:800;margin:15px 0 7px}
+input{width:100%;padding:13px 14px;border:1px solid #d0d5dd;border-radius:13px;font-size:15px;outline:none}
+input:focus{border-color:#0b1426;box-shadow:0 0 0 3px rgba(11,20,38,.08)}
+.note{font-size:11px;color:#667085;line-height:1.5;margin:15px 0}
+.btn{width:100%;border:0;border-radius:13px;padding:14px;background:#0b1426;color:#fff;font-weight:900;font-size:15px;cursor:pointer}
+.btn:disabled{opacity:.55}
+.back{display:block;text-align:center;margin-top:16px;color:#344054;text-decoration:none;font-size:13px;font-weight:700}
+.err{min-height:18px;color:#b42318;font-size:12px;margin:9px 0}.ok{color:#15803d;font-size:13px;line-height:1.5;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+    <h1>Daftar FIXZY BUSINESS</h1>
+    <p class="sub">Buat akun Owner untuk mulai menggunakan platform.</p>
+  </div>
+
+  <div class="card">
+    <form id="registerForm">
+      <label for="nama">Nama Lengkap</label>
+      <input id="nama" required autocomplete="name" placeholder="Nama pemilik">
+
+      <label for="usaha">Nama Usaha</label>
+      <input id="usaha" required autocomplete="organization" placeholder="Nama toko / usaha">
+
+      <label for="wa">Nomor WhatsApp</label>
+      <input id="wa" required type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx">
+
+      <label for="email">Email</label>
+      <input id="email" required type="email" autocomplete="email" placeholder="email@contoh.com">
+
+      <label for="password">Password</label>
+      <input id="password" required type="password" minlength="6" autocomplete="new-password" placeholder="Minimal 6 karakter">
+
+      <label for="password2">Ulangi Password</label>
+      <input id="password2" required type="password" minlength="6" autocomplete="new-password" placeholder="Ulangi password">
+
+      <p class="note">
+        Dengan mendaftar, akun dibuat sebagai <b>Owner</b>. Data bisnis setiap Owner akan dipisahkan berdasarkan UID Firebase.
+      </p>
+
+      <button class="btn" id="submitBtn" type="submit">DAFTAR OWNER</button>
+      <div class="err" id="error"></div>
+      <div class="ok" id="success"></div>
+    </form>
+    <a class="back" href="index.html">← Kembali ke Login</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
+  projectId: "teknisi-ponsel-maja",
+  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId: "835618012205",
+  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const form=document.getElementById("registerForm");
+const err=document.getElementById("error");
+const success=document.getElementById("success");
+const btn=document.getElementById("submitBtn");
+
+form.addEventListener("submit", async e=>{
+  e.preventDefault();
+  err.textContent=""; success.textContent="";
+  const nama=document.getElementById("nama").value.trim();
+  const usaha=document.getElementById("usaha").value.trim();
+  const wa=document.getElementById("wa").value.trim();
+  const email=document.getElementById("email").value.trim();
+  const password=document.getElementById("password").value;
+  const password2=document.getElementById("password2").value;
+
+  if(password!==password2){
+    err.textContent="Password dan ulangi password tidak sama.";
+    return;
+  }
+  if(password.length<6){
+    err.textContent="Password minimal 6 karakter.";
+    return;
+  }
+
+  btn.disabled=true;
+  btn.textContent="MEMBUAT AKUN...";
+
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,password);
+    await updateProfile(cred.user,{displayName:nama});
+
+    // Profil dasar Owner. Role otoritatif tetap berasal dari
+    // Firebase Custom Claims yang akan diberikan oleh Superadmin.
+    await setDoc(doc(db,"users",cred.user.uid),{
+      uid:cred.user.uid,
+      nama,
+      namaUsaha:usaha,
+      noWhatsApp:wa,
+      email,
+      role:"owner",
+      ownerUid:cred.user.uid,
+      status:"AKTIF",
+      createdAt:serverTimestamp()
+    });
+
+    await setDoc(doc(db,"owners",cred.user.uid),{
+      ownerUid:cred.user.uid,
+      nama,
+      namaUsaha:usaha,
+      noWhatsApp:wa,
+      email,
+      status:"AKTIF",
+      createdAt:serverTimestamp()
+    });
+
+    success.textContent="Akun Owner berhasil dibuat. Setelah akses Owner diaktifkan oleh sistem, silakan masuk ke FIXZY BUSINESS.";
+    form.reset();
+  }catch(e){
+    const map={
+      "auth/email-already-in-use":"Email sudah terdaftar.",
+      "auth/invalid-email":"Format email tidak valid.",
+      "auth/weak-password":"Password terlalu lemah.",
+      "auth/network-request-failed":"Periksa koneksi internet."
+    };
+    err.textContent=map[e.code] || "Pendaftaran gagal. Silakan coba lagi.";
+  }finally{
+    btn.disabled=false;
+    btn.textContent="DAFTAR OWNER";
+  }
+});
+</script>
+</body>
+</html>
