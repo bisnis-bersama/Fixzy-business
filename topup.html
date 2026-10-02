@@ -45,56 +45,12 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
 .detail-title{font-weight:800;font-size:14px;margin-bottom:8px}
 
 </style>
-
-<style id="fixzy-topup-theme">
-:root{--yellow:#FFC107;--black:#111;--bg:#f4f5f7;--ink:#101828;--muted:#667085;--line:#e5e7eb;--card:#fff}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-.page{width:100%;max-width:760px;margin:auto;min-height:100vh;padding-bottom:28px}
-.header{background:#111;color:#fff;padding:16px 18px}
-.headrow{display:flex;align-items:center;gap:12px}
-.back{width:40px;height:40px;border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:12px;font-size:25px;line-height:1;cursor:pointer}
-.header h1{margin:0;font-size:18px;color:var(--yellow)}
-.header small{display:block;margin-top:3px;color:#cfcfcf;font-size:11px}
-.content{padding:16px}
-.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 4px 15px rgba(15,23,42,.045)}
-.label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
-.amount{font-size:30px;font-weight:900;margin-top:6px}
-.balance{background:#111;color:#fff;border-color:#111}
-.balance .label{color:#bfc5ce}
-.balance .amount{color:var(--yellow)}
-label{display:block;font-size:12px;font-weight:800;margin:14px 0 6px}
-input,select{width:100%;padding:12px;border:1px solid #d7dce3;border-radius:11px;background:#fff;font:inherit;font-size:14px;outline:none}
-input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(255,193,7,.15)}
-.quick{display:flex;gap:8px;margin:9px 0 2px;flex-wrap:wrap}
-.quick button{border:1px solid #d8dde5;background:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer}
-.quick button:hover{border-color:var(--yellow);background:#fff9df}
-.unique-code-box{margin-top:12px;padding:13px;border-radius:13px;background:#fff9df;border:1px solid #f4d36a}
-.unique-code-title{font-size:11px;font-weight:800;color:#6b5a13}
-.unique-code-value{font-size:25px;font-weight:900;color:#111;margin-top:2px}
-.unique-code-info{font-size:11px;color:#667085;line-height:1.45;margin-top:4px}
-.unique-total{margin-top:10px;padding-top:10px;border-top:1px dashed #d0d5dd;font-size:12px}
-.unique-total strong{display:block;font-size:19px;margin-top:2px}
-.payment-note,.note{font-size:11px;color:var(--muted);line-height:1.5}
-.payment-details{margin-top:10px}
-.payment-placeholder,.paybox{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fafafa;color:#667085;font-size:12px;line-height:1.5;margin-top:8px}
-.detail-title{font-size:13px;font-weight:900;margin-bottom:7px}
-.paybox b{color:#111}
-.qrbox{text-align:center;padding:10px;border:1px solid var(--line);border-radius:12px}
-.qrbox img{max-width:240px;width:100%;height:auto;display:block;margin:auto}
-.qrfallback{display:none;color:#667085;font-size:12px;padding:18px}
-.btn{width:100%;border:0;border-radius:12px;background:var(--yellow);color:#111;padding:13px;font-weight:900;cursor:pointer}
-.msg{font-size:12px;margin-top:9px;line-height:1.45}
-.list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-.itemtop{display:flex;justify-content:space-between;gap:10px}
-.item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
-.item b{font-size:13px}.item small{color:#667085;font-size:11px}
-.badge{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;white-space:nowrap}
-.empty{text-align:center;color:#667085;font-size:12px;padding:15px}
-@media(min-width:700px){.header{border-radius:0 0 18px 18px}.content{padding:20px 22px}}
-@media(max-width:420px){.content{padding:12px}.card{padding:14px;border-radius:16px}.amount{font-size:28px}.unique-code-value{font-size:23px}}
+<style id="payment-inline-fix">
+.payment-details{margin-top:8px}
+.detail-title{font-weight:900;font-size:13px;margin:0 0 6px}
+.paybox{background:#fafafa;border:1px solid #e4e7ec;border-radius:12px;padding:11px 12px;font-size:12px;line-height:1.55}
+.payment-placeholder{padding:10px 2px;color:#667085;font-size:11px}
 </style>
-
 </head>
 <body>
 <div class="page">
@@ -109,14 +65,6 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(25
     <section class="card balance">
       <div class="label">Saldo Pribadi Saat Ini</div>
       <div class="amount" id="saldo">Rp0</div>
-    </section>
-
-    <section class="card payment-card">
-      <div class="label">Detail Pembayaran</div>
-      <div class="payment-note">Detail rekening atau QRIS akan muncul setelah memilih metode pembayaran.</div>
-      <div id="paymentDetails" class="payment-details">
-        <div class="payment-placeholder">Pilih metode pembayaran terlebih dahulu.</div>
-      </div>
     </section>
 
     <section class="card">
@@ -140,12 +88,21 @@ input:focus,select:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(25
 
         <label for="metode">Metode Pembayaran</label>
         <select id="metode" required>
-          <option value="">Pilih metode</option>
-          <option>Transfer Bank</option>
-          <option>QRIS</option>
-          <option>E-Wallet</option>
-          <option>Lainnya</option>
+          <option value="">Pilih metode pembayaran</option>
+          <option value="BCA">BCA</option>
+          <option value="BRI">BRI</option>
+          <option value="Mandiri">Mandiri</option>
+          <option value="BNI">BNI</option>
+          <option value="SeaBank">SeaBank</option>
+          <option value="DANA">DANA</option>
+          <option value="GoPay">GoPay</option>
+          <option value="QRIS">QRIS</option>
+          <option value="Lainnya">Lainnya</option>
         </select>
+
+        <div id="paymentDetails" class="payment-details">
+          <div class="payment-placeholder">Pilih metode pembayaran untuk melihat detail.</div>
+        </div>
 
         <label for="referensi">Nomor Referensi / Keterangan</label>
         <input id="referensi" maxlength="100" placeholder="Opsional">
@@ -219,29 +176,15 @@ function refreshTransferTotal(){
 }
 
 const paymentDetails={
-  "Transfer Bank":`
-    <div class="detail-title">🏦 Rekening Bank</div>
-    <div class="paybox"><b>Bank Mandiri</b><br>No. Rekening: 1340033268904<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>Bank BCA</b><br>No. Rekening: 4180734771<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>Bank BRI</b><br>No. Rekening: 004601060489505<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>SeaBank</b><br>No. Rekening: 901341445605<br>A/N YUDI ALIYUDIN</div>
-  `,
-  "QRIS":`
-    <div class="detail-title">📲 QRIS</div>
-    <div class="qrbox">
-      <img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-      <div class="qrfallback">File <b>qris.jpg</b> belum tersedia.</div>
-    </div>
-  `,
-  "E-Wallet":`
-    <div class="detail-title">💳 DANA / GoPay</div>
-    <div class="paybox"><b>DANA / GoPay</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>
-  `,
-  "Lainnya":`
-    <div class="detail-title">💬 Metode Lainnya</div>
-    <div class="paybox">Silakan hubungi Superadmin untuk mendapatkan instruksi pembayaran.</div>
-  `
+  "BCA":`<div class="detail-title">🏦 BCA</div><div class="paybox"><b>Bank BCA</b><br>No. Rekening: 4180734771<br>A/N YUDI ALIYUDIN</div>`,
+  "BRI":`<div class="detail-title">🏦 BRI</div><div class="paybox"><b>Bank BRI</b><br>No. Rekening: 004601060489505<br>A/N YUDI ALIYUDIN</div>`,
+  "Mandiri":`<div class="detail-title">🏦 Mandiri</div><div class="paybox"><b>Bank Mandiri</b><br>No. Rekening: 1340033268904<br>A/N YUDI ALIYUDIN</div>`,
+  "BNI":`<div class="detail-title">🏦 BNI</div><div class="paybox"><b>Bank BNI</b><br>Nomor rekening BNI belum diatur.</div>`,
+  "SeaBank":`<div class="detail-title">🏦 SeaBank</div><div class="paybox"><b>SeaBank</b><br>No. Rekening: 901341445605<br>A/N YUDI ALIYUDIN</div>`,
+  "DANA":`<div class="detail-title">💳 DANA</div><div class="paybox"><b>DANA</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>`,
+  "GoPay":`<div class="detail-title">💳 GoPay</div><div class="paybox"><b>GoPay</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>`,
+  "QRIS":`<div class="detail-title">📲 QRIS</div><div class="qrbox"><img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="qrfallback">File <b>qris.jpg</b> belum tersedia.</div></div>`,
+  "Lainnya":`<div class="detail-title">💬 Metode Lainnya</div><div class="paybox">Silakan hubungi Superadmin untuk mendapatkan instruksi pembayaran.</div>`
 };
 
 function updatePaymentDetails(method){
