@@ -1,130 +1,37 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1426">
-<title>Top Up Saldo | FIXZY BUSINESS</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f4f6f8;color:#101828;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.page{max-width:520px;min-height:100vh;margin:auto;padding-bottom:30px}
-.header{background:#0b1426;color:#fff;padding:18px 18px 25px;border-radius:0 0 28px 28px}
-.headrow{display:flex;align-items:center;gap:12px}.back{border:0;background:rgba(255,255,255,.08);color:#fff;width:40px;height:40px;border-radius:12px;font-size:22px;cursor:pointer}
-.header h1{font-size:19px;margin:0}.header small{color:#aeb9ca}
-.content{padding:0 16px;margin-top:-8px}
-.card{background:#fff;border:1px solid #e7eaf0;border-radius:22px;padding:18px;margin-top:16px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
-.balance{background:linear-gradient(145deg,#fff9df,#fff);border-color:#f7df82}
-.label{font-size:11px;color:#667085;font-weight:800;text-transform:uppercase}.amount{font-size:29px;font-weight:900;margin-top:5px}
-label{display:block;font-size:12px;font-weight:800;margin:15px 0 7px}
-input,select,textarea{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px 14px;font:inherit;outline:none;background:#fff}
-textarea{min-height:82px;resize:vertical}
-input:focus,select:focus,textarea:focus{border-color:#0b1426}
-.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-.quick button{border:1px solid #e4e7ec;background:#f8fafc;border-radius:11px;padding:10px 5px;font-weight:800;font-size:12px;cursor:pointer}
-.btn{width:100%;border:0;border-radius:13px;background:#0b1426;color:#fff;padding:14px;font-weight:900;margin-top:18px;cursor:pointer}
-.btn:disabled{opacity:.55}
-.msg{font-size:12px;line-height:1.5;margin-top:11px;min-height:18px}.error{color:#b42318}.success{color:#15803d}
-.note{font-size:11px;color:#667085;line-height:1.55}
-.list{margin-top:12px}.item{padding:13px 0;border-bottom:1px solid #eef0f3}.item:last-child{border-bottom:0}
-.itemtop{display:flex;justify-content:space-between;gap:10px}.item b{font-size:14px}.item small{color:#667085;font-size:11px}
-.badge{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;white-space:nowrap}
-.empty{text-align:center;color:#667085;font-size:12px;padding:15px}.payment-note{font-size:12px;color:#667085;line-height:1.5;margin-top:8px}
-.paybox{background:#f8fafc;border:1px solid #e4e7ec;border-radius:13px;padding:11px 12px;margin-top:9px;font-size:12px;line-height:1.55}
-.qrbox{margin-top:12px;border:1px dashed #cfd4dc;border-radius:15px;padding:12px;text-align:center;font-size:12px}
-.qrbox img{display:block;width:min(280px,100%);max-height:280px;object-fit:contain;margin:10px auto 2px;border-radius:10px}
-.qrfallback{display:none;color:#b42318;font-size:11px;margin-top:8px}
-.payment-details{margin-top:12px}.unique-code-box{margin-top:10px;padding:13px;border:1px solid #f2cf58;background:#fffaf0;border-radius:14px}
-.unique-code-title{font-size:12px;font-weight:700;color:#667085}
-.unique-code-value{font-size:24px;font-weight:900;letter-spacing:3px;margin-top:3px}
-.unique-code-info{font-size:11px;color:#667085;line-height:1.45;margin-top:4px}
-.unique-total{margin-top:10px;padding-top:10px;border-top:1px dashed #d0d5dd;font-size:12px}
-.unique-total strong{display:block;font-size:19px;margin-top:2px}
-
-.payment-placeholder{padding:14px;border:1px dashed #cfd4dc;border-radius:13px;text-align:center;color:#667085;font-size:12px}
-.detail-title{font-weight:800;font-size:14px;margin-bottom:8px}
-
-</style>
-</head>
-<body>
-<div class="page">
-  <header class="header">
-    <div class="headrow">
-      <button class="back" onclick="location.href='index.html'">‹</button>
-      <div><h1>Top Up Saldo</h1><small>Saldo Pribadi FIXZY BUSINESS</small></div>
-    </div>
-  </header>
-
-  <main class="content">
-    <section class="card balance">
-      <div class="label">Saldo Pribadi Saat Ini</div>
-      <div class="amount" id="saldo">Rp0</div>
-    </section>
-
-    <section class="card payment-card">
-      <div class="label">Detail Pembayaran</div>
-      <div class="payment-note">Detail rekening atau QRIS akan muncul setelah memilih metode pembayaran.</div>
-      <div id="paymentDetails" class="payment-details">
-        <div class="payment-placeholder">Pilih metode pembayaran terlebih dahulu.</div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="label">Ajukan Top Up</div>
-
-      <form id="form">
-        <label for="nominal">Nominal Top Up</label>
-        <input id="nominal" type="number" min="10000" step="1000" placeholder="Minimal Rp10.000" required>
-<div class="unique-code-box">
-  <div class="unique-code-title">Kode unik pembayaran</div>
-  <div class="unique-code-value" id="kodeUnikDisplay">-</div>
-  <div class="unique-code-info">Transfer sesuai <b>Total Transfer</b> di bawah. Kode unik otomatis ditambahkan.</div>
-  <div class="unique-total">Total yang harus ditransfer:<strong id="totalTransferDisplay">Rp0</strong></div>
-</div>
-
-        <div class="quick">
-          <button type="button" data-value="50000">Rp50 Rb</button>
-          <button type="button" data-value="100000">Rp100 Rb</button>
-          <button type="button" data-value="500000">Rp500 Rb</button>
-        </div>
-
-        <label for="metode">Metode Pembayaran</label>
-        <select id="metode" required>
-          <option value="">Pilih metode</option>
-          <option>Transfer Bank</option>
-          <option>QRIS</option>
-          <option>E-Wallet</option>
-          <option>Lainnya</option>
-        </select>
-
-        <label for="referensi">Nomor Referensi / Keterangan</label>
-        <input id="referensi" maxlength="100" placeholder="Opsional">
-
-        <p class="note">
-          Top up tidak langsung menambah saldo. Pengajuan akan diperiksa Superadmin terlebih dahulu.
-        </p>
-
-        <button class="btn" id="submit" type="submit">AJUKAN TOP UP</button>
-        <div class="msg" id="msg"></div>
-      </form>
-    </section>
-
-    <section class="card">
-      <div class="label">Riwayat Pengajuan Top Up</div>
-      <div class="list" id="history"><div class="empty">Memuat...</div></div>
-    </section>
-  </main>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getFirestore, doc, getDoc, collection, addDoc, query, where,
-  limit, getDocs, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-const firebaseConfig = {
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Top Up Saldo | FIXZY BUSINESS</title><style>
+:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
+.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
+.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
+.container{max-width:900px;margin:auto;padding:16px 16px 90px}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
+.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
+.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
+label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
+.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
+.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
+.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
+</style></head><body>
+<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Top Up Saldo</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
+<main class="container">
+<section class="card"><h2>Top Up Saldo</h2><label>Nominal</label><input type="number" placeholder="Contoh 500000">
+<label>Metode</label><select><option>QRIS</option><option>Bank Mandiri</option><option>BCA</option><option>BRI</option><option>DANA / GoPay</option><option>SeaBank</option></select>
+<button class="btn yellow">Buat Pengajuan Top Up</button><p class="note">Setelah pengajuan, Owner mengirim bukti pembayaran kepada Admin. Saldo baru bertambah setelah disetujui.</p></section>
+</main>
+<nav class="bottom">
+<a class="" href="index.html">Beranda</a>
+<a class="" href="produk.html">Belanja</a>
+<a class="" href="tagihan.html">Tagihan</a>
+<a class="" href="riwayat.html">Riwayat</a>
+<a class="" href="profil.html">Profil</a>
+</nav><script type="module">const firebaseConfig = {
   apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
   authDomain: "teknisi-ponsel-maja.firebaseapp.com",
   projectId: "teknisi-ponsel-maja",
@@ -132,205 +39,4 @@ const firebaseConfig = {
   messagingSenderId: "835618012205",
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-let currentUser=null;
-
-await setPersistence(auth,browserLocalPersistence);
-await auth.authStateReady();
-
-const $=id=>document.getElementById(id);
-const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-
-
-function makeUniqueCode(){
-  return Math.floor(Math.random()*899)+101;
-}
-function openWhatsAppProof(data){
-  const text=`Halo Admin FIXZY BUSINESS,
-
-Saya sudah melakukan Top Up Saldo.
-
-Nominal Top Up: ${rupiah(data.nominal)}
-Kode Unik: ${data.kodeUnik}
-Total Transfer: ${rupiah(data.totalTransfer)}
-Metode: ${data.metode}
-Referensi: ${data.referensi || "-"}
-
-Saya kirim bukti transfer melalui WhatsApp ini. Mohon diperiksa dan diverifikasi.
-
-Terima kasih.`;
-  window.location.href="https://wa.me/6282319264646?text="+encodeURIComponent(text);
-}
-let currentKodeUnik=makeUniqueCode();
-function refreshTransferTotal(){
-  const nominal=Number($("nominal").value||0);
-  $("kodeUnikDisplay").textContent=nominal ? String(currentKodeUnik) : "-";
-  $("totalTransferDisplay").textContent=nominal ? rupiah(nominal+currentKodeUnik) : "Rp0";
-}
-
-const paymentDetails={
-  "Transfer Bank":`
-    <div class="detail-title">🏦 Rekening Bank</div>
-    <div class="paybox"><b>Bank Mandiri</b><br>No. Rekening: 1340033268904<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>Bank BCA</b><br>No. Rekening: 4180734771<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>Bank BRI</b><br>No. Rekening: 004601060489505<br>A/N YUDI ALIYUDIN</div>
-    <div class="paybox"><b>SeaBank</b><br>No. Rekening: 901341445605<br>A/N YUDI ALIYUDIN</div>
-  `,
-  "QRIS":`
-    <div class="detail-title">📲 QRIS</div>
-    <div class="qrbox">
-      <img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-      <div class="qrfallback">File <b>qris.jpg</b> belum tersedia.</div>
-    </div>
-  `,
-  "E-Wallet":`
-    <div class="detail-title">💳 DANA / GoPay</div>
-    <div class="paybox"><b>DANA / GoPay</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>
-  `,
-  "Lainnya":`
-    <div class="detail-title">💬 Metode Lainnya</div>
-    <div class="paybox">Silakan hubungi Superadmin untuk mendapatkan instruksi pembayaran.</div>
-  `
-};
-
-function updatePaymentDetails(method){
-  const box=$("paymentDetails");
-  if(!box)return;
-  box.innerHTML=paymentDetails[method] ||
-    '<div class="payment-placeholder">Pilih metode pembayaran terlebih dahulu.</div>';
-}
-
-document.querySelectorAll("[data-value]").forEach(b=>{
-  b.onclick=()=>{
-    $("nominal").value=b.dataset.value;
-    refreshTransferTotal();
-  }
-});
-$("nominal").addEventListener("input",refreshTransferTotal);
-refreshTransferTotal();
-
-$("metode").addEventListener("change",e=>{
-  updatePaymentDetails(e.target.value);
-});
-
-async function load(){
-  if(!currentUser)return;
-
-  const wallet=await getDoc(doc(db,"wallets",currentUser.uid));
-  $("saldo").textContent=rupiah(wallet.exists() ? wallet.data().saldoPribadi : 0);
-
-  // Ambil transaksi milik Owner saja, lalu filter/sort di browser.
-  // Dengan cara ini tidak membutuhkan composite index Firestore.
-  const q=query(
-    collection(db,"walletTransactions"),
-    where("ownerUid","==",currentUser.uid),
-    limit(50)
-  );
-  const snap=await getDocs(q);
-
-  const rows=[];
-  snap.forEach(d=>{
-    const x=d.data();
-    if(x.type==="TOPUP") rows.push({id:d.id,...x});
-  });
-
-  rows.sort((a,b)=>{
-    const ta=a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-    const tb=b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-    return tb-ta;
-  });
-
-  if(!rows.length){
-    $("history").innerHTML='<div class="empty">Belum ada pengajuan top up.</div>';
-    return;
-  }
-
-  $("history").innerHTML="";
-  rows.slice(0,10).forEach(x=>{
-    const dt=x.createdAt?.toDate ? x.createdAt.toDate().toLocaleString("id-ID") : "Baru saja";
-    $("history").insertAdjacentHTML("beforeend",`
-      <div class="item">
-        <div class="itemtop">
-          <div><b>${rupiah(x.nominal)}</b><br><small>${dt} • ${x.metode||"-"}</small></div>
-          <span class="badge">${x.status||"MENUNGGU"}</span>
-        </div>
-      </div>`);
-  });
-}
-
-$("form").addEventListener("submit",async e=>{
-  e.preventDefault();
-  $("msg").className="msg";$("msg").textContent="";
-
-  const nominal=Number($("nominal").value);
-  const metode=$("metode").value;
-  const referensi=$("referensi").value.trim();
-
-  if(!Number.isFinite(nominal)||nominal<10000){
-    $("msg").className="msg error";
-    $("msg").textContent="Nominal minimal Rp10.000.";
-    return;
-  }
-  if(!metode){
-    $("msg").className="msg error";
-    $("msg").textContent="Pilih metode pembayaran.";
-    return;
-  }
-
-  $("submit").disabled=true;
-  $("submit").textContent="MENGIRIM...";
-
-  try{
-    const kodeUnik=currentKodeUnik;
-    const totalTransfer=nominal+kodeUnik;
-
-    await addDoc(collection(db,"walletTransactions"),{
-      ownerUid:currentUser.uid,
-      type:"TOPUP",
-      nominal,
-      kodeUnik,
-      totalTransfer,
-      metode,
-      referensi,
-      status:"MENUNGGU",
-      createdAt:serverTimestamp()
-    });
-
-    $("form").reset();
-    updatePaymentDetails("");
-    $("msg").className="msg success";
-    $("msg").innerHTML="Pengajuan berhasil dikirim. <b>Transfer tepat "+rupiah(totalTransfer)+"</b>. Setelah itu kirim bukti transfer melalui WhatsApp.";
-    try{
-      await load();
-    }catch(loadErr){
-      console.error("Riwayat top up gagal dimuat:",loadErr);
-    }
-
-    openWhatsAppProof({nominal,kodeUnik,totalTransfer,metode,referensi});
-    currentKodeUnik=makeUniqueCode();
-    refreshTransferTotal();
-  }catch(err){
-    console.error(err);
-    $("msg").className="msg error";
-    $("msg").textContent="Pengajuan gagal. Pastikan Rules sudah menggunakan versi transaksi yang aman.";
-  }finally{
-    $("submit").disabled=false;
-    $("submit").textContent="AJUKAN TOP UP";
-  }
-});
-
-onAuthStateChanged(auth,async user=>{
-  if(!user){location.href="index.html";return}
-  currentUser=user;
-  try{await load()}catch(err){
-    console.error(err);
-    $("history").innerHTML='<div class="empty">Riwayat belum dapat dimuat.</div>';
-  }
-});
-</script>
-</body>
-</html>
+</script></body></html>
