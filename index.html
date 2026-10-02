@@ -119,6 +119,57 @@ button{font:inherit}
 }
 </style>
 
+
+<style id="fixzy-landing-promo">
+.landing{display:none;min-height:calc(100vh - 82px);padding:24px clamp(16px,4vw,54px) 90px}
+.landing.show{display:block}
+.landing-inner{width:100%;max-width:820px;margin:0 auto}
+.landing-brand{display:flex;align-items:center;gap:12px;margin:8px 0 22px}
+.landing-logo{width:52px;height:52px;border-radius:15px;background:#fff;overflow:hidden;display:grid;place-items:center;box-shadow:0 5px 16px rgba(0,0,0,.12)}
+.landing-logo img{width:100%;height:100%;object-fit:contain}
+.landing-title{font-size:21px;font-weight:900;letter-spacing:.2px}
+.landing-subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.promo-main{background:linear-gradient(145deg,#081225,#14233c);color:#fff;border-radius:26px;padding:clamp(24px,5vw,42px);box-shadow:0 14px 35px rgba(15,23,42,.14)}
+.promo-kicker{color:#f6bd24;font-size:11px;font-weight:900;letter-spacing:1px}
+.promo-main h2{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:10px 0 12px;letter-spacing:-1px}
+.promo-main p{max-width:620px;color:#c5cedb;font-size:14px;line-height:1.6;margin:0}
+.landing-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.landing-btn{border:0;border-radius:13px;padding:13px 20px;font-weight:900;font-size:14px;text-decoration:none;text-align:center;cursor:pointer}
+.landing-btn.primary{background:#f6bd24;color:#111}
+.landing-btn.secondary{background:#fff;color:#111}
+.promo-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.promo-item{display:flex;gap:12px;align-items:flex-start;padding:14px 2px}
+.promo-icon{font-size:25px;line-height:1}
+.promo-item b{display:block;font-size:14px}
+.promo-item span{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:4px}
+.promo-note{color:#8a93a1;font-size:10px;line-height:1.5;margin-top:12px}
+@media(max-width:560px){
+  .landing{padding:18px 15px 88px}
+  .landing-brand{margin-bottom:18px}
+  .landing-title{font-size:18px}
+  .promo-main{border-radius:22px;padding:23px 20px}
+  .promo-main h2{font-size:29px}
+  .promo-main p{font-size:13px}
+  .landing-actions{display:grid;grid-template-columns:1fr 1fr}
+  .landing-btn{padding:12px 8px}
+  .promo-list{grid-template-columns:1fr;gap:4px;margin-top:12px}
+  .promo-item{padding:10px 0}
+}
+@media(min-width:769px){
+  .landing{padding-top:34px}
+  .promo-list{gap:20px 36px}
+}
+</style>
+
+
+<style id="fixzy-auth-state">
+body.auth-logged-out .app > .top{display:none}
+body.auth-logged-out .bottom{display:none!important}
+body.auth-logged-out .content{display:none}
+body.auth-logged-out .landing{display:block}
+body.auth-logged-in .landing{display:none}
+</style>
+
 </head>
 <body>
 <div class="app">
@@ -131,6 +182,52 @@ button{font:inherit}
       <button class="logout" id="logoutBtn">Keluar</button>
     </div>
   </header>
+
+
+<section class="landing" id="landingPage">
+  <div class="landing-inner">
+    <div class="landing-brand">
+      <div class="landing-logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+      <div>
+        <div class="landing-title">FIXZY BUSINESS</div>
+        <div class="landing-subtitle">Platform bisnis untuk Owner & Konter</div>
+      </div>
+    </div>
+
+    <div class="promo-main">
+      <div class="promo-kicker">SOLUSI BISNIS KONTER</div>
+      <h2>Belanja lebih mudah,<br>bisnis lebih terarah.</h2>
+      <p>Kelola saldo, belanja produk, limit, tagihan, dan transaksi bisnis dalam satu tempat.</p>
+      <div class="landing-actions">
+        <button class="landing-btn primary" id="landingLoginBtn">Masuk</button>
+        <a class="landing-btn secondary" href="register.html">Daftar Owner</a>
+      </div>
+    </div>
+
+    <div class="promo-list">
+      <div class="promo-item">
+        <div class="promo-icon">💳</div>
+        <div><b>Limit besar</b><span>Peluang limit hingga ratusan juta sesuai persetujuan dan ketentuan FIXZY.</span></div>
+      </div>
+      <div class="promo-item">
+        <div class="promo-icon">📦</div>
+        <div><b>Produk berkualitas</b><span>Akses kebutuhan produk bisnis dalam satu platform.</span></div>
+      </div>
+      <div class="promo-item">
+        <div class="promo-icon">⚡</div>
+        <div><b>Transaksi mudah</b><span>Proses belanja, pembayaran, dan pencatatan dibuat lebih praktis.</span></div>
+      </div>
+      <div class="promo-item">
+        <div class="promo-icon">🔒</div>
+        <div><b>Aman & tercatat</b><span>Setiap akun dan transaksi dikelola berdasarkan hak akses Owner dan sistem.</span></div>
+      </div>
+    </div>
+
+    <div class="promo-note">
+      * Besaran limit, persetujuan, produk, dan fasilitas transaksi mengikuti hasil verifikasi serta ketentuan yang berlaku.
+    </div>
+  </div>
+</section>
 
   <main class="content">
     <section class="balance">
@@ -258,6 +355,7 @@ el("loginForm").addEventListener("submit", async e=>{
 });
 
 el("logoutBtn").addEventListener("click", ()=>signOut(auth));
+el("landingLoginBtn").addEventListener("click", ()=>openLogin(true));
 
 document.querySelectorAll("[data-page]").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -417,7 +515,14 @@ async function loadOwnerDashboard(user){
 }
 
 onAuthStateChanged(auth, async user=>{
-  if(!user){ openLogin(true); return; }
+  if(!user){
+    document.body.classList.remove("auth-logged-in");
+    document.body.classList.add("auth-logged-out");
+    openLogin(false);
+    return;
+  }
+  document.body.classList.remove("auth-logged-out");
+  document.body.classList.add("auth-logged-in");
   openLogin(false);
   try{
     await loadOwnerDashboard(user);
