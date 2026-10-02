@@ -742,11 +742,14 @@ async function loadOwnerName(){
 }
 
 async function loadCatalogs(){
-  // Katalog sekarang bersifat global. Hanya Superadmin yang boleh
-  // menambah/mengubah/menghapus link Spreadsheet. Owner hanya membaca.
+  // Katalog bersifat GLOBAL. Superadmin yang mengelola link, Owner hanya membaca.
+  // Jangan membatasi query berdasarkan ownerUid karena katalog yang dibuat
+  // Superadmin harus tetap tampil pada semua Owner.
   const q = query(collection(db,"productCatalogs"));
   const snap = await getDocs(q);
-  catalogs = snap.docs.map(d => ({id:d.id,...d.data()}));
+  catalogs = snap.docs
+    .map(d => ({id:d.id,...d.data()}))
+    .filter(c => c.aktif !== false);
 
   $("sourceCount").textContent = `${catalogs.length} link`;
   renderSources();
@@ -898,6 +901,9 @@ function renderProducts(){
       </div>
     </article>
   `).join("");
+
+  // Tombol baru dibuat setelah HTML produk dirender.
+  bindProductActions();
 }
 
 function cartKey(){
@@ -1119,9 +1125,11 @@ onAuthStateChanged(auth, async user => {
   try{
     await loadCatalogs();
   }catch(err){
-    $("sourceList").innerHTML =
-      `<div class="error">Gagal memuat katalog: ${escapeHtml(err.message)}</div>`;
-    $("products").innerHTML = "";
+    console.error("FIXZY produk load error:", err);
+    $("message").innerHTML =
+      `<div class="error"><b>Gagal memuat katalog produk.</b><br>${escapeHtml(err.message || "Akses katalog gagal.")}</div>`;
+    $("products").innerHTML = `<div class="empty">Katalog belum dapat dibaca. Periksa akses koleksi <b>productCatalogs</b> di Firestore Rules.</div>`;
+    $("productCount").textContent = "0 produk";
   }
 });
 </script>
