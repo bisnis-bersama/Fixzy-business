@@ -99,8 +99,10 @@ body{
 .container{
   width:100%;
   max-width:1180px;
-  margin:auto;
+  margin:-60px auto 0;
   padding:0 clamp(14px,3vw,28px) 100px;
+  position:relative;
+  z-index:21;
 }
 .card{
   background:#fff;
@@ -111,21 +113,26 @@ body{
   box-shadow:0 2px 8px #00000008;
 }
 .add-box{
-  background:#111;
-  color:#fff;
-  border-radius:16px;
-  padding:15px;
+  background:#fff;
+  color:#101828;
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 10px 26px rgba(15,23,42,.10);
+  position:relative;
+  z-index:25;
 }
 .add-box h2{
-  margin:0 0 5px;
+  margin:0 0 6px;
   font-size:18px;
-  color:var(--yellow);
+  color:#101828;
+  font-weight:900;
 }
-.note{
-  color:#d1d5db;
+.add-box .note{
+  color:#667085;
   font-size:12px;
   line-height:1.5;
-  margin-bottom:12px;
+  margin-bottom:14px;
 }
 .btn{
   display:inline-flex;
@@ -385,16 +392,14 @@ label{
   .source{align-items:flex-start}
 }
 @media(max-width:430px){
-  .container{padding:10px 10px 86px}
-  .header{padding:10px 12px}
-  .brand h1{font-size:16px}
-  .logo{width:42px;height:42px}
+  .container{padding:0 12px 100px}
   .source{flex-direction:column}
   .source-actions{width:100%}
   .source-actions button{flex:1}
 }
 
 @media(max-width:420px){
+  .header{padding-left:16px;padding-right:16px}
   .brand h1{font-size:17px}
   .brand small{font-size:12px}
   .logout{font-size:12px;padding:9px 11px}
@@ -403,7 +408,11 @@ label{
 }
 @media(min-width:769px){
   .header{padding-left:24px;padding-right:24px}
-  .container{padding-left:28px;padding-right:28px}
+  .container{
+    margin-top:-60px;
+    padding-left:28px;
+    padding-right:28px;
+  }
 }
 </style>
 </head>
@@ -412,7 +421,7 @@ label{
 <header class="header">
   <div class="header-inner">
     <div class="brand">
-      <img class="logo" src="logofixzy.png" onerror="this.style.display='none'" alt="FIXZY">
+      <img class="logo" src="logofixzy.png" alt="FIXZY BUSINESS">
       <div class="brand-text">
         <h1>FIXZY BUSINESS</h1>
         <small id="ownerName">A yudi thea</small>
