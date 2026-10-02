@@ -1,42 +1,229 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Approval Top Up | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Approval Top Up</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Approval Top Up</h2><div class="grid"><div class="stat"><small>MENUNGGU</small><b>0</b></div><div class="stat"><small>TOTAL NOMINAL</small><b>Rp0</b></div></div></section>
-<section class="card"><h3>Menunggu Verifikasi</h3><div class="item">Belum ada pengajuan.</div></section>
-<a class="back" href="index-superadmin.html">← Kembali</a>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1426">
+<title>Superadmin | Top Up FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f8;color:#101828;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.page{max-width:720px;margin:auto;min-height:100vh;padding-bottom:35px}
+.header{background:#0b1426;color:#fff;padding:18px 18px 25px;border-radius:0 0 28px 28px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.head h1{font-size:20px;margin:0}.head small{color:#aeb9ca}
+.back{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}
+.content{padding:0 15px;margin-top:-6px}
+.card{background:#fff;border:1px solid #e6e9ef;border-radius:20px;margin-top:15px;padding:16px;box-shadow:0 7px 22px rgba(15,23,42,.05)}
+.title{font-weight:900;font-size:15px}.muted{font-size:12px;color:#667085}
+.item{border:1px solid #e4e7ec;border-radius:16px;padding:14px;margin-top:10px}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.amount{font-size:20px;font-weight:900}.name{font-weight:850}.meta{font-size:11px;color:#667085;line-height:1.55;margin-top:4px}
+.badge{font-size:10px;font-weight:900;border-radius:999px;padding:6px 8px;background:#fff7ed;color:#b54708}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+button{font:inherit;cursor:pointer}.approve,.reject{border:0;border-radius:11px;padding:11px;font-weight:900}
+.approve{background:#0b1426;color:#fff}.reject{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
+button:disabled{opacity:.5;cursor:not-allowed}
+.empty{text-align:center;padding:25px 10px;color:#667085;font-size:12px}
+.msg{font-size:12px;margin-top:10px;line-height:1.5}.error{color:#b42318}.success{color:#15803d}
+.refresh{border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:8px 11px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="header">
+  <div class="head">
+    <div>
+      <h1>Superadmin</h1>
+      <small>Verifikasi Top Up FIXZY BUSINESS</small>
+    </div>
+    <button class="back" onclick="location.href='index.html'">Dashboard</button>
+  </div>
+</header>
+
+<main class="content">
+  <section class="card">
+    <div class="row">
+      <div>
+        <div class="title">Pengajuan Top Up</div>
+        <div class="muted" id="count">Memuat...</div>
+      </div>
+      <button class="refresh" id="refresh">Refresh</button>
+    </div>
+    <div id="list"><div class="empty">Memuat data...</div></div>
+    <div class="msg" id="msg"></div>
+  </section>
 </main>
-<nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore,collection,query,where,getDocs,doc,getDoc,
+  runTransaction,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+  projectId:"teknisi-ponsel-maja",
+  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId:"835618012205",
+  appId:"1:835618012205:web:95d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+let currentUser=null;
+
+const $=id=>document.getElementById(id);
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+async function isSuperadmin(){
+  const result=await currentUser.getIdTokenResult(true);
+  return result.claims.role==="superadmin";
+}
+
+async function load(){
+  $("msg").textContent="";
+  const q=query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"));
+  const snap=await getDocs(q);
+
+  $("count").textContent=`${snap.size} pengajuan menunggu verifikasi`;
+  if(snap.empty){
+    $("list").innerHTML='<div class="empty">Tidak ada pengajuan top up.</div>';
+    return;
+  }
+
+  const rows=[];
+  snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+  rows.sort((a,b)=>{
+    const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
+    const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
+    return tb-ta;
+  });
+
+  $("list").innerHTML="";
+  rows.forEach(x=>{
+    const dt=x.createdAt?.toDate?x.createdAt.toDate().toLocaleString("id-ID"):"Baru saja";
+    $("list").insertAdjacentHTML("beforeend",`
+      <div class="item" id="item-${esc(x.id)}">
+        <div class="row">
+          <div>
+            <div class="name">${esc(x.namaUsaha||"Owner")}</div>
+            <div class="amount">${rupiah(x.nominal)}</div>
+            <div class="meta">
+              UID: ${esc(x.ownerUid)}<br>
+              Metode: ${esc(x.metode||"-")}<br>
+              Referensi: ${esc(x.referensi||"-")}<br>
+              Diajukan: ${esc(dt)}
+            </div>
+          </div>
+          <span class="badge">MENUNGGU</span>
+        </div>
+        <div class="actions">
+          <button class="approve" data-id="${esc(x.id)}">SETUJUI</button>
+          <button class="reject" data-id="${esc(x.id)}">TOLAK</button>
+        </div>
+      </div>`);
+  });
+
+  document.querySelectorAll(".approve").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,true));
+  document.querySelectorAll(".reject").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,false));
+}
+
+async function processTopup(id,approve){
+  const item=$(`item-${id}`);
+  if(!item)return;
+  const buttons=item.querySelectorAll("button");
+  buttons.forEach(b=>b.disabled=true);
+
+  try{
+    await runTransaction(db,async tx=>{
+      const txRef=doc(db,"walletTransactions",id);
+      const txSnap=await tx.get(txRef);
+
+      if(!txSnap.exists())throw new Error("TRANSAKSI_TIDAK_ADA");
+      const data=txSnap.data();
+
+      if(data.type!=="TOPUP" || data.status!=="MENUNGGU"){
+        throw new Error("TRANSAKSI_SUDAH_DIPROSES");
+      }
+
+      if(!approve){
+        tx.update(txRef,{
+          status:"DITOLAK",
+          verifiedBy:currentUser.uid,
+          verifiedAt:serverTimestamp()
+        });
+        return;
+      }
+
+      const ownerUid=data.ownerUid;
+      const nominal=Number(data.nominal)||0;
+      if(nominal<=0)throw new Error("NOMINAL_TIDAK_VALID");
+
+      const walletRef=doc(db,"wallets",ownerUid);
+      const walletSnap=await tx.get(walletRef);
+      const wallet=walletSnap.exists()?walletSnap.data():{};
+      const sebelum=Number(wallet.saldoPribadi)||0;
+      const sesudah=sebelum+nominal;
+
+      if(walletSnap.exists()){
+        tx.update(walletRef,{
+          saldoPribadi:sesudah,
+          ownerUid,
+          updatedAt:serverTimestamp()
+        });
+      }else{
+        tx.set(walletRef,{
+          ownerUid,
+          saldoPribadi:sesudah,
+          status:"AKTIF",
+          createdAt:serverTimestamp(),
+          updatedAt:serverTimestamp()
+        });
+      }
+
+      tx.update(txRef,{
+        status:"DISETUJUI",
+        saldoSebelum:sebelum,
+        saldoSesudah:sesudah,
+        verifiedBy:currentUser.uid,
+        verifiedAt:serverTimestamp()
+      });
+    });
+
+    $("msg").className="msg success";
+    $("msg").textContent=approve?"Top up disetujui. Saldo Owner sudah bertambah.":"Pengajuan top up ditolak.";
+    await load();
+
+  }catch(err){
+    console.error(err);
+    $("msg").className="msg error";
+    $("msg").textContent="Gagal memproses: "+err.message;
+    buttons.forEach(b=>b.disabled=false);
+  }
+}
+
+$("refresh").onclick=load;
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){location.href="index.html";return}
+  currentUser=user;
+  try{
+    if(!(await isSuperadmin())){
+      $("list").innerHTML='<div class="empty">Akun ini bukan Superadmin.</div>';
+      return;
+    }
+    await load();
+  }catch(err){
+    console.error(err);
+    $("list").innerHTML='<div class="empty">Gagal memuat data.</div>';
+  }
+});
+</script>
+</body>
+</html>
