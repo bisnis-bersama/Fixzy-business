@@ -3,556 +3,299 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07152b">
 <title>FIXZY BUSINESS | Riwayat</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5f8;color:#101828;font-family:Arial,sans-serif}
-.app{max-width:720px;margin:auto;padding-bottom:30px}
+body{margin:0;background:#f3f5f8;color:#101828;font-family:Arial,Helvetica,sans-serif}
+.app{max-width:720px;margin:auto;min-height:100vh;padding-bottom:30px}
 .header{background:#07152b;color:#fff;padding:22px 18px 26px;border-radius:0 0 28px 28px}
 .brand{display:flex;align-items:center;gap:12px}
 .logo{width:56px;height:56px;border-radius:16px;background:#fff;overflow:hidden;flex:none}
-.logo img{width:100%;height:100%;object-fit:cover}
-h1{margin:0;font-size:22px}
-.sub{margin-top:4px;color:#aab6c8;font-size:13px}
+.logo img{width:100%;height:100%;object-fit:contain}
+.brand h1{margin:0;font-size:21px}
+.sub{margin-top:4px;color:#aab6c8;font-size:12px}
 .content{padding:0 16px}
-.card{background:#fff;border-radius:22px;margin-top:16px;padding:18px;box-shadow:0 6px 24px #10182812}
-.title{font-size:22px;font-weight:800}
-.summary{margin-top:5px;color:#667085;font-size:13px}
-.total{margin-top:14px;font-size:26px;font-weight:900}
-.count{margin-top:3px;color:#667085;font-size:12px}
-.search{width:100%;margin-top:15px;padding:12px 14px;border:1px solid #d0d5dd;border-radius:13px;font-size:14px}
+.card{background:#fff;border:1px solid #eaecf0;border-radius:22px;margin-top:16px;padding:18px;box-shadow:0 6px 24px #10182812}
+.title{font-size:21px;font-weight:900}
+.muted{margin-top:4px;color:#667085;font-size:12px}
+.summary{margin-top:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.summary b{font-size:15px}.summary span{display:block;color:#667085;font-size:11px;margin-top:2px}
+.search{width:100%;margin-top:14px;padding:12px 13px;border:1px solid #d0d5dd;border-radius:13px;font-size:14px;outline:none}
 .filters{display:flex;gap:7px;overflow:auto;margin-top:11px;padding-bottom:3px}
-.filters button{border:1px solid #d0d5dd;background:#fff;border-radius:20px;padding:9px 13px;white-space:nowrap;font-weight:700}
+.filters button{border:1px solid #d0d5dd;background:#fff;color:#344054;border-radius:20px;padding:8px 12px;white-space:nowrap;font-weight:800;font-size:12px}
 .filters button.active{background:#07152b;color:#fff;border-color:#07152b}
-.refresh{width:100%;margin-top:11px;padding:12px;border:0;border-radius:12px;background:#07152b;color:#fff;font-weight:800}
-.item{padding:15px 0;border-bottom:1px solid #eaecf0}
+.refresh,.back{width:100%;padding:12px;border-radius:12px;font-weight:800}
+.refresh{margin-top:11px;border:0;background:#07152b;color:#fff}
+.back{margin-top:10px;border:1px solid #d0d5dd;background:#fff;color:#344054}
+.item{padding:14px 0;border-bottom:1px solid #eaecf0}
 .item:last-child{border-bottom:0}
 .row{display:flex;justify-content:space-between;gap:10px}
+.left{min-width:0}
 .amount{font-size:18px;font-weight:900}
-.desc{font-weight:800;margin-top:3px}
-.date{font-size:11px;color:#667085;margin-top:4px}
-.badge{height:max-content;padding:6px 9px;border-radius:20px;font-size:10px;font-weight:900;white-space:nowrap}
-.pending{background:#fff4e5;color:#b54708}
-.approved{background:#ecfdf3;color:#027a48}
-.rejected{background:#fef3f2;color:#b42318}
-.detail{display:none;margin-top:9px;background:#f8fafc;border-radius:12px;padding:10px;font-size:12px;line-height:1.7}
+.amount.in{color:#027a48}.amount.out{color:#b42318}
+.desc{font-weight:800;margin-top:3px;font-size:13px}
+.date{color:#667085;font-size:11px;margin-top:4px}
+.badge{height:max-content;border-radius:20px;padding:6px 9px;font-size:10px;font-weight:900;white-space:nowrap}
+.pending{background:#fff4e5;color:#b54708}.approved{background:#ecfdf3;color:#027a48}.rejected{background:#fef3f2;color:#b42318}
+.detail{display:none;margin-top:9px;background:#f8fafc;border-radius:12px;padding:10px;font-size:12px;line-height:1.7;word-break:break-word}
 .item.open .detail{display:block}
-.more{margin-top:8px;border:0;background:none;padding:0;color:#344054;font-weight:700;font-size:12px}
-.empty,.loading{text-align:center;color:#667085;padding:28px 5px}
-.error{margin-top:12px;background:#fef3f2;color:#b42318;padding:11px;border-radius:12px;font-size:13px}
-.back{width:100%;margin-top:10px;padding:12px;border:1px solid #d0d5dd;border-radius:12px;background:#fff;color:#344054;font-weight:800}
-@media(max-width:420px){h1{font-size:20px}.total{font-size:23px}}
+.more{margin-top:7px;border:0;background:none;padding:0;color:#344054;font-size:12px;font-weight:800}
+.empty,.loading{text-align:center;color:#667085;padding:28px 5px;font-size:12px}
+.error{margin-top:11px;background:#fef3f2;color:#b42318;padding:11px;border-radius:12px;font-size:12px}
+@media(max-width:420px){.brand h1{font-size:20px}}
 </style>
 </head>
-
 <body>
 <div class="app">
-
 <header class="header">
   <div class="brand">
-    <div class="logo">
-      <img src="logofixzy.png" alt="FIXZY BUSINESS">
-    </div>
+    <div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
     <div>
       <h1>FIXZY BUSINESS</h1>
-      <div class="sub" id="roleLabel">Riwayat Transaksi</div>
+      <div class="sub" id="roleLabel">Riwayat Semua Transaksi</div>
     </div>
   </div>
 </header>
 
 <main class="content">
 <section class="card">
+  <div class="title">Riwayat Semua Transaksi</div>
+  <div class="muted">Seluruh transaksi saldo akun ini.</div>
 
-  <div class="title">Riwayat Transaksi</div>
-  <div class="summary">Riwayat aktivitas saldo FIXZY BUSINESS</div>
+  <div class="summary">
+    <div><b id="count">0</b><span>TRANSAKSI</span></div>
+    <div><b id="inTotal">Rp0</b><span>DANA MASUK</span></div>
+    <div><b id="outTotal">Rp0</b><span>DANA KELUAR</span></div>
+  </div>
 
-  <div class="total" id="total">Rp0</div>
-  <div class="count" id="count">0 transaksi</div>
-
-  <input id="search" class="search"
-         placeholder="Cari nominal, metode, referensi...">
+  <input id="search" class="search" placeholder="Cari nominal, jenis, metode, referensi...">
 
   <div class="filters">
     <button class="active" data-filter="SEMUA">Semua</button>
+    <button data-filter="MASUK">Dana Masuk</button>
+    <button data-filter="KELUAR">Dana Keluar</button>
     <button data-filter="MENUNGGU">Menunggu</button>
     <button data-filter="DISETUJUI">Disetujui</button>
     <button data-filter="DITOLAK">Ditolak</button>
   </div>
 
   <button class="refresh" id="refresh">↻ Refresh</button>
-
   <div id="message"></div>
-  <div id="list">
-    <div class="loading">Memuat riwayat...</div>
-  </div>
-
-  <button class="back" id="back">← Kembali</button>
-
+  <div id="list"><div class="loading">Memuat transaksi...</div></div>
+  <button class="back" id="back">← Kembali ke Dashboard</button>
 </section>
 </main>
 </div>
 
 <script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-
-import {
-  getAuth,
-  setPersistence,
-  browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+const firebaseConfig={
+  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+  projectId:"teknisi-ponsel-maja",
+  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId:"835618012205",
+  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+await setPersistence(auth,browserLocalPersistence);
+await auth.authStateReady();
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 
-const rupiah = value =>
-  new Intl.NumberFormat("id-ID",{
-    style:"currency",
-    currency:"IDR",
-    maximumFractionDigits:0
-  }).format(Number(value)||0);
+let currentUser=auth.currentUser;
+let role="";
+let rows=[];
+let activeFilter="SEMUA";
 
-let currentUser = null;
-let currentRole = "";
-let rows = [];
-let activeFilter = "SEMUA";
-
-
-function formatDate(ts){
-
-  if(!ts) return "-";
-
-  if(ts.toDate){
-    return ts.toDate().toLocaleString("id-ID",{
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    });
-  }
-
+function dateText(v){
+  if(!v) return "-";
+  if(v.toDate) return v.toDate().toLocaleString("id-ID",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
   return "-";
 }
 
-
-function statusClass(status){
-
-  if(status === "DISETUJUI") return "approved";
-  if(status === "DITOLAK") return "rejected";
-
+function statusClass(s){
+  if(s==="DISETUJUI") return "approved";
+  if(s==="DITOLAK") return "rejected";
   return "pending";
 }
 
+function transactionType(x){
+  const t=String(x.type||x.jenis||x.category||"").toUpperCase();
+  if(["TOPUP","DANA_MASUK","MASUK","REFUND","PENGEMBALIAN"].includes(t)) return "MASUK";
+  if(["BELANJA","PEMBAYARAN","PEMBAYARAN_TAGIHAN","TAGIHAN","DANA_KELUAR","KELUAR","DEBIT"].includes(t)) return "KELUAR";
+  if(String(x.direction||x.arah||"").toUpperCase()==="IN") return "MASUK";
+  if(String(x.direction||x.arah||"").toUpperCase()==="OUT") return "KELUAR";
+  return Number(x.amount??x.jumlah??x.nilai??0)<0 ? "KELUAR" : "MASUK";
+}
+
+function amountValue(x){
+  const n=Number(x.nominal??x.amount??x.jumlah??x.nilai??0);
+  return Math.abs(n)||0;
+}
+
+function typeLabel(x){
+  const t=String(x.type||x.jenis||"TRANSAKSI").toUpperCase();
+  const map={
+    TOPUP:"Top Up Saldo",
+    DANA_MASUK:"Dana Masuk",
+    REFUND:"Pengembalian",
+    BELANJA:"Belanja",
+    PEMBAYARAN:"Pembayaran",
+    PEMBAYARAN_TAGIHAN:"Pembayaran Tagihan",
+    TAGIHAN:"Tagihan",
+    DANA_KELUAR:"Dana Keluar"
+  };
+  return map[t]||t;
+}
 
 function render(){
+  const key=$("search").value.trim().toLowerCase();
+  let data=[...rows];
 
-  const keyword =
-    $("search").value.trim().toLowerCase();
+  if(activeFilter==="MASUK" || activeFilter==="KELUAR")
+    data=data.filter(x=>transactionType(x)===activeFilter);
+  else if(["MENUNGGU","DISETUJUI","DITOLAK"].includes(activeFilter))
+    data=data.filter(x=>(x.status||"MENUNGGU")===activeFilter);
 
-  let data = [...rows];
-
-  if(activeFilter !== "SEMUA"){
-    data = data.filter(x =>
-      (x.status || "MENUNGGU") === activeFilter
-    );
-  }
-
-  if(keyword){
-
-    data = data.filter(x => {
-
-      const text = [
-        x.nominal,
-        x.kodeUnik,
-        x.metode,
-        x.referensi,
-        x.status,
-        x.totalTransfer,
-        x.type
+  if(key){
+    data=data.filter(x=>{
+      const text=[
+        x.type,x.jenis,x.nominal,x.amount,x.jumlah,x.nilai,
+        x.metode,x.referensi,x.status,x.ownerUid,x.invoiceNo
       ].join(" ").toLowerCase();
-
-      return text.includes(keyword);
+      return text.includes(key);
     });
-
   }
-
 
   if(!data.length){
-
-    $("list").innerHTML =
-      '<div class="empty">Belum ada transaksi.</div>';
-
+    $("list").innerHTML='<div class="empty">Belum ada transaksi yang sesuai.</div>';
     return;
   }
 
-
-  $("list").innerHTML = "";
-
-
-  data.forEach(x => {
-
-    const status =
-      x.status || "MENUNGGU";
-
-    const totalTransfer =
-      Number(x.totalTransfer) ||
-      (
-        Number(x.nominal || 0) +
-        Number(x.kodeUnik || 0)
-      );
-
-
-    const item =
-      document.createElement("div");
-
-    item.className = "item";
-
-
-    item.innerHTML = `
-
+  $("list").innerHTML="";
+  data.forEach(x=>{
+    const dir=transactionType(x);
+    const amount=amountValue(x);
+    const status=x.status||"-";
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerHTML=`
       <div class="row">
-
-        <div>
-          <div class="amount">
-            ${rupiah(x.nominal)}
-          </div>
-
-          <div class="desc">
-            Top Up Saldo
-          </div>
-
-          <div class="date">
-            ${formatDate(x.createdAt)}
-          </div>
+        <div class="left">
+          <div class="amount ${dir==="MASUK"?"in":"out"}">${dir==="MASUK"?"+":"-"} ${rupiah(amount)}</div>
+          <div class="desc">${typeLabel(x)}</div>
+          <div class="date">${dateText(x.createdAt)}${x.metode?" • "+String(x.metode):""}</div>
         </div>
-
-        <span class="badge ${statusClass(status)}">
-          ${status}
-        </span>
-
+        <span class="badge ${statusClass(status)}">${status}</span>
       </div>
-
-
-      <button class="more">
-        Lihat detail
-      </button>
-
-
+      <button class="more">Lihat detail</button>
       <div class="detail">
-
-        <b>Nominal:</b>
-        ${rupiah(x.nominal)}
-        <br>
-
-        <b>Kode Unik:</b>
-        ${x.kodeUnik ?? "-"}
-        <br>
-
-        <b>Total Transfer:</b>
-        ${rupiah(totalTransfer)}
-        <br>
-
-        <b>Metode:</b>
-        ${x.metode || "-"}
-        <br>
-
-        <b>Referensi:</b>
-        ${x.referensi || "-"}
-        <br>
-
-        <b>Status:</b>
-        ${status}
-
-        ${
-          status === "DISETUJUI"
-          ? `
-            <br>
-            <b>Saldo Sebelum:</b>
-            ${rupiah(x.saldoSebelum)}
-            <br>
-            <b>Saldo Sesudah:</b>
-            ${rupiah(x.saldoSesudah)}
-            <br>
-            <b>Diverifikasi:</b>
-            ${formatDate(x.verifiedAt)}
-          `
-          : ""
-        }
-
-      </div>
-    `;
-
-
-    item.querySelector(".more").onclick = () => {
-
+        <b>Jenis:</b> ${typeLabel(x)}<br>
+        <b>Nilai:</b> ${rupiah(amount)}<br>
+        <b>Status:</b> ${status}<br>
+        <b>Metode:</b> ${x.metode||"-"}<br>
+        <b>Referensi:</b> ${x.referensi||"-"}
+        ${x.kodeUnik!=null?`<br><b>Kode Unik:</b> ${x.kodeUnik}`:""}
+        ${x.totalTransfer!=null?`<br><b>Total Transfer:</b> ${rupiah(x.totalTransfer)}`:""}
+        ${x.saldoSebelum!=null?`<br><b>Saldo Sebelum:</b> ${rupiah(x.saldoSebelum)}`:""}
+        ${x.saldoSesudah!=null?`<br><b>Saldo Sesudah:</b> ${rupiah(x.saldoSesudah)}`:""}
+        ${role==="superadmin"&&x.ownerUid?`<br><b>Owner UID:</b> ${x.ownerUid}`:""}
+        ${x.verifiedAt?`<br><b>Diverifikasi:</b> ${dateText(x.verifiedAt)}`:""}
+      </div>`;
+    item.querySelector(".more").onclick=()=>{
       item.classList.toggle("open");
-
-      item.querySelector(".more").textContent =
-        item.classList.contains("open")
-        ? "Tutup detail"
-        : "Lihat detail";
-
+      item.querySelector(".more").textContent=item.classList.contains("open")?"Tutup detail":"Lihat detail";
     };
-
-
     $("list").appendChild(item);
-
   });
-
 }
 
-
-async function loadHistory(){
-
-  $("list").innerHTML =
-    '<div class="loading">Memuat riwayat...</div>';
-
-  $("message").innerHTML = "";
+async function load(){
+  $("list").innerHTML='<div class="loading">Memuat transaksi...</div>';
+  $("message").innerHTML="";
 
   try{
-
     let q;
-
-    if(currentRole === "superadmin"){
-
-      q = query(
-        collection(db,"walletTransactions"),
-        where("type","==","TOPUP")
-      );
-
+    if(role==="superadmin"){
+      q=query(collection(db,"walletTransactions"));
     }else{
-
-      q = query(
-        collection(db,"walletTransactions"),
-        where("ownerUid","==",currentUser.uid),
-        where("type","==","TOPUP")
-      );
-
+      q=query(collection(db,"walletTransactions"),where("ownerUid","==",currentUser.uid));
     }
 
+    const snap=await getDocs(q);
+    rows=[];
+    snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+    rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
-    const snap = await getDocs(q);
-
-    rows = [];
-
-    snap.forEach(d => {
-
-      rows.push({
-        id:d.id,
-        ...d.data()
-      });
-
+    let masuk=0,keluar=0;
+    rows.forEach(x=>{
+      const n=amountValue(x);
+      if(transactionType(x)==="MASUK") masuk+=n;
+      else keluar+=n;
     });
 
-
-    rows.sort((a,b) => {
-
-      const ta =
-        a.createdAt?.toMillis?.() || 0;
-
-      const tb =
-        b.createdAt?.toMillis?.() || 0;
-
-      return tb - ta;
-
-    });
-
-
-    const total =
-      rows.reduce(
-        (sum,x) =>
-          sum + (Number(x.nominal)||0),
-        0
-      );
-
-
-    $("total").textContent =
-      rupiah(total);
-
-    $("count").textContent =
-      `${rows.length} transaksi`;
-
+    $("count").textContent=rows.length;
+    $("inTotal").textContent=rupiah(masuk);
+    $("outTotal").textContent=rupiah(keluar);
     render();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    $("list").innerHTML = "";
-
-    $("message").className = "error";
-
-    $("message").textContent =
-      "Riwayat tidak dapat dimuat. Periksa Firestore Rules atau koneksi.";
-
+  }catch(e){
+    console.error(e);
+    $("list").innerHTML="";
+    $("message").className="error";
+    $("message").textContent="Transaksi tidak dapat dimuat. Periksa Firestore Rules atau koneksi.";
   }
-
 }
 
-
-document
-.querySelectorAll("[data-filter]")
-.forEach(button => {
-
-  button.onclick = () => {
-
-    activeFilter =
-      button.dataset.filter;
-
-    document
-      .querySelectorAll("[data-filter]")
-      .forEach(x =>
-        x.classList.remove("active")
-      );
-
-    button.classList.add("active");
-
+document.querySelectorAll("[data-filter]").forEach(btn=>{
+  btn.onclick=()=>{
+    activeFilter=btn.dataset.filter;
+    document.querySelectorAll("[data-filter]").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
     render();
-
   };
-
 });
-
-
-$("search").oninput = render;
-
-
-$("refresh").onclick =
-  () => loadHistory();
-
-
-$("back").onclick = () => {
-
-  if(history.length > 1){
-
-    history.back();
-
-  }else{
-
-    location.href = "index.html";
-
-  }
-
-};
-
-
-await setPersistence(
-  auth,
-  browserLocalPersistence
-);
-
-
-await auth.authStateReady();
-
-
-currentUser = auth.currentUser;
-
+$("search").oninput=render;
+$("refresh").onclick=load;
+$("back").onclick=()=>{location.href="index.html"};
 
 if(!currentUser){
-
-  $("message").className = "error";
-
-  $("message").textContent =
-    "Sesi login tidak ditemukan. Silakan kembali ke FIXZY BUSINESS.";
-
+  $("message").className="error";
+  $("message").textContent="Sesi login tidak ditemukan. Silakan kembali ke Dashboard.";
 }else{
-
   try{
-
-    const profileSnap =
-      await getDoc(
-        doc(db,"users",currentUser.uid)
-      );
-
-    const profile =
-      profileSnap.exists()
-      ? profileSnap.data()
-      : {};
-
-
-    const token =
-      await currentUser.getIdTokenResult(true);
-
-
-    if(token.claims?.role === "superadmin"){
-
-      currentRole = "superadmin";
-
-    }else if(
-      profile.role === "superadmin"
-    ){
-
-      currentRole = "superadmin";
-
-    }else if(
-      profile.role === "owner" &&
-      profile.ownerUid === currentUser.uid
-    ){
-
-      currentRole = "owner";
-
+    const profileSnap=await getDoc(doc(db,"users",currentUser.uid));
+    const profile=profileSnap.exists()?profileSnap.data():{};
+    const token=await currentUser.getIdTokenResult(true);
+    if(token.claims?.role==="superadmin" || profile.role==="superadmin"){
+      role="superadmin";
+    }else if(profile.role==="owner" && profile.ownerUid===currentUser.uid){
+      role="owner";
     }
 
-
-    if(!currentRole){
-
-      $("message").className = "error";
-
-      $("message").textContent =
-        "Akses ditolak.";
-
+    if(!role){
+      $("message").className="error";
+      $("message").textContent="Akses ditolak.";
     }else{
-
-      $("roleLabel").textContent =
-        currentRole === "superadmin"
-        ? "Riwayat Transaksi • Superadmin"
-        : "Riwayat Transaksi • Owner";
-
-
-      await loadHistory();
-
+      $("roleLabel").textContent=role==="superadmin"
+        ?"Riwayat Semua Transaksi • Superadmin"
+        :"Riwayat Semua Transaksi • Owner";
+      await load();
     }
-
-  }catch(error){
-
-    console.error(error);
-
-    $("message").className = "error";
-
-    $("message").textContent =
-      "Gagal memeriksa akun. Silakan tekan Refresh.";
-
+  }catch(e){
+    console.error(e);
+    $("message").className="error";
+    $("message").textContent="Gagal memeriksa akun. Silakan kembali ke Dashboard.";
   }
-
 }
-
 </script>
 </body>
 </html>

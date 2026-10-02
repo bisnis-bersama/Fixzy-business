@@ -198,6 +198,8 @@ const db = getFirestore(app);
 
 // Pertahankan sesi login saat berpindah halaman.
 await setPersistence(auth, browserLocalPersistence);
+// Tunggu Firebase selesai memulihkan sesi sebelum menampilkan login.
+await auth.authStateReady();
 
 const el = id => document.getElementById(id);
 const rupiah = n => new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
