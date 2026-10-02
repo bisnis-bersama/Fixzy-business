@@ -70,7 +70,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
   <section class="card">
     <h2 class="hero-title">Approval Limit</h2>
-    <p class="hero-note">Periksa pengajuan limit Owner dan tentukan persetujuannya.</p>
+    <p class="hero-note">Setiap pengajuan yang disetujui akan menambah limit Owner.</p>
 
     <div class="summary">
       <div class="stat">
@@ -292,8 +292,8 @@ async function processApplication(id,approve,clickedBtn){
     reason=prompt("Alasan penolakan (opsional):") || "";
   }else{
     const ok=confirm(
-      "Setujui limit "+rupiah(nominal)+" untuk Owner ini?\n\n"+
-      "Limit disetujui akan menjadi "+rupiah(nominal)+"."
+      "Tambahkan limit "+rupiah(nominal)+" untuk Owner ini?\n\n"+
+      "Nominal ini akan DITAMBAHKAN ke limit yang sudah ada."
     );
     if(!ok) return;
   }
@@ -323,19 +323,22 @@ async function processApplication(id,approve,clickedBtn){
       const old=limitSnap.exists()?limitSnap.data():{};
 
       const used=Number(old.limitTerpakai)||0;
+      const oldApproved=Number(old.limitDisetujui)||0;
 
       if(approve){
-        if(requested<used){
+        // Pengajuan adalah TAMBAHAN limit, bukan mengganti limit lama.
+        const newApproved=oldApproved+requested;
+        const available=newApproved-used;
+
+        if(available<0){
           throw new Error(
-            "Nominal limit baru lebih kecil dari limit yang sudah terpakai."
+            "Perhitungan limit tidak valid karena limit terpakai melebihi limit baru."
           );
         }
 
-        const available=requested-used;
-
         tx.set(limitRef,{
           ownerUid,
-          limitDisetujui:requested,
+          limitDisetujui:newApproved,
           limitTerpakai:used,
           limitTersedia:available,
           status:"DISETUJUI",
@@ -345,6 +348,10 @@ async function processApplication(id,approve,clickedBtn){
         tx.update(appRef,{
           status:"DISETUJUI",
           nominalDisetujui:requested,
+          nominalTambahan:requested,
+          limitSebelum:oldApproved,
+          limitSesudah:newApproved,
+          limitTerpakai:used,
           limitTersediaSesudah:available,
           processedBy:auth.currentUser.uid,
           processedAt:serverTimestamp()
