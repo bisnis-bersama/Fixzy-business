@@ -27,8 +27,7 @@ button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
 .empty{text-align:center;color:#667085;padding:28px 10px}
 .msg{padding:11px 13px;border-radius:12px;font-size:12px;margin-top:10px;display:none}
 .success{display:block;background:#ecfdf3;color:#027a48}.error{display:block;background:#fef3f2;color:#b42318}
-.login{padding:18px}.login input{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:12px;margin:6px 0 10px;font-size:15px}
-.login button{width:100%;background:#07152b;color:#fff}
+.login{padding:18px}
 .logout{float:right;background:#fff2;color:#fff;border:1px solid #ffffff44;padding:9px 12px}
 @media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.row{align-items:flex-start}}
 </style>
@@ -43,16 +42,16 @@ button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
   </div>
 </header>
 
+
 <section class="card" id="loginCard">
-  <div class="title">Masuk Superadmin</div>
-  <div class="muted">Gunakan akun Firebase yang pada data <b>users/{UID}</b> memiliki <b>role = superadmin</b>.</div>
-  <div class="login">
-    <input id="email" type="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button id="login">Masuk</button>
-    <div id="loginMsg" class="msg"></div>
+  <div class="title">Verifikasi Superadmin</div>
+  <div class="muted">
+    Halaman ini otomatis menggunakan akun Firebase yang sedang login di FIXZY BUSINESS.
+    Pastikan akun tersebut memiliki <b>role = superadmin</b> pada <b>users/{UID}</b>.
   </div>
+  <div id="loginMsg" class="msg"></div>
 </section>
+
 
 <main id="app" style="display:none">
   <section class="card">
@@ -72,9 +71,9 @@ button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
 </div>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,query,where,getDocs,doc,getDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
@@ -106,19 +105,9 @@ async function verifySuperadmin(user){
  return profile.role === "superadmin";
 }
 
-$("login").onclick=async()=>{
- try{
-   const email=$("email").value.trim(),password=$("password").value;
-   if(!email||!password) throw new Error("Email dan password wajib diisi.");
-   const cred=await signInWithEmailAndPassword(auth,email,password);
-   if(!(await verifySuperadmin(cred.user))){
-     await signOut(auth);
-     throw new Error("Akun ini bukan Superadmin.");
-   }
- }catch(e){showLoginMsg(e.message||"Login gagal.");}
-};
-
 $("logout").onclick=()=>signOut(auth);
+
+await setPersistence(auth,browserLocalPersistence);
 
 function formatDate(ts){
  return ts?.toDate ? ts.toDate().toLocaleString("id-ID") : "-";
@@ -234,6 +223,7 @@ onAuthStateChanged(async user=>{
  if(!user){
    $("app").style.display="none";
    $("loginCard").style.display="block";
+   showLoginMsg("Belum ada akun FIXZY yang sedang login. Kembali ke index.html dan login sebagai Superadmin terlebih dahulu.","error");
    return;
  }
  try{
