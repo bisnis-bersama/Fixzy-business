@@ -168,17 +168,25 @@ document.querySelectorAll("[data-page]").forEach(btn=>{
 
 async function loadOwnerDashboard(user){
   const token = await user.getIdTokenResult(true);
-  const role = token.claims.role || "";
+  const claimRole = token.claims.role || "";
 
-  // Rules FIXZY memakai custom claim role.
+  // Owner dibaca dari users/{uid}.role.
+  // Superadmin tetap harus berasal dari Custom Claims.
+  const userSnap = await getDoc(doc(db,"users",user.uid));
+  const profile = userSnap.exists() ? userSnap.data() : {};
+
+  let role = "";
+  if(claimRole === "superadmin"){
+    role = "superadmin";
+  } else if(profile.role === "owner" && profile.ownerUid === user.uid){
+    role = "owner";
+  }
+
   if(!["owner","superadmin"].includes(role)){
-    el("greeting").textContent="Role akun belum diaktifkan";
-    el("loginError").textContent="";
+    el("greeting").textContent="Akun belum memiliki akses FIXZY BUSINESS";
     return;
   }
 
-  const userSnap = await getDoc(doc(db,"users",user.uid));
-  const profile = userSnap.exists() ? userSnap.data() : {};
   el("greeting").textContent = role==="superadmin"
     ? "Superadmin"
     : (profile.namaUsaha || profile.nama || "Owner");
