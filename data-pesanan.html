@@ -1,37 +1,160 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Data Pesanan | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Data Pesanan</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Data Pesanan</h2><p class="note">Halaman sudah disiapkan sebagai bagian dari arsitektur FIXZY BUSINESS. Data dan aksi Firebase akan disambungkan setelah seluruh halaman selesai.</p></section>
-<section class="card"><h3>Data</h3><div class="item">Belum ada data untuk ditampilkan.</div></section>
-<a class="back" href="index-superadmin.html">← Kembali ke Dashboard Superadmin</a>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Pesanan | FIXZY BUSINESS</title>
+<style>
+:root{--yellow:#FFC107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626;--blue:#2563eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.app{width:100%;max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand h1{font-size:17px;margin:0;font-weight:900;letter-spacing:.2px;color:var(--yellow)}
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.home{color:#fff;text-decoration:none;font-size:23px;padding:6px}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+.hero{background:#fff}
+.hero-title{font-size:20px;font-weight:900;margin:0}
+.hero-note{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.stat{background:#f8f8f8;border-radius:14px;padding:13px}
+.stat small{display:block;color:var(--muted);font-size:11px}
+.stat b{display:block;margin-top:6px;font-size:20px}
+.filters{display:flex;gap:8px;overflow:auto;padding-bottom:2px}
+.filter{border:1px solid var(--border);background:#fff;border-radius:999px;padding:9px 13px;font-weight:800;font-size:12px;white-space:nowrap;cursor:pointer}
+.filter.active{background:#111;color:var(--yellow);border-color:#111}
+.list{display:flex;flex-direction:column;gap:12px}
+.order{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff}
+.order-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.order-no{font-size:15px;font-weight:900}
+.owner{font-size:12px;color:var(--muted);margin-top:4px}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.wait{background:#fef3c7;color:#92400e}
+.ok{background:#dcfce7;color:#166534}
+.ship{background:#dbeafe;color:#1e40af}
+.done{background:#dcfce7;color:#166534}
+.bad{background:#fee2e2;color:#991b1b}
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
+.info{background:#f8f8f8;border-radius:11px;padding:10px}
+.info small{display:block;color:var(--muted);font-size:10px}
+.info b{display:block;margin-top:4px;font-size:13px}
+.products{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;margin:10px 0}
+.product-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:12px}
+.product-row span:first-child{max-width:70%}
+.address{font-size:12px;line-height:1.5;background:#f8f8f8;border-radius:11px;padding:10px;margin-bottom:10px}
+.address b{display:block;margin-bottom:3px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{border:0;border-radius:11px;padding:11px 13px;font-weight:900;font-size:12px;cursor:pointer;background:#111;color:#fff}
+.btn.yellow{background:var(--yellow);color:#111}
+.btn.green{background:var(--green);color:#fff}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.red{background:var(--red);color:#fff}
+.btn.light{background:#eee;color:#111}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:13px}
+.loading{text-align:center;padding:25px;color:var(--muted)}
+.message{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}
+.message.show{display:block}
+.message.okmsg{background:#dcfce7;color:#166534}
+.message.errmsg{background:#fee2e2;color:#991b1b}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px;cursor:pointer}
+.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px;color:var(--yellow)}
+.nav.active{color:var(--yellow)}
+@media(max-width:700px){
+  .top{padding:16px 15px 66px}
+  .content{margin-top:-42px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .info-grid{grid-template-columns:1fr 1fr}
+  .order-head{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-left">
+      <div class="logo"><img src="logofixzy.png" alt="FIXZY"></div>
+      <div>
+        <h1>FIXZY BUSINESS</h1>
+        <small>Superadmin · Data Pesanan</small>
+      </div>
+    </div>
+    <a class="home" href="index-superadmin.html" title="Dashboard">⌂</a>
+  </div>
+</header>
+
+<main class="content">
+  <section class="card hero">
+    <h2 class="hero-title">Data Pesanan</h2>
+    <p class="hero-note">Kelola pesanan Owner mulai dari persetujuan sampai pesanan selesai.</p>
+    <div class="stats">
+      <div class="stat"><small>Menunggu</small><b id="sWait">0</b></div>
+      <div class="stat"><small>Disetujui</small><b id="sApproved">0</b></div>
+      <div class="stat"><small>Dikirim</small><b id="sShipping">0</b></div>
+      <div class="stat"><small>Selesai</small><b id="sDone">0</b></div>
+    </div>
+  </section>
+
+  <div id="message" class="message"></div>
+
+  <section class="card">
+    <div class="filters">
+      <button class="filter active" data-filter="SEMUA">Semua</button>
+      <button class="filter" data-filter="MENUNGGU_PERSETUJUAN">Menunggu</button>
+      <button class="filter" data-filter="DISETUJUI">Disetujui</button>
+      <button class="filter" data-filter="DIKEMAS">Dikemas</button>
+      <button class="filter" data-filter="DIKIRIM">Dikirim</button>
+      <button class="filter" data-filter="DIANTAR">Diantar</button>
+      <button class="filter" data-filter="SELESAI">Selesai</button>
+      <button class="filter" data-filter="DITOLAK">Ditolak</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div id="loading" class="loading">Memuat data pesanan...</div>
+    <div id="orders" class="list"></div>
+  </section>
 </main>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
+  <a class="nav" href="index-superadmin.html"><i>⌂</i>Beranda</a>
+  <a class="nav" href="data-produk.html"><i>▦</i>Produk</a>
+  <a class="nav active" href="data-pesanan.html"><i>🛒</i>Pesanan</a>
+  <a class="nav" href="data-tagihan.html"><i>▤</i>Tagihan</a>
+  <a class="nav" href="pengaturan.html"><i>⚙</i>Profil</a>
+</nav>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  runTransaction,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
   apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
   authDomain: "teknisi-ponsel-maja.firebaseapp.com",
   projectId: "teknisi-ponsel-maja",
@@ -39,4 +162,375 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
   messagingSenderId: "835618012205",
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let allOrders = [];
+let activeFilter = "SEMUA";
+let busy = false;
+
+const $ = id => document.getElementById(id);
+
+function money(v){
+  return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v)||0);
+}
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function normalizeStatus(s){
+  return String(s||"").trim().toUpperCase().replaceAll(" ","_");
+}
+
+function statusLabel(s){
+  const map={
+    MENUNGGU_PERSETUJUAN:"MENUNGGU PERSETUJUAN",
+    DISETUJUI:"DISETUJUI",
+    DIKEMAS:"DIKEMAS",
+    DIKIRIM:"DIKIRIM",
+    DIANTAR:"DIANTAR",
+    SELESAI:"SELESAI",
+    DITOLAK:"DITOLAK"
+  };
+  return map[normalizeStatus(s)] || String(s||"-");
+}
+
+function badgeClass(s){
+  s=normalizeStatus(s);
+  if(s==="MENUNGGU_PERSETUJUAN") return "wait";
+  if(s==="DITOLAK") return "bad";
+  if(s==="SELESAI") return "done";
+  if(["DIKIRIM","DIANTAR"].includes(s)) return "ship";
+  return "ok";
+}
+
+function formatDate(v){
+  if(!v) return "-";
+  try{
+    const d = v?.toDate ? v.toDate() : new Date(v);
+    if(Number.isNaN(d.getTime())) return "-";
+    return d.toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});
+  }catch{return "-"}
+}
+
+function showMessage(text,ok=true){
+  const el=$("message");
+  el.textContent=text;
+  el.className="message show "+(ok?"okmsg":"errmsg");
+  setTimeout(()=>el.className="message",4000);
+}
+
+function getItems(order){
+  return Array.isArray(order.items) ? order.items : [];
+}
+
+function getOwnerName(order){
+  return order.ownerName || order.namaOwner || order.businessName || order.namaUsaha || order.ownerUid || "-";
+}
+
+function renderStats(){
+  const c={wait:0,approved:0,shipping:0,done:0};
+  for(const o of allOrders){
+    const s=normalizeStatus(o.status);
+    if(s==="MENUNGGU_PERSETUJUAN") c.wait++;
+    else if(s==="DISETUJUI" || s==="DIKEMAS") c.approved++;
+    else if(s==="DIKIRIM" || s==="DIANTAR") c.shipping++;
+    else if(s==="SELESAI") c.done++;
+  }
+  $("sWait").textContent=c.wait;
+  $("sApproved").textContent=c.approved;
+  $("sShipping").textContent=c.shipping;
+  $("sDone").textContent=c.done;
+}
+
+function render(){
+  renderStats();
+  const list = activeFilter==="SEMUA"
+    ? allOrders
+    : allOrders.filter(o=>normalizeStatus(o.status)===activeFilter);
+
+  $("loading").style.display="none";
+
+  if(!list.length){
+    $("orders").innerHTML='<div class="empty">Belum ada pesanan pada kategori ini.</div>';
+    return;
+  }
+
+  $("orders").innerHTML=list.map(order=>{
+    const s=normalizeStatus(order.status);
+    const items=getItems(order);
+    const payment=String(order.metodePembayaran||order.paymentMethod||"-").toUpperCase();
+    const total=Number(order.total||0);
+
+    const products=items.length
+      ? items.map(it=>{
+          const qty=Number(it.qty||it.jumlah||1);
+          const price=Number(it.harga||it.price||it.tunai||it.hargaTunai||it.tempo||it.hargaTempo||0);
+          return `<div class="product-row">
+            <span>${esc(it.nama||it.name||it.produk||"Produk")} × ${qty}</span>
+            <b>${money(price*qty)}</b>
+          </div>`;
+        }).join("")
+      : '<div class="product-row"><span>Detail produk tidak tersedia</span></div>';
+
+    let actions="";
+    if(s==="MENUNGGU_PERSETUJUAN"){
+      actions=`
+        <button class="btn green" data-action="approve" data-id="${esc(order.id)}">✓ SETUJUI</button>
+        <button class="btn red" data-action="reject" data-id="${esc(order.id)}">✕ TOLAK</button>`;
+    }else if(s==="DISETUJUI"){
+      actions=`<button class="btn yellow" data-action="pack" data-id="${esc(order.id)}">📦 DIKEMAS</button>`;
+    }else if(s==="DIKEMAS"){
+      actions=`<button class="btn blue" data-action="ship" data-id="${esc(order.id)}">🚚 DIKIRIM</button>`;
+    }else if(s==="DIKIRIM"){
+      actions=`<button class="btn blue" data-action="deliver" data-id="${esc(order.id)}">🛵 DIANTAR</button>`;
+    }else if(s==="DIANTAR"){
+      actions=`<button class="btn green" data-action="done" data-id="${esc(order.id)}">✓ SELESAI</button>`;
+    }
+
+    return `
+      <article class="order">
+        <div class="order-head">
+          <div>
+            <div class="order-no">${esc(order.nomorPesanan||order.nomorOrder||order.id)}</div>
+            <div class="owner">${esc(getOwnerName(order))}</div>
+          </div>
+          <span class="badge ${badgeClass(s)}">${esc(statusLabel(s))}</span>
+        </div>
+
+        <div class="info-grid">
+          <div class="info"><small>Total</small><b>${money(total)}</b></div>
+          <div class="info"><small>Pembayaran</small><b>${esc(payment==="SALDO_PRIBADI"?"SALDO PRIBADI":payment==="LIMIT"?"LIMIT / TEMPO":payment)}</b></div>
+          <div class="info"><small>Jumlah Barang</small><b>${Number(order.totalQty||items.reduce((a,x)=>a+Number(x.qty||x.jumlah||1),0))} pcs</b></div>
+          <div class="info"><small>Dibuat</small><b>${esc(formatDate(order.createdAt))}</b></div>
+        </div>
+
+        <div class="products">${products}</div>
+
+        <div class="address">
+          <b>Alamat Pengiriman</b>
+          ${esc(order.alamatPengiriman||order.address||"Belum ada alamat")}
+        </div>
+
+        <div class="actions">${actions || '<span class="note">Tidak ada aksi untuk status ini.</span>'}</div>
+      </article>`;
+  }).join("");
+}
+
+async function loadOrders(){
+  $("loading").style.display="block";
+  $("orders").innerHTML="";
+  try{
+    const snap=await getDocs(collection(db,"orders"));
+    allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    allOrders.sort((a,b)=>{
+      const ta=a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt||0).getTime();
+      const tb=b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt||0).getTime();
+      return tb-ta;
+    });
+    render();
+  }catch(err){
+    console.error(err);
+    $("loading").style.display="none";
+    $("orders").innerHTML=`<div class="empty">Gagal memuat pesanan.<br><small>${esc(err.message)}</small></div>`;
+  }
+}
+
+async function approveOrder(order){
+  if(busy) return;
+  const total=Number(order.total||0);
+  if(!total || total<0){showMessage("Total pesanan tidak valid.",false);return;}
+
+  const payment=String(order.metodePembayaran||order.paymentMethod||"").toUpperCase();
+  if(!["SALDO_PRIBADI","LIMIT"].includes(payment)){
+    showMessage("Metode pembayaran pesanan tidak dikenali.",false);
+    return;
+  }
+
+  if(!confirm(`Setujui pesanan ${order.nomorPesanan||order.id} sebesar ${money(total)}?`)) return;
+
+  busy=true;
+  try{
+    await runTransaction(db,async tx=>{
+      const orderRef=doc(db,"orders",order.id);
+      const orderSnap=await tx.get(orderRef);
+      if(!orderSnap.exists()) throw new Error("Pesanan sudah tidak ditemukan.");
+
+      const current=orderSnap.data();
+      if(normalizeStatus(current.status)!=="MENUNGGU_PERSETUJUAN"){
+        throw new Error("Pesanan sudah diproses sebelumnya.");
+      }
+
+      const ownerUid=current.ownerUid;
+      if(!ownerUid) throw new Error("ownerUid pada pesanan tidak ada.");
+
+      if(payment==="SALDO_PRIBADI"){
+        const walletRef=doc(db,"wallets",ownerUid);
+        const walletSnap=await tx.get(walletRef);
+        if(!walletSnap.exists()) throw new Error("Saldo pribadi Owner belum tersedia.");
+
+        const wallet=walletSnap.data();
+        const saldo=Number(wallet.saldoPribadi||0);
+        if(saldo<total){
+          throw new Error(`Saldo pribadi tidak cukup. Tersedia ${money(saldo)}.`);
+        }
+
+        const sesudah=saldo-total;
+        tx.update(walletRef,{
+          saldoPribadi:sesudah,
+          updatedAt:serverTimestamp()
+        });
+
+        tx.update(orderRef,{
+          status:"DISETUJUI",
+          saldoSebelum:saldo,
+          saldoSesudah:sesudah,
+          approvedAt:serverTimestamp(),
+          approvedBy:auth.currentUser.uid,
+          updatedAt:serverTimestamp()
+        });
+      }else{
+        const limitRef=doc(db,"limits",ownerUid);
+        const limitSnap=await tx.get(limitRef);
+        if(!limitSnap.exists()) throw new Error("Data limit Owner belum tersedia.");
+
+        const lim=limitSnap.data();
+        const tersedia=Number(lim.limitTersedia||0);
+        const terpakai=Number(lim.limitTerpakai||0);
+
+        if(tersedia<total){
+          throw new Error(`Limit tidak cukup. Tersedia ${money(tersedia)}.`);
+        }
+
+        const sisa=tersedia-total;
+        const baruTerpakai=terpakai+total;
+
+        tx.update(limitRef,{
+          limitTerpakai:baruTerpakai,
+          limitTersedia:sisa,
+          updatedAt:serverTimestamp()
+        });
+
+        const invoiceRef=doc(collection(db,"invoices"));
+        tx.set(invoiceRef,{
+          ownerUid,
+          orderId:order.id,
+          nomorPesanan:current.nomorPesanan||order.id,
+          total,
+          totalTerbayar:0,
+          sisaTagihan:total,
+          status:"BELUM_DIBAYAR",
+          metodePembayaran:"LIMIT",
+          createdAt:serverTimestamp()
+        });
+
+        tx.update(orderRef,{
+          status:"DISETUJUI",
+          limitSebelum:tersedia,
+          limitSesudah:sisa,
+          limitTerpakaiSebelum:terpakai,
+          limitTerpakaiSesudah:baruTerpakai,
+          invoiceId:invoiceRef.id,
+          approvedAt:serverTimestamp(),
+          approvedBy:auth.currentUser.uid,
+          updatedAt:serverTimestamp()
+        });
+      }
+    });
+
+    showMessage("Pesanan berhasil disetujui.");
+    await loadOrders();
+  }catch(err){
+    console.error(err);
+    showMessage(err.message||"Gagal menyetujui pesanan.",false);
+  }finally{
+    busy=false;
+  }
+}
+
+async function rejectOrder(order){
+  if(busy) return;
+  if(!confirm(`Tolak pesanan ${order.nomorPesanan||order.id}?`)) return;
+  busy=true;
+  try{
+    await updateDoc(doc(db,"orders",order.id),{
+      status:"DITOLAK",
+      rejectedAt:serverTimestamp(),
+      rejectedBy:auth.currentUser.uid,
+      updatedAt:serverTimestamp()
+    });
+    showMessage("Pesanan ditolak.");
+    await loadOrders();
+  }catch(err){
+    console.error(err);
+    showMessage(err.message||"Gagal menolak pesanan.",false);
+  }finally{busy=false;}
+}
+
+async function changeStatus(order,status){
+  if(busy) return;
+  if(!confirm(`Ubah status ${order.nomorPesanan||order.id} menjadi ${statusLabel(status)}?`)) return;
+  busy=true;
+  try{
+    await updateDoc(doc(db,"orders",order.id),{
+      status,
+      updatedAt:serverTimestamp()
+    });
+    showMessage(`Status pesanan menjadi ${statusLabel(status)}.`);
+    await loadOrders();
+  }catch(err){
+    console.error(err);
+    showMessage(err.message||"Gagal mengubah status.",false);
+  }finally{busy=false;}
+}
+
+document.querySelectorAll(".filter").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter=btn.dataset.filter;
+    render();
+  });
+});
+
+$("orders").addEventListener("click",async e=>{
+  const btn=e.target.closest("[data-action]");
+  if(!btn) return;
+  const order=allOrders.find(x=>x.id===btn.dataset.id);
+  if(!order) return;
+
+  const action=btn.dataset.action;
+  if(action==="approve") await approveOrder(order);
+  else if(action==="reject") await rejectOrder(order);
+  else if(action==="pack") await changeStatus(order,"DIKEMAS");
+  else if(action==="ship") await changeStatus(order,"DIKIRIM");
+  else if(action==="deliver") await changeStatus(order,"DIANTAR");
+  else if(action==="done") await changeStatus(order,"SELESAI");
+});
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){
+    location.href="index-superadmin.html";
+    return;
+  }
+
+  try{
+    const u=await getDoc(doc(db,"users",user.uid));
+    if(!u.exists() || u.data().role!=="superadmin"){
+      alert("Akses hanya untuk Superadmin.");
+      location.href="index.html";
+      return;
+    }
+    await loadOrders();
+  }catch(err){
+    console.error(err);
+    alert("Gagal memeriksa akses Superadmin.");
+    location.href="index.html";
+  }
+});
+</script>
+</body>
+</html>
