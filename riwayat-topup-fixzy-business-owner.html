@@ -282,7 +282,9 @@ import {
   collection,
   query,
   where,
-  getDocs
+  getDocs,
+  doc,
+  getDoc
 }
 from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
@@ -314,6 +316,7 @@ const rupiah = n =>
   }).format(Number(n)||0);
 
 let currentUser = null;
+let currentRole = "";
 let allRows = [];
 let activeFilter = "SEMUA";
 
@@ -475,11 +478,20 @@ async function loadHistory(){
 
   try{
 
-    const q = query(
-      collection(db,"walletTransactions"),
-      where("ownerUid","==",currentUser.uid),
-      where("type","==","TOPUP")
-    );
+    let q;
+
+    if(currentRole === "superadmin"){
+      q = query(
+        collection(db,"walletTransactions"),
+        where("type","==","TOPUP")
+      );
+    }else{
+      q = query(
+        collection(db,"walletTransactions"),
+        where("ownerUid","==",currentUser.uid),
+        where("type","==","TOPUP")
+      );
+    }
 
     const snap = await getDocs(q);
 
@@ -589,14 +601,13 @@ await setPersistence(
 
 async function checkAccess(user){
 
-  // Superadmin boleh membuka halaman ini.
   const token = await user.getIdTokenResult(true);
 
   if(token.claims?.role === "superadmin"){
+    currentRole = "superadmin";
     return true;
   }
 
-  // Owner hanya boleh melihat riwayat Top Up miliknya sendiri.
   const profileRef = doc(db,"users",user.uid);
   const profileSnap = await getDoc(profileRef);
 
@@ -605,9 +616,19 @@ async function checkAccess(user){
   }
 
   const profile = profileSnap.data() || {};
-  return profile.role === "owner" && profile.ownerUid === user.uid;
-}
 
+  if(profile.role === "superadmin"){
+    currentRole = "superadmin";
+    return true;
+  }
+
+  if(profile.role === "owner" && profile.ownerUid === user.uid){
+    currentRole = "owner";
+    return true;
+  }
+
+  return false;
+}
 
 onAuthStateChanged(auth, async user => {
 
