@@ -145,6 +145,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 await setPersistence(auth, browserLocalPersistence);
+await auth.authStateReady();
 
 const rupiah = n => new Intl.NumberFormat("id-ID", {
   style:"currency", currency:"IDR", maximumFractionDigits:0
@@ -221,11 +222,22 @@ async function loadOwner(user){
   }
 }
 
-onAuthStateChanged(auth,async user=>{
+// Firebase harus selesai memulihkan sesi tersimpan sebelum halaman menentukan status login.
+await auth.authStateReady();
+
+async function handleAuth(user){
   if(!user){showLogin(true);return;}
   showLogin(false);
-  try{await loadOwner(user);}catch(e){console.error(e);document.getElementById("greeting").textContent="Gagal memuat data";}
-});
+  try{
+    await loadOwner(user);
+  }catch(e){
+    console.error("FIXZY Owner auth/load:",e);
+    document.getElementById("greeting").textContent="Gagal memuat data";
+  }
+}
+
+await handleAuth(auth.currentUser);
+onAuthStateChanged(auth, handleAuth);
 </script>
 </body>
 </html>
