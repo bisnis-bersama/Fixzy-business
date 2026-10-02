@@ -2,107 +2,493 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FIXZY BUSINESS — Owner</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIXZY BUSINESS</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;background:#f4f5f7;color:#111827;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:84px}
-.header{background:#111;color:#fff;padding:24px 28px 74px;border-radius:0 0 32px 32px}
-.brand{display:flex;align-items:center;justify-content:space-between;gap:14px}
-.brand-left{display:flex;align-items:center;gap:14px;min-width:0}
-.logo{width:62px;height:62px;border-radius:16px;background:#fff;overflow:hidden;flex:0 0 62px}
-.logo img{width:100%;height:100%;object-fit:contain}
-.brand h1{margin:0;color:#FFC107;font-size:22px;font-weight:900}
-.brand p{margin:4px 0 0;color:#ddd;font-size:14px}
-.logout{border:1px solid #3a3a3a;background:#191919;color:#ddd;border-radius:15px;padding:12px 17px;font-size:15px}
-.content{padding:0 26px;margin-top:-38px}
-.balance{background:#fff;border-radius:28px;padding:25px 28px;box-shadow:0 10px 28px rgba(0,0,0,.08)}
-.balance-head{display:flex;justify-content:space-between;align-items:center;gap:15px}
-.label{font-size:14px;font-weight:800;color:#667085;letter-spacing:.5px}
-.amount{font-size:42px;font-weight:900;margin-top:3px}
-.topup{border:0;background:#FFC107;color:#111;font-weight:900;border-radius:15px;padding:15px 19px;font-size:17px}
-.line{height:1px;background:#e5e7eb;margin:20px 0}
-.stats{display:grid;grid-template-columns:1fr 1fr}
-.stat{padding-right:20px}.stat+ .stat{border-left:1px solid #e5e7eb;padding-left:25px}
-.stat small{display:block;color:#667085;font-size:14px}.stat b{display:block;font-size:25px;margin-top:7px}
-.title{display:flex;justify-content:space-between;align-items:center;margin:36px 5px 14px}
-.title h2{margin:0;font-size:21px}.title span{color:#667085;font-size:13px}
-.menu{background:#fff;border:1px solid #e5e7eb;border-radius:28px;padding:22px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px 8px;box-shadow:0 8px 24px rgba(0,0,0,.045)}
-.menu button{border:0;background:transparent;color:#111827;display:flex;flex-direction:column;align-items:center;gap:7px;padding:8px 3px;border-radius:15px;cursor:pointer}
-.menu button:hover{background:#f8fafc}
-.icon{font-size:35px;line-height:1;height:40px;display:grid;place-items:center}
-.menu span{font-size:14px;font-weight:800;text-align:center}
-.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);height:76px;background:#111;border-top:1px solid #292929;display:grid;grid-template-columns:repeat(5,1fr);z-index:20}
-.nav{border:0;background:transparent;color:#FFC107;font-size:11px;font-weight:800}
-.nav i{display:block;font-style:normal;font-size:25px;margin-bottom:2px}
-.loading{position:fixed;inset:0;background:#f4f5f7;display:grid;place-items:center;z-index:50;font-weight:800}
-@media(max-width:600px){
-.header{padding:23px 16px 72px;border-radius:0 0 30px 30px}
-.logo{width:62px;height:62px;flex-basis:62px}
-.brand h1{font-size:21px}.brand p{font-size:14px}
-.logout{padding:11px 15px}
-.content{padding:0 25px;margin-top:-37px}
-.balance{padding:27px 29px;border-radius:28px}
-.amount{font-size:40px}
-.topup{font-size:16px;padding:14px 17px}
-.stat b{font-size:24px}
-.title{margin-top:36px}
-.menu{grid-template-columns:repeat(4,1fr);padding:21px 9px;gap:24px 4px;border-radius:28px}
-.icon{font-size:34px}
-.menu span{font-size:13px}
+:root{
+  --black:#111111;
+  --yellow:#FFC107;
+  --text:#171717;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --bg:#f4f5f7;
+  --white:#ffffff;
 }
-@media(max-width:370px){
-.content{padding:0 16px}.balance{padding:22px 20px}
-.amount{font-size:34px}.menu span{font-size:12px}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh}
+
+.app{
+  width:100%;
+  max-width:1180px;
+  min-height:100vh;
+  margin:auto;
+  padding-bottom:82px;
+}
+
+.top{
+  background:var(--black);
+  color:#fff;
+  padding:18px 18px 82px;
+  border-radius:0 0 30px 30px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.brand-left{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  overflow:hidden;
+  background:#111;
+  border:1px solid var(--yellow);
+  display:grid;
+  place-items:center;
+  flex:0 0 48px;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.brand h1{
+  font-size:17px;
+  margin:0;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:var(--yellow);
+}
+
+.brand small{
+  display:block;
+  color:#d1d5db;
+  margin-top:3px;
+  font-size:12px;
+}
+
+.logout{
+  border:1px solid #3b3b3b;
+  background:#1b1b1b;
+  color:#fff;
+  border-radius:11px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.content{
+  padding:0 clamp(14px,3vw,28px);
+  margin-top:-60px;
+}
+
+.balance{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 10px 28px rgba(0,0,0,.08);
+}
+
+.balance-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.label{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:5px;
+}
+
+.amount{
+  font-size:26px;
+  line-height:1.1;
+  font-weight:900;
+  letter-spacing:-.4px;
+}
+
+.topup{
+  border:0;
+  border-radius:12px;
+  background:var(--black);
+  color:var(--yellow);
+  padding:11px 14px;
+  font-weight:900;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.divider{
+  height:1px;
+  background:var(--line);
+  margin:16px 0;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.stat{
+  background:#f8f8f8;
+  border:1px solid #ededed;
+  border-radius:15px;
+  padding:13px;
+}
+
+.stat small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:5px;
+  font-weight:700;
+}
+
+.stat b{
+  display:block;
+  font-size:15px;
+  font-weight:900;
+}
+
+.section{
+  margin-top:18px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:0 3px 10px;
+}
+
+.section-title h2{
+  font-size:15px;
+  margin:0;
+  font-weight:900;
+}
+
+.section-title span{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+}
+
+.menu{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.menu-btn{
+  min-height:92px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  color:var(--text);
+  box-shadow:0 5px 16px rgba(0,0,0,.045);
+}
+
+.menu-btn:active{
+  transform:scale(.98);
+}
+
+.icon{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  background:#111;
+  color:var(--yellow);
+  display:grid;
+  place-items:center;
+  font-size:20px;
+}
+
+.menu-btn span{
+  font-size:12px;
+  font-weight:900;
+}
+
+.bottom{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(1180px,100%);
+  background:#111 !important;
+  border-top:1px solid #2b2b2b !important;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  z-index:10;
+  backdrop-filter:blur(12px);
+}
+
+.nav{
+  border:0;
+  background:transparent;
+  color:var(--yellow) !important;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.nav i{
+  display:block;
+  font-style:normal;
+  font-size:21px;
+  line-height:22px;
+  margin-bottom:3px;
+  color:var(--yellow) !important;
+}
+
+.nav.active{color:var(--yellow) !important}
+
+.loading,
+.error{
+  text-align:center;
+  padding:30px 15px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.62);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+
+.overlay.show{display:flex}
+
+.login-box{
+  width:min(390px,100%);
+  background:#fff;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.login-box h2{
+  margin:0 0 6px;
+  font-size:20px;
+}
+
+.login-box p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.login-box button{
+  width:100%;
+  margin-top:14px;
+  border:0;
+  border-radius:13px;
+  padding:13px;
+  background:#111;
+  color:var(--yellow);
+  font-weight:900;
+}
+
+@media(max-width:600px){
+  .top{padding:16px 15px 66px}
+  .content{padding:0 14px;margin-top:-42px}
+  .menu{grid-template-columns:repeat(3,1fr)}
+  .menu-btn{min-height:88px}
+  .brand h1{font-size:16px}
+  .logout{padding:8px 10px}
+}
+
+@media(max-width:360px){
+  .menu{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:1fr}
 }
 </style>
 </head>
+
 <body>
-<div class="loading" id="loading">Memuat FIXZY BUSINESS...</div>
+
 <div class="app">
-<header class="header">
- <div class="brand">
-  <div class="brand-left">
-   <div class="logo"><img src="logofixzy.png" alt="FIXZY"></div>
-   <div><h1>FIXZY BUSINESS</h1><p id="businessName">Owner</p></div>
+
+<header class="top">
+  <div class="brand">
+    <div class="brand-left">
+      <div class="logo">
+        <img src="logofixzy.png" alt="FIXZY BUSINESS">
+      </div>
+      <div>
+        <h1>FIXZY BUSINESS</h1>
+        <small id="greeting">Dashboard bisnis</small>
+      </div>
+    </div>
+
+    <button class="logout" id="logoutBtn">Keluar</button>
   </div>
-  <button class="logout" id="logout">Keluar</button>
- </div>
 </header>
-<main class="content">
-<section class="balance">
- <div class="balance-head">
-  <div><div class="label">SALDO PRIBADI</div><div class="amount" id="saldo">Rp0</div></div>
-  <button class="topup" onclick="location.href='topup.html'">+ Top Up</button>
- </div>
- <div class="line"></div>
- <div class="stats">
-  <div class="stat"><small>Limit Tersedia</small><b id="limit">Rp0</b></div>
-  <div class="stat"><small>Total Tagihan</small><b id="tagihan">Rp0</b></div>
- </div>
-</section>
-<div class="title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
-<section class="menu">
- <button onclick="location.href='produk.html'"><div class="icon">🛒</div><span>Belanja</span></button>
- <button onclick="location.href='topup.html'"><div class="icon">💰</div><span>Top Up</span></button>
- <button onclick="location.href='limit.html'"><div class="icon">💳</div><span>Limit</span></button>
- <button onclick="location.href='tagihan.html'"><div class="icon">🧾</div><span>Tagihan</span></button>
- <button onclick="location.href='riwayat.html'"><div class="icon">↔️</div><span>Riwayat</span></button>
- <button onclick="location.href='profil.html'"><div class="icon">👤</div><span>Profil</span></button>
-</section>
+
+<main class="content" id="ownerContent">
+
+  <section class="balance">
+    <div class="balance-head">
+      <div>
+        <div class="label">Saldo Pribadi</div>
+        <div class="amount" id="personalBalance">Rp0</div>
+      </div>
+
+      <button class="topup" data-page="topup.html">+ Top Up</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stats">
+      <div class="stat">
+        <small>Limit Tersedia</small>
+        <b id="availableLimit">Rp0</b>
+      </div>
+
+      <div class="stat">
+        <small>Total Tagihan</small>
+        <b id="totalInvoice">Rp0</b>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Menu Utama</h2>
+      <span>FIXZY BUSINESS</span>
+    </div>
+
+    <div class="menu">
+      <button class="menu-btn" data-page="produk.html">
+        <div class="icon">🛒</div>
+        <span>Belanja</span>
+      </button>
+
+      <button class="menu-btn" data-page="topup.html">
+        <div class="icon">💰</div>
+        <span>Top Up</span>
+      </button>
+
+      <button class="menu-btn" data-page="limit.html">
+        <div class="icon">💳</div>
+        <span>Limit</span>
+      </button>
+
+      <button class="menu-btn" data-page="tagihan.html">
+        <div class="icon">🧾</div>
+        <span>Tagihan</span>
+      </button>
+
+      <button class="menu-btn" data-page="riwayat.html">
+        <div class="icon">↔️</div>
+        <span>Riwayat</span>
+      </button>
+
+      <button class="menu-btn" data-page="profil.html">
+        <div class="icon">👤</div>
+        <span>Profil</span>
+      </button>
+    </div>
+  </section>
+
 </main>
-<nav class="bottom">
- <button class="nav" onclick="location.href='index.html'"><i>⌂</i>Beranda</button>
- <button class="nav" onclick="location.href='produk.html'"><i>🛒</i>Belanja</button>
- <button class="nav" onclick="location.href='tagihan.html'"><i>🧾</i>Tagihan</button>
- <button class="nav" onclick="location.href='riwayat.html'"><i>↔️</i>Riwayat</button>
- <button class="nav" onclick="location.href='profil.html'"><i>👤</i>Profil</button>
-</nav>
 </div>
+
+<nav class="bottom">
+  <button class="nav active">
+    <i>⌂</i>Beranda
+  </button>
+
+  <button class="nav" data-page="produk.html">
+    <i>🛒</i>Belanja
+  </button>
+
+  <button class="nav" data-page="tagihan.html">
+    <i>🧾</i>Tagihan
+  </button>
+
+  <button class="nav" data-page="riwayat.html">
+    <i>↔️</i>Riwayat
+  </button>
+
+  <button class="nav" data-page="profil.html">
+    <i>👤</i>Profil
+  </button>
+</nav>
+
+<div class="overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>Masuk FIXZY BUSINESS</h2>
+    <p>Silakan masuk menggunakan akun Owner.</p>
+
+    <form id="loginForm">
+      <input id="loginEmail" type="email" placeholder="Email" required
+        style="width:100%;margin-top:16px;padding:13px;border:1px solid #ddd;border-radius:12px">
+
+      <input id="loginPassword" type="password" placeholder="Password" required
+        style="width:100%;margin-top:10px;padding:13px;border:1px solid #ddd;border-radius:12px">
+
+      <button type="submit">Masuk</button>
+      <div id="loginError" style="color:#b42318;font-size:12px;margin-top:9px"></div>
+    </form>
+  </div>
+</div>
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {getFirestore,doc,getDoc,collection,query,where,getDocs} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
@@ -113,27 +499,153 @@ const firebaseConfig = {
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
 
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
-const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-document.getElementById("logout").onclick=()=>signOut(auth);
-onAuthStateChanged(auth,async user=>{
- if(!user){location.href="index.html";return}
- try{
-  const us=await getDoc(doc(db,"users",user.uid)); const p=us.exists()?us.data():{};
-  if(p.role!=="owner"||p.ownerUid!==user.uid){location.href="index-superadmin-baru.html";return}
-  document.getElementById("businessName").textContent=p.namaUsaha||p.nama||"Owner";
-  const ws=await getDoc(doc(db,"wallets",user.uid));
-  const ls=await getDoc(doc(db,"limits",user.uid));
-  document.getElementById("saldo").textContent=rupiah(ws.exists()?(ws.data().saldoPribadi||0):0);
-  document.getElementById("limit").textContent=rupiah(ls.exists()?(ls.data().limitTersedia||0):0);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const el = id => document.getElementById(id);
+
+function rupiah(value){
+  return new Intl.NumberFormat("id-ID",{
+    style:"currency",
+    currency:"IDR",
+    maximumFractionDigits:0
+  }).format(Number(value)||0);
+}
+
+function go(page){
+  if(page) location.href = page;
+}
+
+document.querySelectorAll("[data-page]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    go(btn.dataset.page);
+  });
+});
+
+el("logoutBtn").addEventListener("click", async()=>{
+  await signOut(auth);
+});
+
+el("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  el("loginError").textContent="";
+
   try{
-   const q=query(collection(db,"invoices"),where("ownerUid","==",user.uid));
-   const snap=await getDocs(q); let total=0;
-   snap.forEach(d=>{const x=d.data(); total+=Number(x.sisaTagihan??x.sisa??x.total??0)||0});
-   document.getElementById("tagihan").textContent=rupiah(total);
-  }catch(e){document.getElementById("tagihan").textContent="Rp0"}
- }catch(e){document.getElementById("businessName").textContent="Gagal memuat data";console.error(e)}
- document.getElementById("loading").remove();
+    await signInWithEmailAndPassword(
+      auth,
+      el("loginEmail").value.trim(),
+      el("loginPassword").value
+    );
+    el("loginOverlay").classList.remove("show");
+  }catch(err){
+    el("loginError").textContent="Login gagal. Periksa email dan password.";
+  }
+});
+
+async function loadOwner(user){
+
+  const userSnap = await getDoc(doc(db,"users",user.uid));
+
+  if(!userSnap.exists()){
+    throw new Error("Profil pengguna tidak ditemukan.");
+  }
+
+  const profile = userSnap.data();
+
+  // index.html khusus Owner.
+  // Superadmin memakai index-superadmin.html.
+  if(profile.role === "superadmin"){
+    location.replace("index-superadmin.html");
+    return;
+  }
+
+  if(profile.role !== "owner" || profile.ownerUid !== user.uid){
+    throw new Error("Akun ini bukan Owner FIXZY BUSINESS.");
+  }
+
+  el("greeting").textContent =
+    profile.namaUsaha ||
+    profile.nama ||
+    "Owner";
+
+  // ==============================
+  // SALDO OWNER
+  // ==============================
+  const walletSnap = await getDoc(
+    doc(db,"wallets",user.uid)
+  );
+
+  const wallet = walletSnap.exists()
+    ? walletSnap.data()
+    : {};
+
+  el("personalBalance").textContent =
+    rupiah(wallet.saldoPribadi || 0);
+
+  // ==============================
+  // LIMIT OWNER
+  // ==============================
+  const limitSnap = await getDoc(
+    doc(db,"limits",user.uid)
+  );
+
+  const limit = limitSnap.exists()
+    ? limitSnap.data()
+    : {};
+
+  el("availableLimit").textContent =
+    rupiah(limit.limitTersedia || 0);
+
+  // ==============================
+  // TOTAL TAGIHAN OWNER
+  // ==============================
+  let totalInvoice = 0;
+
+  try{
+    const invoiceQ = query(
+      collection(db,"invoices"),
+      where("ownerUid","==",user.uid),
+      where("status","in",["BELUM_LUNAS","JATUH_TEMPO"])
+    );
+
+    const invoiceSnap = await getDocs(invoiceQ);
+
+    invoiceSnap.forEach(item=>{
+      const x = item.data();
+
+      totalInvoice += Number(
+        x.sisaTagihan ??
+        x.totalTagihan ??
+        x.total ??
+        0
+      );
+    });
+  }catch(err){
+    console.warn("Tagihan belum dapat dibaca:",err);
+  }
+
+  el("totalInvoice").textContent =
+    rupiah(totalInvoice);
+}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){
+    el("greeting").textContent="Silakan masuk";
+    el("loginOverlay").classList.add("show");
+    return;
+  }
+
+  try{
+    await loadOwner(user);
+  }catch(err){
+    console.error(err);
+    el("greeting").textContent="Akses tidak tersedia";
+    el("ownerContent").innerHTML =
+      '<div class="error">Akun tidak memiliki akses Owner FIXZY BUSINESS.</div>';
+  }
 });
 </script>
-</body></html>
+
+</body>
+</html>
