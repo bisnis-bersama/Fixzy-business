@@ -29,7 +29,12 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
 .list{margin-top:12px}.item{padding:13px 0;border-bottom:1px solid #eef0f3}.item:last-child{border-bottom:0}
 .itemtop{display:flex;justify-content:space-between;gap:10px}.item b{font-size:14px}.item small{color:#667085;font-size:11px}
 .badge{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;white-space:nowrap}
-.empty{text-align:center;color:#667085;font-size:12px;padding:15px}
+.empty{text-align:center;color:#667085;font-size:12px;padding:15px}.payment-note{font-size:12px;color:#667085;line-height:1.5;margin-top:8px}
+.paybox{background:#f8fafc;border:1px solid #e4e7ec;border-radius:13px;padding:11px 12px;margin-top:9px;font-size:12px;line-height:1.55}
+.qrbox{margin-top:12px;border:1px dashed #cfd4dc;border-radius:15px;padding:12px;text-align:center;font-size:12px}
+.qrbox img{display:block;width:min(280px,100%);max-height:280px;object-fit:contain;margin:10px auto 2px;border-radius:10px}
+.qrfallback{display:none;color:#b42318;font-size:11px;margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -45,6 +50,48 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
     <section class="card balance">
       <div class="label">Saldo Pribadi Saat Ini</div>
       <div class="amount" id="saldo">Rp0</div>
+    </section>
+
+    <section class="card">
+      <div class="label">Pembayaran Top Up</div>
+      <div class="payment-note">Silakan transfer sesuai nominal top up ke salah satu rekening berikut. Setelah transfer, pilih metode dan kirim pengajuan.</div>
+
+      <div class="paybox">
+        <b>🏦 Bank Mandiri</b><br>
+        No. Rekening: 1340033268904<br>
+        A/N YUDI ALIYUDIN
+      </div>
+
+      <div class="paybox">
+        <b>🏦 Bank BCA</b><br>
+        No. Rekening: 4180734771<br>
+        A/N YUDI ALIYUDIN
+      </div>
+
+      <div class="paybox">
+        <b>🏦 Bank BRI</b><br>
+        No. Rekening: 004601060489505<br>
+        A/N YUDI ALIYUDIN
+      </div>
+
+      <div class="paybox">
+        <b>💳 DANA / GoPay</b><br>
+        No. HP: 082319264646<br>
+        A/N YUDI ALIYUDIN
+      </div>
+
+      <div class="paybox">
+        <b>🏦 SeaBank</b><br>
+        No. Rekening: 901341445605<br>
+        A/N YUDI ALIYUDIN
+      </div>
+
+      <div class="qrbox">
+        <b>QRIS</b>
+        <img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="qrfallback">File <b>qris.jpg</b> belum tersedia di folder website.</div>
+      </div>
     </section>
 
     <section class="card">
@@ -123,23 +170,34 @@ async function load(){
   const wallet=await getDoc(doc(db,"wallets",currentUser.uid));
   $("saldo").textContent=rupiah(wallet.exists() ? wallet.data().saldoPribadi : 0);
 
+  // Ambil transaksi milik Owner saja, lalu filter/sort di browser.
+  // Dengan cara ini tidak membutuhkan composite index Firestore.
   const q=query(
     collection(db,"walletTransactions"),
     where("ownerUid","==",currentUser.uid),
-    where("type","==","TOPUP"),
-    orderBy("createdAt","desc"),
-    limit(10)
+    limit(50)
   );
   const snap=await getDocs(q);
 
-  if(snap.empty){
+  const rows=[];
+  snap.forEach(d=>{
+    const x=d.data();
+    if(x.type==="TOPUP") rows.push({id:d.id,...x});
+  });
+
+  rows.sort((a,b)=>{
+    const ta=a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+    const tb=b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+    return tb-ta;
+  });
+
+  if(!rows.length){
     $("history").innerHTML='<div class="empty">Belum ada pengajuan top up.</div>';
     return;
   }
 
   $("history").innerHTML="";
-  snap.forEach(d=>{
-    const x=d.data();
+  rows.slice(0,10).forEach(x=>{
     const dt=x.createdAt?.toDate ? x.createdAt.toDate().toLocaleString("id-ID") : "Baru saja";
     $("history").insertAdjacentHTML("beforeend",`
       <div class="item">
@@ -187,7 +245,11 @@ $("form").addEventListener("submit",async e=>{
     $("form").reset();
     $("msg").className="msg success";
     $("msg").textContent="Pengajuan top up berhasil dikirim. Menunggu verifikasi Superadmin.";
-    await load();
+    try{
+      await load();
+    }catch(loadErr){
+      console.error("Riwayat top up gagal dimuat:",loadErr);
+    }
   }catch(err){
     console.error(err);
     $("msg").className="msg error";
