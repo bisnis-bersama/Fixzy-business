@@ -170,6 +170,159 @@ body.auth-logged-out .landing{display:block}
 body.auth-logged-in .landing{display:none}
 </style>
 
+
+<style id="fixzy-alt-dashboard">
+/* Alternatif dashboard Owner: lebih datar, ringan, sedikit panel */
+body.auth-logged-in .top{
+  background:#0b1426;
+  padding:18px clamp(16px,4vw,48px) 72px;
+  border-radius:0 0 28px 28px;
+}
+body.auth-logged-in .content{
+  max-width:920px;
+  margin-top:-48px;
+  padding:0 clamp(16px,4vw,48px);
+}
+body.auth-logged-in .balance{
+  border-radius:22px;
+  padding:22px 24px 18px;
+  box-shadow:0 10px 26px rgba(15,23,42,.10);
+}
+body.auth-logged-in .balance-head{
+  align-items:center;
+}
+body.auth-logged-in .amount{
+  font-size:clamp(30px,5vw,40px);
+  margin-top:4px;
+}
+body.auth-logged-in .topup{
+  padding:11px 18px;
+}
+body.auth-logged-in .divider{
+  margin:17px 0 13px;
+}
+body.auth-logged-in .stats{
+  grid-template-columns:1fr 1fr;
+}
+body.auth-logged-in .stat{
+  padding:3px 18px;
+}
+body.auth-logged-in .section{
+  margin-top:25px;
+}
+body.auth-logged-in .section-title{
+  margin:0 0 12px;
+}
+body.auth-logged-in .section-title h2{
+  font-size:18px;
+}
+body.auth-logged-in .section-title span{
+  font-size:11px;
+}
+
+/* Menu horizontal yang lebih bersih */
+body.auth-logged-in .menu{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:4px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:10px 5px;
+  box-shadow:0 4px 14px rgba(15,23,42,.04);
+}
+body.auth-logged-in .menu-btn{
+  min-width:0;
+  padding:5px 2px;
+  border-radius:12px;
+}
+body.auth-logged-in .menu-btn:hover{
+  background:#f8fafc;
+}
+body.auth-logged-in .icon{
+  height:39px;
+  font-size:24px;
+}
+body.auth-logged-in .menu-btn span{
+  font-size:11px;
+  margin-top:5px;
+}
+
+/* Tagihan dibuat sebagai baris informasi, bukan card besar */
+body.auth-logged-in .due{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 16px;
+  box-shadow:none;
+}
+body.auth-logged-in .empty{
+  padding:2px 0;
+}
+
+/* Sembunyikan label kanan yang repetitif */
+body.auth-logged-in .section-title span{
+  color:var(--muted);
+}
+
+/* Desktop */
+@media(min-width:769px){
+  body.auth-logged-in .menu{
+    padding:12px 8px;
+  }
+  body.auth-logged-in .menu-btn span{
+    font-size:12px;
+  }
+}
+
+/* HP */
+@media(max-width:600px){
+  body.auth-logged-in .top{
+    padding:16px 15px 66px;
+  }
+  body.auth-logged-in .content{
+    margin-top:-42px;
+    padding:0 15px;
+  }
+  body.auth-logged-in .balance{
+    padding:18px 18px 16px;
+  }
+  body.auth-logged-in .amount{
+    font-size:31px;
+  }
+  body.auth-logged-in .topup{
+    padding:10px 13px;
+    font-size:13px;
+  }
+  body.auth-logged-in .menu{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:8px 4px;
+    padding:9px 4px;
+  }
+  body.auth-logged-in .menu-btn{
+    padding:6px 1px;
+  }
+  body.auth-logged-in .icon{
+    height:34px;
+    font-size:23px;
+  }
+  body.auth-logged-in .menu-btn span{
+    font-size:10.5px;
+  }
+}
+@media(max-width:360px){
+  body.auth-logged-in .menu{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+  body.auth-logged-in .amount{
+    font-size:28px;
+  }
+  body.auth-logged-in .topup{
+    font-size:12px;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
