@@ -252,7 +252,7 @@ onAuthStateChanged(auth, async user=>{
   try{
     await loadOwnerDashboard(user);
   }catch(err){
-    console.error(err);
+    console.error("FIXZY BUSINESS load error:", err);
     el("greeting").textContent="Gagal memuat data";
   }
 });
