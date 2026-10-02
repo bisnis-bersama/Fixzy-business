@@ -45,7 +45,7 @@ button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
 
 <section class="card" id="loginCard">
   <div class="title">Masuk Superadmin</div>
-  <div class="muted">Gunakan akun Firebase yang memiliki Custom Claim <b>role = superadmin</b>.</div>
+  <div class="muted">Gunakan akun Firebase yang pada data <b>users/{UID}</b> memiliki <b>role = superadmin</b>.</div>
   <div class="login">
     <input id="email" type="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
@@ -74,7 +74,7 @@ button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,query,where,getDocs,doc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
@@ -99,8 +99,11 @@ function showLoginMsg(text,type="error"){
 }
 
 async function verifySuperadmin(user){
- const token=await user.getIdTokenResult(true);
- return token.claims.role==="superadmin";
+ const userSnap = await getDoc(doc(db,"users",user.uid));
+ if(!userSnap.exists()) return false;
+
+ const profile = userSnap.data() || {};
+ return profile.role === "superadmin";
 }
 
 $("login").onclick=async()=>{
@@ -188,13 +191,15 @@ async function processTopup(x,approved,el){
 
      const walletRef=doc(db,"wallets",x.ownerUid);
      const walletSnap=await tx.get(walletRef);
-     const oldBalance=walletSnap.exists()?Number(walletSnap.data().saldo||0):0;
+     const walletData=walletSnap.exists() ? (walletSnap.data() || {}) : {};
+     const oldBalance=Number(walletData.saldoPribadi ?? walletData.saldo ?? 0) || 0;
      const add=Number(current.nominal)||0;
      const newBalance=oldBalance+add;
 
      if(walletSnap.exists()){
        tx.update(walletRef,{
          saldo:newBalance,
+         saldoPribadi:newBalance,
          ownerUid:x.ownerUid,
          updatedAt:serverTimestamp()
        });
@@ -202,6 +207,8 @@ async function processTopup(x,approved,el){
        tx.set(walletRef,{
          ownerUid:x.ownerUid,
          saldo:newBalance,
+         saldoPribadi:newBalance,
+         status:"AKTIF",
          updatedAt:serverTimestamp()
        });
      }
