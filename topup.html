@@ -577,6 +577,155 @@ body{
 }
 </style>
 
+
+<style id="fixzy-index-header-match-final">
+/* HEADER TOP UP = standar persis pola header INDEX */
+.fixzy-page-header{
+  width:100%!important;
+  height:223px!important;
+  min-height:223px!important;
+  max-height:223px!important;
+  background:#111111!important;
+  color:#ffffff!important;
+  border-bottom:2px solid #FFC107!important;
+  border-radius:0 0 58px 58px!important;
+  padding:28px 28px 48px!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+
+.fixzy-header-inner{
+  width:100%!important;
+  max-width:1100px!important;
+  height:auto!important;
+  margin:0 auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+}
+
+.fixzy-brand{
+  display:flex!important;
+  align-items:center!important;
+  gap:16px!important;
+  min-width:0!important;
+}
+
+.fixzy-logo{
+  width:82px!important;
+  height:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  object-fit:contain!important;
+  border-radius:18px!important;
+  background:#ffffff!important;
+}
+
+.fixzy-title{
+  color:#FFC107!important;
+  font-size:30px!important;
+  font-weight:800!important;
+  line-height:1.1!important;
+  letter-spacing:-.4px!important;
+  white-space:nowrap!important;
+}
+
+.fixzy-owner-name{
+  color:#d5d8df!important;
+  font-size:18px!important;
+  margin-top:6px!important;
+}
+
+.fixzy-logout{
+  flex:0 0 auto!important;
+  border:1px solid #333333!important;
+  background:#1b1b1b!important;
+  color:#ffffff!important;
+  border-radius:18px!important;
+  padding:13px 22px!important;
+  font-size:16px!important;
+  white-space:nowrap!important;
+}
+
+/* panel saldo menutup bagian bawah header seperti INDEX */
+.balance{
+  position:relative!important;
+  z-index:5!important;
+  width:calc(100% - 56px)!important;
+  max-width:1100px!important;
+  margin:-54px auto 0!important;
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid #e5e7eb!important;
+  border-radius:34px!important;
+  box-shadow:0 12px 30px rgba(15,23,42,.10)!important;
+}
+
+.balance .label{color:#64748b!important}
+.balance .amount{color:#111827!important}
+
+@media(max-width:600px){
+  .fixzy-page-header{
+    height:205px!important;
+    min-height:205px!important;
+    max-height:205px!important;
+    padding:24px 20px 44px!important;
+    border-radius:0 0 52px 52px!important;
+  }
+  .fixzy-logo{
+    width:76px!important;
+    height:76px!important;
+    min-width:76px!important;
+    max-width:76px!important;
+  }
+  .fixzy-brand{gap:13px!important}
+  .fixzy-title{
+    font-size:25px!important;
+    white-space:nowrap!important;
+  }
+  .fixzy-owner-name{font-size:16px!important}
+  .fixzy-logout{
+    padding:11px 15px!important;
+    font-size:14px!important;
+    border-radius:16px!important;
+  }
+  .balance{
+    width:calc(100% - 40px)!important;
+    margin-top:-48px!important;
+    border-radius:30px!important;
+  }
+}
+
+@media(max-width:430px){
+  .fixzy-page-header{
+    height:190px!important;
+    min-height:190px!important;
+    max-height:190px!important;
+    padding:22px 16px 40px!important;
+  }
+  .fixzy-logo{
+    width:68px!important;
+    height:68px!important;
+    min-width:68px!important;
+    max-width:68px!important;
+  }
+  .fixzy-title{
+    font-size:21px!important;
+  }
+  .fixzy-owner-name{font-size:14px!important}
+  .fixzy-logout{
+    padding:9px 11px!important;
+    font-size:13px!important;
+  }
+  .balance{
+    width:calc(100% - 28px)!important;
+    margin-top:-44px!important;
+    border-radius:28px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="page">
