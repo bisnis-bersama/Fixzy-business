@@ -2,66 +2,86 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1426">
-<title>Superadmin | Top Up FIXZY BUSINESS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Approval Top Up | FIXZY BUSINESS</title>
 <style>
+:root{--yellow:#FFC107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5f8;color:#101828;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-.page{max-width:720px;margin:auto;min-height:100vh;padding-bottom:35px}
-.header{background:#0b1426;color:#fff;padding:18px 18px 25px;border-radius:0 0 28px 28px}
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.head h1{font-size:20px;margin:0}.head small{color:#aeb9ca}
-.back{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}
-.content{padding:0 15px;margin-top:-6px}
-.card{background:#fff;border:1px solid #e6e9ef;border-radius:20px;margin-top:15px;padding:16px;box-shadow:0 7px 22px rgba(15,23,42,.05)}
-.title{font-weight:900;font-size:15px}.muted{font-size:12px;color:#667085}
-.item{border:1px solid #e4e7ec;border-radius:16px;padding:14px;margin-top:10px}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-.amount{font-size:20px;font-weight:900}.name{font-weight:850}.meta{font-size:11px;color:#667085;line-height:1.55;margin-top:4px}
-.badge{font-size:10px;font-weight:900;border-radius:999px;padding:6px 8px;background:#fff7ed;color:#b54708}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-button{font:inherit;cursor:pointer}.approve,.reject{border:0;border-radius:11px;padding:11px;font-weight:900}
-.approve{background:#0b1426;color:#fff}.reject{background:#fef3f2;color:#b42318;border:1px solid #fecdca}
-button:disabled{opacity:.5;cursor:not-allowed}
-.empty{text-align:center;padding:25px 10px;color:#667085;font-size:12px}
-.msg{font-size:12px;margin-top:10px;line-height:1.5}.error{color:#b42318}.success{color:#15803d}
-.refresh{border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:8px 11px;font-weight:800}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.app{width:100%;max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand h1{font-size:17px;margin:0;font-weight:900;letter-spacing:.2px;color:var(--yellow)}
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.home{color:#fff;text-decoration:none;font-size:23px;padding:6px}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+.hero-title{font-size:20px;font-weight:900;margin:0}.hero-note{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}.stat{background:#f8f8f8;border-radius:14px;padding:13px}.stat small{display:block;color:var(--muted);font-size:11px}.stat b{display:block;margin-top:6px;font-size:20px}
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}.title{font-size:17px;font-weight:900}.muted{font-size:12px;color:var(--muted);margin-top:3px}
+.refresh{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}
+.item{border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:12px;background:#fff}.item:first-child{margin-top:0}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.name{font-weight:900;font-size:15px}.amount{font-weight:900;font-size:20px;margin-top:4px}.meta{font-size:12px;color:var(--muted);line-height:1.6;margin-top:5px}
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap;background:#fef3c7;color:#92400e}
+.detail{background:#f8f8f8;border-radius:11px;padding:10px;margin-top:11px;font-size:12px;line-height:1.7;word-break:break-word}.detail b{color:#374151}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.btn{border:0;border-radius:11px;padding:12px;font-weight:900;font-size:12px;cursor:pointer}.approve{background:var(--green);color:#fff}.reject{background:var(--red);color:#fff}.btn:disabled{opacity:.55;cursor:not-allowed}
+.message{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}.message.show{display:block}.message.ok{background:#dcfce7;color:#166534}.message.err{background:#fee2e2;color:#991b1b}
+.empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:13px}.loading{text-align:center;padding:25px;color:var(--muted)}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px;color:var(--yellow)}.nav.active{color:var(--yellow)}
+@media(max-width:700px){.top{padding:16px 15px 66px}.content{margin-top:-42px}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.row{flex-direction:column}.actions{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="page">
-<header class="header">
-  <div class="head">
-    <div>
-      <h1>Superadmin</h1>
-      <small>Verifikasi Top Up FIXZY BUSINESS</small>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <div class="brand-left">
+      <div class="logo"><img src="logofixzy.png" alt="FIXZY"></div>
+      <div><h1>FIXZY BUSINESS</h1><small>Superadmin · Approval Top Up</small></div>
     </div>
-    <button class="back" onclick="location.href='index.html'">Dashboard</button>
+    <a class="home" href="index.html" title="Dashboard">⌂</a>
   </div>
 </header>
 
 <main class="content">
   <section class="card">
-    <div class="row">
-      <div>
-        <div class="title">Pengajuan Top Up</div>
-        <div class="muted" id="count">Memuat...</div>
-      </div>
-      <button class="refresh" id="refresh">Refresh</button>
+    <h2 class="hero-title">Approval Top Up</h2>
+    <p class="hero-note">Verifikasi pengajuan Top Up Owner sebelum saldo pribadi ditambahkan.</p>
+    <div class="stats">
+      <div class="stat"><small>TOP UP MENUNGGU</small><b id="waitingCount">0</b></div>
+      <div class="stat"><small>TOTAL NOMINAL</small><b id="waitingTotal">Rp0</b></div>
     </div>
-    <div id="list"><div class="empty">Memuat data...</div></div>
-    <div class="msg" id="msg"></div>
+  </section>
+
+  <div id="message" class="message"></div>
+
+  <section class="card">
+    <div class="title-row">
+      <div><div class="title">Menunggu Verifikasi</div><div class="muted">Periksa bukti transfer sebelum menyetujui.</div></div>
+      <button class="refresh" id="refresh">↻ Refresh</button>
+    </div>
+    <div id="list"><div class="loading">Memeriksa akses Superadmin...</div></div>
   </section>
 </main>
+
+<nav class="bottom">
+  <a class="nav" href="index.html"><i>⌂</i>Beranda</a>
+  <a class="nav" href="data-produk.html"><i>▦</i>Produk</a>
+  <a class="nav" href="data-pesanan.html"><i>🛒</i>Pesanan</a>
+  <a class="nav active" href="admin-topup-fixzy-business.html"><i>💳</i>Top Up</a>
+  <a class="nav" href="pengaturan.html"><i>⚙</i>Profil</a>
+</nav>
+</div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getFirestore,collection,query,where,getDocs,doc,getDoc,
-  runTransaction,serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {getFirestore,collection,getDocs,doc,getDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
@@ -69,160 +89,80 @@ const firebaseConfig={
   projectId:"teknisi-ponsel-maja",
   storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
   messagingSenderId:"835618012205",
-  appId:"1:835618012205:web:95d1a56c761d4ca4"
+  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-let currentUser=null;
-
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+let currentUser=null,busy=false;
 
-async function isSuperadmin(){
-  const result=await currentUser.getIdTokenResult(true);
-  return result.claims.role==="superadmin";
+function showMessage(text,ok=true){const el=$("message");el.textContent=text;el.className="message show "+(ok?"ok":"err");setTimeout(()=>el.className="message",4000)}
+function formatDate(v){try{if(!v)return "-";const d=v?.toDate?v.toDate():new Date(v);return Number.isNaN(d.getTime())?"-":d.toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"})}catch{return "-"}}
+
+// Akses Superadmin dibaca dari Firestore users/{uid}.role, sesuai rules FIXZY.
+async function isSuperadmin(user){
+  const snap=await getDoc(doc(db,"users",user.uid));
+  return snap.exists() && String(snap.data().role||"").toLowerCase()==="superadmin";
 }
 
 async function load(){
-  $("msg").textContent="";
-  const q=query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"));
-  const snap=await getDocs(q);
-
-  $("count").textContent=`${snap.size} pengajuan menunggu verifikasi`;
-  if(snap.empty){
-    $("list").innerHTML='<div class="empty">Tidak ada pengajuan top up.</div>';
-    return;
-  }
-
-  const rows=[];
-  snap.forEach(d=>rows.push({id:d.id,...d.data()}));
-  rows.sort((a,b)=>{
-    const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
-    const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
-    return tb-ta;
-  });
-
-  $("list").innerHTML="";
-  rows.forEach(x=>{
-    const dt=x.createdAt?.toDate?x.createdAt.toDate().toLocaleString("id-ID"):"Baru saja";
-    $("list").insertAdjacentHTML("beforeend",`
-      <div class="item" id="item-${esc(x.id)}">
-        <div class="row">
-          <div>
-            <div class="name">${esc(x.namaUsaha||"Owner")}</div>
-            <div class="amount">${rupiah(x.nominal)}</div>
-            <div class="meta">
-              UID: ${esc(x.ownerUid)}<br>
-              Metode: ${esc(x.metode||"-")}<br>
-              Referensi: ${esc(x.referensi||"-")}<br>
-              Diajukan: ${esc(dt)}
-            </div>
-          </div>
-          <span class="badge">MENUNGGU</span>
-        </div>
-        <div class="actions">
-          <button class="approve" data-id="${esc(x.id)}">SETUJUI</button>
-          <button class="reject" data-id="${esc(x.id)}">TOLAK</button>
-        </div>
-      </div>`);
-  });
-
-  document.querySelectorAll(".approve").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,true));
-  document.querySelectorAll(".reject").forEach(b=>b.onclick=()=>processTopup(b.dataset.id,false));
+  $("list").innerHTML='<div class="loading">Memuat pengajuan Top Up...</div>';
+  try{
+    const snap=await getDocs(collection(db,"walletTransactions"));
+    const rows=[];
+    snap.forEach(d=>{const x=d.data();if(String(x.type||"").toUpperCase()==="TOPUP" && String(x.status||"").toUpperCase()==="MENUNGGU") rows.push({id:d.id,...x})});
+    rows.sort((a,b)=>{const ta=a.createdAt?.toMillis?.()||0,tb=b.createdAt?.toMillis?.()||0;return tb-ta});
+    $("waitingCount").textContent=rows.length;
+    $("waitingTotal").textContent=rupiah(rows.reduce((n,x)=>n+(Number(x.nominal)||0),0));
+    if(!rows.length){$("list").innerHTML='<div class="empty">Tidak ada Top Up yang menunggu verifikasi.</div>';return}
+    $("list").innerHTML=rows.map(x=>{
+      const nominal=Number(x.nominal)||0,kode=Number(x.kodeUnik)||0,total=Number(x.totalTransfer)||(nominal+kode);
+      return `<article class="item" id="item-${esc(x.id)}">
+        <div class="row"><div><div class="name">${esc(x.namaUsaha||x.ownerName||x.emailOwner||"Owner")}</div><div class="amount">${rupiah(nominal)}</div><div class="meta">Diajukan: ${esc(formatDate(x.createdAt))}</div></div><span class="badge">MENUNGGU</span></div>
+        <div class="detail"><b>Owner UID:</b> ${esc(x.ownerUid||"-")}<br><b>Kode Unik:</b> ${esc(x.kodeUnik??"-")}<br><b>Total Transfer:</b> ${rupiah(total)}<br><b>Referensi:</b> ${esc(x.referensi||"-")}<br><b>Metode:</b> ${esc(x.metode||"-")}</div>
+        <div class="actions"><button class="btn approve" data-id="${esc(x.id)}" data-ok="1">✓ SETUJUI</button><button class="btn reject" data-id="${esc(x.id)}" data-ok="0">✕ TOLAK</button></div>
+      </article>`;
+    }).join("");
+  }catch(err){console.error(err);$("list").innerHTML=`<div class="empty">Gagal memuat data Top Up.<br><small>${esc(err.message)}</small></div>`}
 }
 
 async function processTopup(id,approve){
-  const item=$(`item-${id}`);
-  if(!item)return;
-  const buttons=item.querySelectorAll("button");
-  buttons.forEach(b=>b.disabled=true);
-
+  if(busy)return;
+  const card=$("item-"+id);if(!card)return;
+  if(!confirm(approve?"Setujui Top Up ini? Saldo Owner akan bertambah sesuai nominal Top Up.":"Tolak Top Up ini?"))return;
+  busy=true;card.querySelectorAll("button").forEach(b=>b.disabled=true);
   try{
     await runTransaction(db,async tx=>{
-      const txRef=doc(db,"walletTransactions",id);
-      const txSnap=await tx.get(txRef);
-
-      if(!txSnap.exists())throw new Error("TRANSAKSI_TIDAK_ADA");
+      const txRef=doc(db,"walletTransactions",id),txSnap=await tx.get(txRef);
+      if(!txSnap.exists())throw new Error("Transaksi Top Up tidak ditemukan.");
       const data=txSnap.data();
-
-      if(data.type!=="TOPUP" || data.status!=="MENUNGGU"){
-        throw new Error("TRANSAKSI_SUDAH_DIPROSES");
-      }
-
-      if(!approve){
-        tx.update(txRef,{
-          status:"DITOLAK",
-          verifiedBy:currentUser.uid,
-          verifiedAt:serverTimestamp()
-        });
-        return;
-      }
-
-      const ownerUid=data.ownerUid;
-      const nominal=Number(data.nominal)||0;
-      if(nominal<=0)throw new Error("NOMINAL_TIDAK_VALID");
-
-      const walletRef=doc(db,"wallets",ownerUid);
-      const walletSnap=await tx.get(walletRef);
-      const wallet=walletSnap.exists()?walletSnap.data():{};
-      const sebelum=Number(wallet.saldoPribadi)||0;
-      const sesudah=sebelum+nominal;
-
-      if(walletSnap.exists()){
-        tx.update(walletRef,{
-          saldoPribadi:sesudah,
-          ownerUid,
-          updatedAt:serverTimestamp()
-        });
-      }else{
-        tx.set(walletRef,{
-          ownerUid,
-          saldoPribadi:sesudah,
-          status:"AKTIF",
-          createdAt:serverTimestamp(),
-          updatedAt:serverTimestamp()
-        });
-      }
-
-      tx.update(txRef,{
-        status:"DISETUJUI",
-        saldoSebelum:sebelum,
-        saldoSesudah:sesudah,
-        verifiedBy:currentUser.uid,
-        verifiedAt:serverTimestamp()
-      });
+      if(String(data.type||"").toUpperCase()!=="TOPUP"||String(data.status||"").toUpperCase()!=="MENUNGGU")throw new Error("Transaksi ini sudah diproses.");
+      if(!approve){tx.update(txRef,{status:"DITOLAK",verifiedBy:currentUser.uid,verifiedAt:serverTimestamp()});return}
+      const ownerUid=data.ownerUid,nominal=Number(data.nominal)||0;
+      if(!ownerUid)throw new Error("Owner UID pada transaksi tidak ditemukan.");
+      if(nominal<=0)throw new Error("Nominal Top Up tidak valid.");
+      const walletRef=doc(db,"wallets",ownerUid),walletSnap=await tx.get(walletRef),wallet=walletSnap.exists()?walletSnap.data():{};
+      const sebelum=Number(wallet.saldoPribadi)||0,sesudah=sebelum+nominal;
+      if(walletSnap.exists())tx.update(walletRef,{saldoPribadi:sesudah,ownerUid,updatedAt:serverTimestamp()});
+      else tx.set(walletRef,{ownerUid,saldoPribadi:sesudah,status:"AKTIF",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+      tx.update(txRef,{status:"DISETUJUI",saldoSebelum:sebelum,saldoDitambahkan:nominal,saldoSesudah:sesudah,verifiedBy:currentUser.uid,verifiedAt:serverTimestamp()});
     });
-
-    $("msg").className="msg success";
-    $("msg").textContent=approve?"Top up disetujui. Saldo Owner sudah bertambah.":"Pengajuan top up ditolak.";
+    showMessage(approve?"Top Up berhasil disetujui. Saldo Owner sudah bertambah.":"Top Up berhasil ditolak.",true);
     await load();
-
-  }catch(err){
-    console.error(err);
-    $("msg").className="msg error";
-    $("msg").textContent="Gagal memproses: "+err.message;
-    buttons.forEach(b=>b.disabled=false);
-  }
+  }catch(err){console.error(err);showMessage(err.message||"Gagal memproses Top Up.",false);card.querySelectorAll("button").forEach(b=>b.disabled=false)}finally{busy=false}
 }
 
+$("list").addEventListener("click",e=>{const b=e.target.closest("button[data-id]");if(b)processTopup(b.dataset.id,b.dataset.ok==="1")});
 $("refresh").onclick=load;
 
 onAuthStateChanged(auth,async user=>{
   if(!user){location.href="index.html";return}
   currentUser=user;
   try{
-    if(!(await isSuperadmin())){
-      $("list").innerHTML='<div class="empty">Akun ini bukan Superadmin.</div>';
-      return;
-    }
+    if(!(await isSuperadmin(user))){alert("Akses hanya untuk Superadmin.");location.href="index.html";return}
     await load();
-  }catch(err){
-    console.error(err);
-    $("list").innerHTML='<div class="empty">Gagal memuat data.</div>';
-  }
+  }catch(err){console.error(err);alert("Gagal memeriksa akses Superadmin.");location.href="index.html"}
 });
 </script>
 </body>
