@@ -109,7 +109,7 @@ button{font:inherit}
         <button class="menu-btn" data-page="topup.html"><div class="icon">💰</div><span>Top Up</span></button>
         <button class="menu-btn" data-page="limit.html"><div class="icon">💳</div><span>Limit</span></button>
         <button class="menu-btn" data-page="tagihan.html"><div class="icon">🧾</div><span>Tagihan</span></button>
-        <button class="menu-btn" data-page="riwayat-topup-fixzy-business-owner.html"><div class="icon">↔️</div><span>Riwayat</span></button>
+        <button class="menu-btn" data-page="riwayat.html"><div class="icon">↔️</div><span>Riwayat</span></button>
         <button class="menu-btn" data-page="supplier.html"><div class="icon">🏭</div><span>Supplier</span></button>
         <button class="menu-btn" data-page="profil.html"><div class="icon">👤</div><span>Profil</span></button>
       </div>
@@ -154,7 +154,7 @@ button{font:inherit}
   <button class="nav active"><i>⌂</i>Beranda</button>
   <button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button>
   <button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button>
-  <button class="nav" data-page="riwayat-topup-fixzy-business-owner.html"><i>↔️</i>Riwayat</button>
+  <button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button>
   <button class="nav" data-page="profil.html"><i>👤</i>Profil</button>
 </nav>
 
@@ -175,7 +175,8 @@ button{font:inherit}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
+  setPersistence, browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, serverTimestamp,
@@ -194,6 +195,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// Pertahankan sesi login saat berpindah halaman.
+await setPersistence(auth, browserLocalPersistence);
 
 const el = id => document.getElementById(id);
 const rupiah = n => new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
