@@ -34,7 +34,13 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
 .qrbox{margin-top:12px;border:1px dashed #cfd4dc;border-radius:15px;padding:12px;text-align:center;font-size:12px}
 .qrbox img{display:block;width:min(280px,100%);max-height:280px;object-fit:contain;margin:10px auto 2px;border-radius:10px}
 .qrfallback{display:none;color:#b42318;font-size:11px;margin-top:8px}
-.payment-details{margin-top:12px}
+.payment-details{margin-top:12px}.unique-code-box{margin-top:10px;padding:13px;border:1px solid #f2cf58;background:#fffaf0;border-radius:14px}
+.unique-code-title{font-size:12px;font-weight:700;color:#667085}
+.unique-code-value{font-size:24px;font-weight:900;letter-spacing:3px;margin-top:3px}
+.unique-code-info{font-size:11px;color:#667085;line-height:1.45;margin-top:4px}
+.unique-total{margin-top:10px;padding-top:10px;border-top:1px dashed #d0d5dd;font-size:12px}
+.unique-total strong{display:block;font-size:19px;margin-top:2px}
+
 .payment-placeholder{padding:14px;border:1px dashed #cfd4dc;border-radius:13px;text-align:center;color:#667085;font-size:12px}
 .detail-title{font-weight:800;font-size:14px;margin-bottom:8px}
 
@@ -69,6 +75,12 @@ input:focus,select:focus,textarea:focus{border-color:#0b1426}
       <form id="form">
         <label for="nominal">Nominal Top Up</label>
         <input id="nominal" type="number" min="10000" step="1000" placeholder="Minimal Rp10.000" required>
+<div class="unique-code-box">
+  <div class="unique-code-title">Kode unik pembayaran</div>
+  <div class="unique-code-value" id="kodeUnikDisplay">-</div>
+  <div class="unique-code-info">Transfer sesuai <b>Total Transfer</b> di bawah. Kode unik otomatis ditambahkan.</div>
+  <div class="unique-total">Total yang harus ditransfer:<strong id="totalTransferDisplay">Rp0</strong></div>
+</div>
 
         <div class="quick">
           <button type="button" data-value="50000">Rp50 Rb</button>
@@ -129,6 +141,33 @@ let currentUser=null;
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 
+
+function makeUniqueCode(){
+  return Math.floor(Math.random()*899)+101;
+}
+function openWhatsAppProof(data){
+  const text=`Halo Admin FIXZY BUSINESS,
+
+Saya sudah melakukan Top Up Saldo.
+
+Nominal Top Up: ${rupiah(data.nominal)}
+Kode Unik: ${data.kodeUnik}
+Total Transfer: ${rupiah(data.totalTransfer)}
+Metode: ${data.metode}
+Referensi: ${data.referensi || "-"}
+
+Saya kirim bukti transfer melalui WhatsApp ini. Mohon diperiksa dan diverifikasi.
+
+Terima kasih.`;
+  window.location.href="https://wa.me/6282319264646?text="+encodeURIComponent(text);
+}
+let currentKodeUnik=makeUniqueCode();
+function refreshTransferTotal(){
+  const nominal=Number($("nominal").value||0);
+  $("kodeUnikDisplay").textContent=nominal ? String(currentKodeUnik) : "-";
+  $("totalTransferDisplay").textContent=nominal ? rupiah(nominal+currentKodeUnik) : "Rp0";
+}
+
 const paymentDetails={
   "Transfer Bank":`
     <div class="detail-title">🏦 Rekening Bank</div>
@@ -163,8 +202,13 @@ function updatePaymentDetails(method){
 }
 
 document.querySelectorAll("[data-value]").forEach(b=>{
-  b.onclick=()=>{$("nominal").value=b.dataset.value}
+  b.onclick=()=>{
+    $("nominal").value=b.dataset.value;
+    refreshTransferTotal();
+  }
 });
+$("nominal").addEventListener("input",refreshTransferTotal);
+refreshTransferTotal();
 
 $("metode").addEventListener("change",e=>{
   updatePaymentDetails(e.target.value);
@@ -238,10 +282,15 @@ $("form").addEventListener("submit",async e=>{
   $("submit").textContent="MENGIRIM...";
 
   try{
+    const kodeUnik=currentKodeUnik;
+    const totalTransfer=nominal+kodeUnik;
+
     await addDoc(collection(db,"walletTransactions"),{
       ownerUid:currentUser.uid,
       type:"TOPUP",
       nominal,
+      kodeUnik,
+      totalTransfer,
       metode,
       referensi,
       status:"MENUNGGU",
@@ -251,12 +300,16 @@ $("form").addEventListener("submit",async e=>{
     $("form").reset();
     updatePaymentDetails("");
     $("msg").className="msg success";
-    $("msg").textContent="Pengajuan top up berhasil dikirim. Menunggu verifikasi Superadmin.";
+    $("msg").innerHTML="Pengajuan berhasil dikirim. <b>Transfer tepat "+rupiah(totalTransfer)+"</b>. Setelah itu kirim bukti transfer melalui WhatsApp.";
     try{
       await load();
     }catch(loadErr){
       console.error("Riwayat top up gagal dimuat:",loadErr);
     }
+
+    openWhatsAppProof({nominal,kodeUnik,totalTransfer,metode,referensi});
+    currentKodeUnik=makeUniqueCode();
+    refreshTransferTotal();
   }catch(err){
     console.error(err);
     $("msg").className="msg error";
