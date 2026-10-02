@@ -25,7 +25,7 @@ function phone(v){let s=String(v||"").replace(/\D/g,"");return s.startsWith("0")
 function show(t,ok=false){$("msg").textContent=t;$("msg").className="msg show "+(ok?"ok":"err")}
 async function sendWA(inv){
  const u=await getDoc(doc(db,"users",inv.ownerUid));const p=u.exists()?u.data():{};
- const no=p.whatsapp||p.telepon||p.noHp||p.nomorHp||p.phone||"";
+ const no=p.noWhatsApp||p.whatsapp||p.telepon||p.noHp||p.nomorHp||p.phone||"";
  if(!no)return show("Nomor WhatsApp Owner belum tersimpan.");
  const remain=Number(inv.sisaTagihan??(Number(inv.total||0)-Number(inv.totalTerbayar||0)));
  const text=`Halo ${p.nama||p.namaLengkap||p.namaUsaha||"Owner FIXZY"},
