@@ -1079,8 +1079,7 @@ async function removeCatalog(id){
 
 $("btnAdd").onclick = openAdd;
 $("cartBar").onclick = () => {
-  if(!cart.length){ alert("Keranjang masih kosong."); return; }
-  alert(`Ada ${cart.reduce((s,x)=>s+Number(x.qty||0),0)} produk di keranjang. Checkout akan kita buat setelah alur pembelian ditetapkan.`);
+  location.href = "checkout.html";
 };
 $("btnClose").onclick = closeModal;
 $("logoutBtn").onclick = async () => {
