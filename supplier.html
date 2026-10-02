@@ -229,12 +229,11 @@ function render(){
    const orderList=g.orders.map(o=>esc(o.nomorPesanan||o.id)).join(", ");
 
    let buttons="";
-   if(!sent){
+   if(!available){
      buttons+=`<button class="btn green" data-action="send" data-supplier="${esc(g.key)}">💬 Kirim ke WhatsApp</button>`;
-   }else if(!available){
-     buttons+=`<button class="btn yellow" data-action="available" data-supplier="${esc(g.key)}">✓ Barang Tersedia</button>`;
+     buttons+=`<button class="btn yellow" data-action="available" data-supplier="${esc(g.key)}">✓ BARANG TERSEDIA</button>`;
    }else{
-     buttons+=`<button class="btn light" disabled>✓ Barang Sudah Tersedia</button>`;
+     buttons+=`<button class="btn light" disabled>✓ BARANG SUDAH TERSEDIA</button>`;
    }
 
    if(g.supplier.phone){
