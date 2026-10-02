@@ -50,7 +50,7 @@ button{font:inherit}
 .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#0b1426;color:#fff;font-weight:900;cursor:pointer}
 .err{color:#b42318;font-size:12px;min-height:18px;margin-top:9px}.register-link{display:block;text-align:center;margin-top:15px;color:#475467;text-decoration:none;font-size:13px}.register-link b{color:#0b1426}
 @media(max-width:360px){.menu{grid-template-columns:repeat(3,1fr)}.amount{font-size:27px}}
-.sa-dashboard{display:none}
+.sa-dashboard{display:none;margin-top:16px;padding:0 15px}
 .sa-dashboard.show{display:block}
 .sa-hero{background:linear-gradient(145deg,#081225,#14233c);color:#fff;border-radius:24px;padding:18px;margin-bottom:14px;box-shadow:0 12px 28px rgba(15,23,42,.12)}
 .sa-hero h2{margin:0;font-size:20px}.sa-hero p{margin:5px 0 0;color:#aeb9ca;font-size:12px}
@@ -58,11 +58,20 @@ button{font:inherit}
 .sa-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 4px 14px rgba(15,23,42,.045)}
 .sa-card small{display:block;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase}
 .sa-card b{display:block;font-size:21px;margin-top:5px}
-.sa-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sa-menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .sa-btn{border:0;background:transparent;padding:0;color:var(--ink);cursor:pointer}
-.sa-icon{height:64px;background:#fff;border:1px solid var(--line);border-radius:17px;display:grid;place-items:center;font-size:25px;box-shadow:0 4px 13px rgba(15,23,42,.045)}
+.sa-icon{height:68px;background:#fff;border:1px solid var(--line);border-radius:17px;display:grid;place-items:center;font-size:25px;box-shadow:0 4px 13px rgba(15,23,42,.045)}
 .sa-btn span{display:block;font-size:10.5px;font-weight:800;margin-top:7px}
 .sa-note{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;color:var(--muted);font-size:12px;line-height:1.5}
+.sa-mode .top{padding:14px 16px 22px;border-radius:0 0 24px 24px}
+.sa-mode .logo{width:46px;height:46px;flex-basis:46px}
+.sa-mode .brand h1{font-size:16px}
+.sa-mode .brand small{font-size:11px}
+.sa-mode .app{padding-bottom:30px}
+.sa-mode .sa-dashboard{margin-top:16px}
+.sa-mode .section{margin-top:18px}
+.sa-mode .bottom{display:none!important}
+
 
 </style>
 </head>
@@ -253,9 +262,9 @@ async function loadOwnerDashboard(user){
 
   if(role==="superadmin"){
     // Superadmin memakai dashboard khusus, bukan dashboard keuangan Owner.
+    document.body.classList.add("sa-mode");
     el("greeting").textContent = "Superadmin";
-    document.querySelector(".balance").style.display = "none";
-    document.querySelector(".bottom").style.display = "none";
+    document.querySelector(".balance").closest("main.content").style.display = "none";
     document.getElementById("superadminDashboard").classList.add("show");
 
     try{
