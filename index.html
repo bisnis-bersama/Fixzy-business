@@ -50,6 +50,20 @@ button{font:inherit}
 .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#0b1426;color:#fff;font-weight:900;cursor:pointer}
 .err{color:#b42318;font-size:12px;min-height:18px;margin-top:9px}.register-link{display:block;text-align:center;margin-top:15px;color:#475467;text-decoration:none;font-size:13px}.register-link b{color:#0b1426}
 @media(max-width:360px){.menu{grid-template-columns:repeat(3,1fr)}.amount{font-size:27px}}
+.sa-dashboard{display:none}
+.sa-dashboard.show{display:block}
+.sa-hero{background:linear-gradient(145deg,#081225,#14233c);color:#fff;border-radius:24px;padding:18px;margin-bottom:14px;box-shadow:0 12px 28px rgba(15,23,42,.12)}
+.sa-hero h2{margin:0;font-size:20px}.sa-hero p{margin:5px 0 0;color:#aeb9ca;font-size:12px}
+.sa-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.sa-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 4px 14px rgba(15,23,42,.045)}
+.sa-card small{display:block;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase}
+.sa-card b{display:block;font-size:21px;margin-top:5px}
+.sa-menu{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sa-btn{border:0;background:transparent;padding:0;color:var(--ink);cursor:pointer}
+.sa-icon{height:64px;background:#fff;border:1px solid var(--line);border-radius:17px;display:grid;place-items:center;font-size:25px;box-shadow:0 4px 13px rgba(15,23,42,.045)}
+.sa-btn span{display:block;font-size:10.5px;font-weight:800;margin-top:7px}
+.sa-note{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;color:var(--muted);font-size:12px;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -96,6 +110,34 @@ button{font:inherit}
     </section>
   </main>
 </div>
+
+<main class="content sa-dashboard" id="superadminDashboard">
+  <section class="sa-hero">
+    <h2>Dashboard Superadmin</h2>
+    <p>Kelola sistem FIXZY BUSINESS dari satu halaman.</p>
+    <div class="sa-stats">
+      <div class="sa-card"><small>Total Owner</small><b id="saOwnerCount">0</b></div>
+      <div class="sa-card"><small>Top Up Menunggu</small><b id="saTopupCount">0</b></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><h2>Menu Superadmin</h2><span>ADMIN SISTEM</span></div>
+    <div class="sa-menu">
+      <button class="sa-btn" data-admin-page="admin-topup-fixzy-business.html"><div class="sa-icon">💰</div><span>Approval Top Up</span></button>
+      <button class="sa-btn" data-admin-action="owners"><div class="sa-icon">👥</div><span>Data Owner</span></button>
+      <button class="sa-btn" data-admin-action="limits"><div class="sa-icon">💳</div><span>Kelola Limit</span></button>
+      <button class="sa-btn" data-admin-action="invoices"><div class="sa-icon">🧾</div><span>Tagihan</span></button>
+      <button class="sa-btn" data-admin-action="reports"><div class="sa-icon">📊</div><span>Laporan Sistem</span></button>
+      <button class="sa-btn" data-admin-action="settings"><div class="sa-icon">⚙️</div><span>Pengaturan</span></button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><h2>Status Sistem</h2><span>FIXZY BUSINESS</span></div>
+    <div class="sa-note">Akun ini terdeteksi sebagai <b>Superadmin</b>. Dashboard Owner, saldo pribadi, limit pribadi, dan tagihan pribadi tidak ditampilkan pada mode Superadmin.</div>
+  </section>
+</main>
 
 <nav class="bottom">
   <button class="nav active"><i>⌂</i>Beranda</button>
@@ -167,6 +209,25 @@ document.querySelectorAll("[data-page]").forEach(btn=>{
   });
 });
 
+document.querySelectorAll("[data-admin-page]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    location.href = btn.dataset.adminPage;
+  });
+});
+
+document.querySelectorAll("[data-admin-action]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const names = {
+      owners:"Data Owner",
+      limits:"Kelola Limit",
+      invoices:"Tagihan",
+      reports:"Laporan Sistem",
+      settings:"Pengaturan"
+    };
+    alert((names[btn.dataset.adminAction] || "Menu") + " belum dibuat. Kita buat pada tahap berikutnya.");
+  });
+});
+
 async function loadOwnerDashboard(user){
   // Role dibaca langsung dari users/{uid}.role.
   // Dengan cara ini index.html mengenali akun yang sedang login
@@ -191,10 +252,34 @@ async function loadOwnerDashboard(user){
     : (profile.namaUsaha || profile.nama || "Owner");
 
   if(role==="superadmin"){
-    // Superadmin dikenali dari users/{uid}.role.
-    el("personalBalance").textContent="SUPERADMIN";
-    el("availableLimit").textContent="-";
-    el("totalInvoice").textContent="-";
+    // Superadmin memakai dashboard khusus, bukan dashboard keuangan Owner.
+    el("greeting").textContent = "Superadmin";
+    document.querySelector(".balance").style.display = "none";
+    document.querySelector(".bottom").style.display = "none";
+    document.getElementById("superadminDashboard").classList.add("show");
+
+    try{
+      const ownerQ = query(collection(db,"users"), where("role","==","owner"));
+      const ownerSnap = await getDocs(ownerQ);
+      el("saOwnerCount").textContent = ownerSnap.size;
+    }catch(e){
+      console.error("Gagal memuat jumlah Owner:", e);
+      el("saOwnerCount").textContent = "-";
+    }
+
+    try{
+      const topupQ = query(
+        collection(db,"walletTransactions"),
+        where("type","==","TOPUP"),
+        where("status","==","MENUNGGU")
+      );
+      const topupSnap = await getDocs(topupQ);
+      el("saTopupCount").textContent = topupSnap.size;
+    }catch(e){
+      console.error("Gagal memuat jumlah Top Up:", e);
+      el("saTopupCount").textContent = "-";
+    }
+
     return;
   }
 
