@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#f3f5f8;--card:#fff;--ink:#101828;--muted:#667085;
+  --dark:#111827;--line:#e7eaf0;--accent:#fbbf24;--danger:#dc2626;--ok:#16a34a;
+}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,a{font:inherit}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:92px}
+.top{background:var(--dark);color:#fff;padding:20px 18px 72px;border-radius:0 0 28px 28px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--accent);color:#111827;display:grid;place-items:center;font-weight:900;font-size:20px}
+.brand h1{font-size:17px;margin:0;letter-spacing:.3px}.brand small{color:#cbd5e1}
+.avatar{width:40px;height:40px;border-radius:50%;border:1px solid #475569;background:#1f2937;color:#fff}
+.content{padding:0 16px;margin-top:-52px}
+.balance{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 10px 28px rgba(15,23,42,.10)}
+.balance-head{display:flex;justify-content:space-between;align-items:center}
+.label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.amount{font-size:28px;font-weight:900;margin:7px 0 14px}
+.topup{border:0;background:var(--accent);font-weight:800;padding:10px 14px;border-radius:12px;cursor:pointer}
+.divider{height:1px;background:var(--line);margin:2px 0 15px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#f8fafc;border:1px solid var(--line);border-radius:15px;padding:13px}
+.stat b{display:block;font-size:17px;margin-top:5px}.stat small{color:var(--muted)}
+.section{margin-top:20px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 3px 11px}
+.section-title h2{font-size:15px;margin:0}.section-title span{font-size:12px;color:var(--muted)}
+.menu{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.menu-btn{border:0;background:transparent;padding:0;color:var(--ink);cursor:pointer}
+.icon{height:58px;background:#fff;border:1px solid var(--line);border-radius:17px;display:grid;place-items:center;font-size:24px;box-shadow:0 3px 12px rgba(15,23,42,.04)}
+.menu-btn span{display:block;font-size:11px;font-weight:700;margin-top:7px}
+.due{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px}
+.due-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.due strong{font-size:15px}.due p{font-size:12px;color:var(--muted);margin:5px 0 0}
+.badge{font-size:11px;font-weight:800;border-radius:999px;padding:7px 10px;background:#fff7ed;color:#c2410c;white-space:nowrap}
+.empty{text-align:center;color:var(--muted);font-size:13px;padding:14px 4px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:9px 6px calc(9px + env(safe-area-inset-bottom));z-index:10}
+.nav{border:0;background:transparent;color:#667085;font-size:10px;font-weight:700;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}.nav.active{color:#111827}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:30}
+.overlay.show{display:flex}.login{width:min(420px,100%);background:#fff;border-radius:22px;padding:22px}
+.login h2{margin:0 0 6px}.login p{color:var(--muted);font-size:13px;margin:0 0 18px}
+.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}
+.field input{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:13px;outline:none}
+.primary{width:100%;border:0;border-radius:12px;padding:13px;background:#111827;color:#fff;font-weight:800;cursor:pointer}
+.err{color:#b42318;font-size:12px;min-height:18px;margin-top:9px}
+.logout{border:0;background:#1f2937;color:#fff;border-radius:10px;padding:8px 10px;font-size:12px;cursor:pointer}
+@media(max-width:360px){.menu{grid-template-columns:repeat(3,1fr)}.amount{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo">F</div>
+        <div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div>
+      </div>
+      <button class="logout" id="logoutBtn">Keluar</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="balance">
+      <div class="balance-head">
+        <div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp0</div></div>
+        <button class="topup" data-page="topup.html">+ Top Up</button>
+      </div>
+      <div class="divider"></div>
+      <div class="stats">
+        <div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp0</b></div>
+        <div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp0</b></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
+      <div class="menu">
+        <button class="menu-btn" data-page="produk.html"><div class="icon">🛒</div><span>Belanja</span></button>
+        <button class="menu-btn" data-page="topup.html"><div class="icon">💰</div><span>Top Up</span></button>
+        <button class="menu-btn" data-page="limit.html"><div class="icon">💳</div><span>Limit</span></button>
+        <button class="menu-btn" data-page="tagihan.html"><div class="icon">🧾</div><span>Tagihan</span></button>
+        <button class="menu-btn" data-page="riwayat.html"><div class="icon">↔️</div><span>Riwayat</span></button>
+        <button class="menu-btn" data-page="supplier.html"><div class="icon">🏭</div><span>Supplier</span></button>
+        <button class="menu-btn" data-page="profil.html"><div class="icon">👤</div><span>Profil</span></button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><h2>Tagihan Terdekat</h2><span id="invoiceCount">0 tagihan</span></div>
+      <div class="due" id="dueBox"><div class="empty">Belum ada tagihan jatuh tempo.</div></div>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom">
+  <button class="nav active"><i>⌂</i>Beranda</button>
+  <button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button>
+  <button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button>
+  <button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button>
+  <button class="nav" data-page="profil.html"><i>👤</i>Profil</button>
+</nav>
+
+<div class="overlay" id="loginOverlay">
+  <div class="login">
+    <h2>Masuk FIXZY BUSINESS</h2>
+    <p>Gunakan akun Owner atau Superadmin.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <button class="primary" type="submit">Masuk</button>
+      <div class="err" id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, collection, query, where, getDocs
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
+  projectId: "teknisi-ponsel-maja",
+  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId: "835618012205",
+  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const el = id => document.getElementById(id);
+const rupiah = n => new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+
+function openLogin(show){ el("loginOverlay").classList.toggle("show", show); }
+
+el("loginForm").addEventListener("submit", async e=>{
+  e.preventDefault();
+  el("loginError").textContent="";
+  try{
+    await signInWithEmailAndPassword(auth, el("email").value.trim(), el("password").value);
+  }catch(err){
+    el("loginError").textContent="Login gagal. Periksa email dan password.";
+  }
+});
+
+el("logoutBtn").addEventListener("click", ()=>signOut(auth));
+
+document.querySelectorAll("[data-page]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const page=btn.dataset.page;
+    // Halaman dibuat pada tahap berikutnya.
+    location.href=page;
+  });
+});
+
+async function loadOwnerDashboard(user){
+  const token = await user.getIdTokenResult(true);
+  const role = token.claims.role || "";
+
+  // Rules FIXZY memakai custom claim role.
+  if(!["owner","superadmin"].includes(role)){
+    el("greeting").textContent="Role akun belum diaktifkan";
+    el("loginError").textContent="";
+    return;
+  }
+
+  const userSnap = await getDoc(doc(db,"users",user.uid));
+  const profile = userSnap.exists() ? userSnap.data() : {};
+  el("greeting").textContent = role==="superadmin"
+    ? "Superadmin"
+    : (profile.namaUsaha || profile.nama || "Owner");
+
+  if(role==="superadmin"){
+    // Index superadmin khusus akan dibuat terpisah.
+    el("personalBalance").textContent="SUPERADMIN";
+    el("availableLimit").textContent="-";
+    el("totalInvoice").textContent="-";
+    return;
+  }
+
+  // Wallet milik owner: document ID = UID owner.
+  const walletSnap = await getDoc(doc(db,"wallets",user.uid));
+  const wallet = walletSnap.exists() ? walletSnap.data() : {};
+  el("personalBalance").textContent = rupiah(wallet.saldoPribadi || 0);
+
+  // Limit milik owner: document ID = UID owner.
+  const limitSnap = await getDoc(doc(db,"limits",user.uid));
+  const limit = limitSnap.exists() ? limitSnap.data() : {};
+  el("availableLimit").textContent = rupiah(limit.limitTersedia || 0);
+
+  // Hanya tagihan owner yang sedang login.
+  const q = query(
+    collection(db,"invoices"),
+    where("ownerUid","==",user.uid),
+    where("status","in",["BELUM_LUNAS","JATUH_TEMPO"])
+  );
+  const snap = await getDocs(q);
+  let total=0, invoices=[];
+  snap.forEach(d=>{
+    const x={id:d.id,...d.data()};
+    total += Number(x.sisaTagihan ?? x.totalTagihan ?? 0);
+    invoices.push(x);
+  });
+  el("totalInvoice").textContent=rupiah(total);
+  el("invoiceCount").textContent=`${invoices.length} tagihan`;
+
+  invoices.sort((a,b)=>{
+    const ad=a.jatuhTempo?.toDate ? a.jatuhTempo.toDate() : new Date(a.jatuhTempo||"2999-12-31");
+    const bd=b.jatuhTempo?.toDate ? b.jatuhTempo.toDate() : new Date(b.jatuhTempo||"2999-12-31");
+    return ad-bd;
+  });
+
+  if(invoices.length){
+    const x=invoices[0];
+    const dt=x.jatuhTempo?.toDate ? x.jatuhTempo.toDate() : new Date(x.jatuhTempo);
+    const dateText=isNaN(dt)?"-":dt.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
+    el("dueBox").innerHTML=`
+      <div class="due-row">
+        <div>
+          <strong>${rupiah(x.sisaTagihan ?? x.totalTagihan ?? 0)}</strong>
+          <p>${x.invoiceNo || x.id} • Jatuh tempo ${dateText}</p>
+        </div>
+        <span class="badge">${x.status==="JATUH_TEMPO"?"Jatuh Tempo":"Belum Lunas"}</span>
+      </div>`;
+  }
+}
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){ openLogin(true); return; }
+  openLogin(false);
+  try{
+    await loadOwnerDashboard(user);
+  }catch(err){
+    console.error(err);
+    el("greeting").textContent="Gagal memuat data";
+  }
+});
+</script>
+</body>
+</html>
