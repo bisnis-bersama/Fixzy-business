@@ -125,7 +125,8 @@ import {
   getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, collection, query, where, getDocs
+  getFirestore, doc, getDoc, setDoc, serverTimestamp,
+  collection, query, where, getDocs
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -199,14 +200,42 @@ async function loadOwnerDashboard(user){
     return;
   }
 
-  // Wallet milik owner: document ID = UID owner.
-  const walletSnap = await getDoc(doc(db,"wallets",user.uid));
-  const wallet = walletSnap.exists() ? walletSnap.data() : {};
-  el("personalBalance").textContent = rupiah(wallet.saldoPribadi || 0);
+  // =====================================================
+  // INISIALISASI KEUANGAN OWNER
+  // =====================================================
+  // Setiap Owner memiliki dokumen saldo dan limit sendiri.
+  // Dokumen dibuat otomatis hanya jika belum ada.
+  const walletRef = doc(db,"wallets",user.uid);
+  const limitRef = doc(db,"limits",user.uid);
 
-  // Limit milik owner: document ID = UID owner.
-  const limitSnap = await getDoc(doc(db,"limits",user.uid));
-  const limit = limitSnap.exists() ? limitSnap.data() : {};
+  let walletSnap = await getDoc(walletRef);
+  if(!walletSnap.exists()){
+    await setDoc(walletRef,{
+      ownerUid:user.uid,
+      saldoPribadi:0,
+      status:"AKTIF",
+      createdAt:serverTimestamp()
+    });
+    walletSnap = await getDoc(walletRef);
+  }
+
+  let limitSnap = await getDoc(limitRef);
+  if(!limitSnap.exists()){
+    await setDoc(limitRef,{
+      ownerUid:user.uid,
+      limitDisetujui:0,
+      limitTerpakai:0,
+      limitTersedia:0,
+      status:"BELUM_DIAJUKAN",
+      createdAt:serverTimestamp()
+    });
+    limitSnap = await getDoc(limitRef);
+  }
+
+  const wallet = walletSnap.data() || {};
+  const limit = limitSnap.data() || {};
+
+  el("personalBalance").textContent = rupiah(wallet.saldoPribadi || 0);
   el("availableLimit").textContent = rupiah(limit.limitTersedia || 0);
 
   // Hanya tagihan owner yang sedang login.
