@@ -373,6 +373,40 @@ body.auth-logged-in .section-title span{
 }
 </style>
 
+
+<style id="fixzy-yellow-brand">
+/* Brand FIXZY */
+.top .brand-title,
+.top .brand-title strong,
+.top .brand-title b{
+  color:#FFC107 !important;
+}
+
+/* Semua tulisan navigasi bawah kuning */
+.bottom a,
+.bottom a.active{
+  color:#FFC107 !important;
+}
+
+/* Icon home/beranda ikut kuning */
+.bottom a:first-child,
+.bottom a:first-child svg,
+.bottom a:first-child img{
+  color:#FFC107 !important;
+  filter:none !important;
+}
+
+/* Pastikan icon navigasi tidak terkena warna gelap dari state lama */
+.bottom a svg{
+  color:inherit !important;
+}
+
+/* Tulisan subtitle tetap putih/abu agar tidak berlebihan */
+.top .brand-sub{
+  color:#d1d5db !important;
+}
+</style>
+
 </head>
 <body>
 <div class="app">
