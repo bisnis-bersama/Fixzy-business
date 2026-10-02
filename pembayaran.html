@@ -1,40 +1,77 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pembayaran | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
+<!doctype html><html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111">
+<title>Pembayaran Tagihan | FIXZY BUSINESS</title>
+<style>
+:root{--y:#FFC107;--b:#111;--bg:#f3f4f6;--m:#6b7280;--bd:#e5e7eb}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Pembayaran</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Pembayaran Tagihan</h2><label>Pilih Tagihan</label><select><option>Belum ada tagihan</option></select><label>Nominal Pembayaran</label><input type="number" placeholder="Nominal"><button class="btn yellow">Ajukan Pembayaran</button><p class="note">Pembayaran akan dicatat dan diproses sesuai aturan sistem.</p></section>
-</main>
-<nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.left{display:flex;align-items:center;gap:11px}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--y)}.logo img{width:100%;height:100%;object-fit:contain}
+.brand h1{font-size:17px;margin:0;color:var(--y);font-weight:900}.small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}.home{color:#fff;text-decoration:none;font-size:23px}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
+h2{font-size:20px;margin:0 0 12px}.invoice{background:#f8f8f8;border-radius:14px;padding:13px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.muted{color:var(--m);font-size:12px;line-height:1.5}.amount{font-size:24px;font-weight:900}
+label{font-size:12px;font-weight:800;display:block;margin:14px 0 6px}input{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:11px;font-size:16px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.quick button,.btn{border:0;border-radius:11px;padding:12px;font-weight:900;cursor:pointer;background:#111;color:#fff}
+.quick button{background:#eee;color:#111}.btn.yellow{background:var(--y);color:#111}.btn:disabled{opacity:.5;cursor:not-allowed}
+.note{font-size:12px;color:var(--m);line-height:1.5}.msg{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}.msg.show{display:block}.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.nav{color:var(--y);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
+@media(max-width:600px){.top{padding:16px 15px 66px}.content{margin-top:-42px}}
+</style></head><body><div class="app">
+<header class="top"><div class="brand"><div class="left"><div class="logo"><img src="logofixzy.png" alt="FIXZY"></div><div><h1>FIXZY BUSINESS</h1><span class="small">Pembayaran Tagihan Owner</span></div></div><a class="home" href="tagihan.html">⌂</a></div></header>
+<main class="content"><section class="card"><h2>Bayar Tagihan</h2><div id="msg" class="msg"></div><div id="invoiceBox" class="invoice"><div class="muted">Memuat tagihan...</div></div>
+<label>Nominal Pembayaran</label><input id="nominal" type="number" min="1" step="1" placeholder="Masukkan nominal pembayaran">
+<div class="quick"><button type="button" data-q="25000">25 Rb</button><button type="button" data-q="50000">50 Rb</button><button type="button" data-q="100000">100 Rb</button></div>
+<p class="note">Pembayaran boleh dilakukan sebelum jatuh tempo maupun saat/setelah jatuh tempo. Pembayaran diproses dari Saldo Pribadi Owner.</p>
+<button id="payBtn" class="btn yellow" style="width:100%">Ajukan Pembayaran</button></section>
+<section class="card"><h3 style="margin:0 0 8px">Alur Pembayaran</h3><p class="note">Owner memilih tagihan dan nominal → permintaan masuk ke Superadmin → Superadmin memverifikasi → Saldo Pribadi berkurang → sisa tagihan diperbarui.</p></section></main>
+<nav class="bottom"><a class="nav" href="index.html"><i>⌂</i>Beranda</a><a class="nav" href="produk.html"><i>🛒</i>Belanja</a><a class="nav" href="tagihan.html"><i>🧾</i>Tagihan</a><a class="nav" href="riwayat.html"><i>↔️</i>Riwayat</a><a class="nav" href="profil.html"><i>👤</i>Profil</a></nav>
+</div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc,addDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={
+  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+  projectId:"teknisi-ponsel-maja",
+  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId:"835618012205",
+  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+const money=v=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v)||0);
+const dt=v=>{try{const d=v?.toDate?v.toDate():new Date(v);return isNaN(d)?"-":d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"})}catch{return "-"}};
+const selectedId=new URLSearchParams(location.search).get("invoice");let user=null,invoice=null;
+function msg(t,ok=false){$("msg").textContent=t;$("msg").className="msg show "+(ok?"ok":"err")}
+async function loadInvoices(u){
+ const snap=await getDocs(query(collection(db,"invoices"),where("ownerUid","==",u.uid)));
+ const rows=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>Number(x.sisaTagihan??x.totalTagihan??x.total??0)>0);
+ rows.sort((a,b)=>(a.jatuhTempo?.toDate?.()?.getTime()||9999999999999)-(b.jatuhTempo?.toDate?.()?.getTime()||9999999999999));
+ invoice=selectedId?rows.find(x=>x.id===selectedId):rows[0];
+ if(!invoice){$("invoiceBox").innerHTML="<b>Tidak ada tagihan yang masih harus dibayar.</b>";$("payBtn").disabled=true;return}
+ const total=Number(invoice.total??invoice.totalTagihan??0),paid=Number(invoice.totalTerbayar??invoice.terbayar??0);
+ const remain=Number(invoice.sisaTagihan??Math.max(0,total-paid));
+ $("invoiceBox").innerHTML=`<div class="row"><b>${invoice.invoiceNo||invoice.nomorInvoice||invoice.id}</b><b>${money(remain)}</b></div><div class="muted">Pesanan: ${invoice.nomorPesanan||"-"}<br>Jatuh tempo: ${dt(invoice.jatuhTempo)}<br>Total: ${money(total)} · Sudah dibayar: ${money(paid)}</div>`;
+ $("nominal").max=remain;
+}
+$("payBtn").addEventListener("click",async()=>{
+ if(!user||!invoice)return;
+ const nominal=Math.floor(Number($("nominal").value)||0),total=Number(invoice.total??invoice.totalTagihan??0),paid=Number(invoice.totalTerbayar??0);
+ const remain=Number(invoice.sisaTagihan??Math.max(0,total-paid));
+ if(nominal<=0)return msg("Masukkan nominal pembayaran.");
+ if(nominal>remain)return msg("Nominal melebihi sisa tagihan.");
+ try{
+  const walletSnap=await getDoc(doc(db,"wallets",user.uid)),saldo=Number(walletSnap.exists()?walletSnap.data().saldoPribadi:0);
+  if(nominal>saldo)return msg(`Saldo Pribadi tidak cukup. Saldo tersedia ${money(saldo)}.`);
+  const pending=await getDocs(query(collection(db,"payments"),where("ownerUid","==",user.uid),where("invoiceId","==",invoice.id),where("status","==","MENUNGGU")));
+  const pendingNominal=pending.docs.reduce((s,d)=>s+Number(d.data().nominal||0),0);
+  if(nominal+pendingNominal>remain)return msg("Masih ada pembayaran yang menunggu verifikasi.");
+  await addDoc(collection(db,"payments"),{ownerUid:user.uid,invoiceId:invoice.id,invoiceNo:invoice.invoiceNo||invoice.nomorInvoice||invoice.id,nomorPesanan:invoice.nomorPesanan||invoice.orderId||"",nominal,metode:"SALDO_PRIBADI",status:"MENUNGGU",createdAt:serverTimestamp()});
+  msg("Permintaan pembayaran berhasil dikirim ke Superadmin.",true);$("payBtn").disabled=true;
+ }catch(e){console.error(e);msg("Gagal mengirim pembayaran: "+(e.message||"Terjadi kesalahan."))}
+});
+document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{$("nominal").value=b.dataset.q});
+onAuthStateChanged(auth,async u=>{if(!u){location.href="index.html";return}user=u;try{const me=await getDoc(doc(db,"users",u.uid));if(!me.exists()||me.data().role!=="owner"){alert("Halaman ini khusus Owner.");location.href="index.html";return}await loadInvoices(u)}catch(e){console.error(e);msg("Gagal memuat data tagihan.")}});
 </script></body></html>
