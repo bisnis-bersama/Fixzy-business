@@ -219,7 +219,7 @@ body{
       </div>
       <div>
         <h1>FIXZY BUSINESS</h1>
-        <p>Riwayat Top Up • Owner & Superadmin</p>
+        <p id="roleLabel">Riwayat Top Up • Owner & Superadmin</p>
       </div>
     </div>
     <button class="logout" id="logoutBtn">Keluar</button>
@@ -473,7 +473,7 @@ function render(){
 
 async function loadHistory(){
 
-  $( "list" ).innerHTML =
+  $("list").innerHTML =
     '<div class="loading">Memuat riwayat...</div>';
 
   try{
@@ -481,16 +481,22 @@ async function loadHistory(){
     let q;
 
     if(currentRole === "superadmin"){
+
+      // Superadmin melihat seluruh transaksi Top Up.
       q = query(
         collection(db,"walletTransactions"),
         where("type","==","TOPUP")
       );
+
     }else{
+
+      // Owner hanya melihat transaksi miliknya sendiri.
       q = query(
         collection(db,"walletTransactions"),
         where("ownerUid","==",currentUser.uid),
         where("type","==","TOPUP")
       );
+
     }
 
     const snap = await getDocs(q);
@@ -520,26 +526,31 @@ async function loadHistory(){
       0
     );
 
-    $( "totalNominal" ).textContent = rupiah(total);
-    $( "totalTransaksi" ).textContent = allRows.length;
+    $("totalNominal").textContent = rupiah(total);
+    $("totalTransaksi").textContent = allRows.length;
 
     render();
 
   }catch(error){
 
-    console.error(error);
+    console.error("Gagal memuat riwayat:",error);
 
-    $( "list" ).innerHTML =
+    $("list").innerHTML =
       '<div class="empty">Riwayat belum dapat dimuat.</div>';
 
-    $( "message" ).className = "message error";
-    $( "message" ).textContent =
-      "Gagal memuat riwayat. Periksa koneksi internet atau Firestore Rules.";
+    $("message").className = "message error";
+
+    if(currentRole === "superadmin"){
+      $("message").textContent =
+        "Superadmin terdeteksi, tetapi Firestore menolak akses. Pastikan Custom Claim role = superadmin sudah aktif.";
+    }else{
+      $("message").textContent =
+        "Gagal memuat riwayat Owner. Pastikan ownerUid transaksi sama dengan UID akun Owner.";
+    }
 
   }
 
 }
-
 
 /* =====================================================
    FILTER
@@ -601,13 +612,22 @@ await setPersistence(
 
 async function checkAccess(user){
 
-  const token = await user.getIdTokenResult(true);
+  currentRole = "";
 
-  if(token.claims?.role === "superadmin"){
-    currentRole = "superadmin";
-    return true;
+  // 1. Cek Custom Claim Superadmin.
+  // Firestore Rules juga menggunakan claim ini untuk akses seluruh transaksi.
+  try{
+    const token = await user.getIdTokenResult(true);
+
+    if(token.claims?.role === "superadmin"){
+      currentRole = "superadmin";
+      return true;
+    }
+  }catch(error){
+    console.warn("Custom Claim tidak dapat diperiksa:",error);
   }
 
+  // 2. Cek profil users/{uid}.
   const profileRef = doc(db,"users",user.uid);
   const profileSnap = await getDoc(profileRef);
 
@@ -618,6 +638,8 @@ async function checkAccess(user){
   const profile = profileSnap.data() || {};
 
   if(profile.role === "superadmin"){
+    // Profil mengatakan Superadmin, tetapi jika claim belum ada
+    // Rules Firestore tetap tidak mengizinkan membaca seluruh walletTransactions.
     currentRole = "superadmin";
     return true;
   }
@@ -656,6 +678,11 @@ onAuthStateChanged(auth, async user => {
     }
 
     currentUser = user;
+
+    $("roleLabel").textContent =
+      currentRole === "superadmin"
+        ? "Riwayat Top Up • Superadmin"
+        : "Riwayat Top Up • Owner";
 
     await loadHistory();
 
