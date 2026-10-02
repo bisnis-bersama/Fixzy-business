@@ -50,19 +50,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
 .address{font-size:12px;line-height:1.5;background:#f8f8f8;border-radius:11px;padding:10px;margin-bottom:10px}
 .address b{display:block;margin-bottom:3px}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
-.fulfillment{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:10px;margin:10px 0}
-.fulfillment-title{font-size:11px;font-weight:900;color:#374151;margin-bottom:7px}
-.fulfill-line{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:12px}
-.fulfill-line span:last-child{font-weight:800}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:50}
-.modal.show{display:flex}
-.modal-box{width:min(620px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:22px 22px 0 0;padding:18px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.modal-head h3{margin:0;font-size:18px}.close{border:0;background:#eee;border-radius:10px;padding:8px 11px;cursor:pointer;font-weight:900}
-.alloc{border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px}.alloc-name{font-weight:900;font-size:13px;margin-bottom:8px}
-.alloc-row{display:grid;grid-template-columns:1fr 100px;gap:8px;align-items:center;margin:7px 0}.alloc-row label{font-size:12px;font-weight:700}.alloc-row input,.alloc-row select{margin:0;padding:10px}.alloc-total{font-size:12px;color:var(--muted);margin-top:7px}
-.modal-actions{display:flex;gap:8px;margin-top:12px}.modal-actions .btn{flex:1}
-
 .btn{border:0;border-radius:11px;padding:11px 13px;font-weight:900;font-size:12px;cursor:pointer;background:#111;color:#fff}
 .btn.yellow{background:var(--yellow);color:#111}
 .btn.green{background:var(--green);color:#fff}
@@ -148,13 +135,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
   <a class="nav" href="pengaturan.html"><i>⚙</i>Profil</a>
 </nav>
 </div>
-<div class="modal" id="supplierModal">
-  <div class="modal-box">
-    <div class="modal-head"><h3 id="supplierModalTitle">Atur Supplier</h3><button class="close" id="closeSupplierModal" type="button">✕</button></div>
-    <div id="supplierForm"></div>
-    <div class="modal-actions"><button class="btn light" id="cancelSupplier" type="button">Batal</button><button class="btn green" id="saveSupplier" type="button">Simpan Supplier</button></div>
-  </div>
-</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {
@@ -189,12 +170,6 @@ const db = getFirestore(app);
 let allOrders = [];
 let activeFilter = "SEMUA";
 let busy = false;
-let supplierOrder = null;
-const SUPPLIERS = [
-  {id:"deris", name:"Deris", wa:"0838881160"},
-  {id:"zevan", name:"ZEVAN", wa:"081362292115"},
-  {id:"cadangan", name:"Supplier Cadangan", wa:""}
-];
 
 const $ = id => document.getElementById(id);
 
@@ -287,27 +262,6 @@ function renderStats(){
   $("sDone").textContent=c.done;
 }
 
-function getFulfillment(item){
-  if(Array.isArray(item.fulfillment) && item.fulfillment.length) return item.fulfillment;
-  const qty=Number(item.qty||item.jumlah||1);
-  const supplierName=item.supplier || "Belum ditentukan";
-  return [{supplierId:"default",supplierName,qty,status:"BELUM_DIPROSES"}];
-}
-function supplierById(id){ return SUPPLIERS.find(x=>x.id===id); }
-function waUrl(phone,text){
-  if(!phone) return "";
-  const clean=String(phone).replace(/\D/g,"");
-  const number=clean.startsWith("0") ? "62"+clean.slice(1) : clean;
-  return `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
-}
-function fulfillmentHtml(item,orderId){
-  const rows=getFulfillment(item);
-  return `<div class="fulfillment"><div class="fulfillment-title">SUMBER BARANG</div>${rows.map(x=>{
-    const ss=supplierById(x.supplierId);
-    const name=x.supplierName || ss?.name || "Belum ditentukan";
-    return `<div class="fulfill-line"><span>${esc(name)}</span><span>${Number(x.qty||0)} pcs</span></div>`;
-  }).join("")}<button class="btn light" data-action="supplier-item" data-id="${esc(orderId)}" type="button">⚙️ Atur Supplier</button></div>`;
-}
 function render(){
   renderStats();
   const list = activeFilter==="SEMUA"
@@ -328,33 +282,29 @@ function render(){
     const total=Number(order.total||0);
 
     const products=items.length
-      ? items.map((it,idx)=>{
-          it._index=idx;
+      ? items.map(it=>{
           const qty=Number(it.qty||it.jumlah||1);
           const price=Number(it.harga||it.price||it.tunai||it.hargaTunai||it.tempo||it.hargaTempo||0);
-          return `<div>
-            <div class="product-row">
-              <span>${esc(it.nama||it.name||it.produk||"Produk")} × ${qty}</span>
-              <b>${money(price*qty)}</b>
-            </div>
-            ${fulfillmentHtml(it,order.id)}
+          return `<div class="product-row">
+            <span>${esc(it.nama||it.name||it.produk||"Produk")} × ${qty}</span>
+            <b>${money(price*qty)}</b>
           </div>`;
         }).join("")
       : '<div class="product-row"><span>Detail produk tidak tersedia</span></div>';
 
-    let actions=`<button class="btn light" data-action="supplier-order" data-id="${esc(order.id)}">⚙️ ATUR SUPPLIER</button>`;
+    let actions="";
     if(s==="MENUNGGU_PERSETUJUAN"){
       actions=`
         <button class="btn green" data-action="approve" data-id="${esc(order.id)}">✓ SETUJUI</button>
         <button class="btn red" data-action="reject" data-id="${esc(order.id)}">✕ TOLAK</button>`;
     }else if(s==="DISETUJUI"){
-      actions+=`<button class="btn yellow" data-action="pack" data-id="${esc(order.id)}">📦 DIKEMAS</button>`;
+      actions=`<button class="btn yellow" data-action="pack" data-id="${esc(order.id)}">📦 DIKEMAS</button>`;
     }else if(s==="DIKEMAS"){
-      actions+=`<button class="btn blue" data-action="ship" data-id="${esc(order.id)}">🚚 DIKIRIM</button>`;
+      actions=`<button class="btn blue" data-action="ship" data-id="${esc(order.id)}">🚚 DIKIRIM</button>`;
     }else if(s==="DIKIRIM"){
-      actions+=`<button class="btn blue" data-action="deliver" data-id="${esc(order.id)}">🛵 DIANTAR</button>`;
+      actions=`<button class="btn blue" data-action="deliver" data-id="${esc(order.id)}">🛵 DIANTAR</button>`;
     }else if(s==="DIANTAR"){
-      actions+=`<button class="btn green" data-action="done" data-id="${esc(order.id)}">✓ SELESAI</button>`;
+      actions=`<button class="btn green" data-action="done" data-id="${esc(order.id)}">✓ SELESAI</button>`;
     }
 
     return `
@@ -553,63 +503,6 @@ async function changeStatus(order,status){
   }finally{busy=false;}
 }
 
-function openSupplierModal(order){
-  supplierOrder=order;
-  $("supplierModalTitle").textContent=`Atur Supplier · ${order.nomorPesanan||order.id}`;
-  const items=getItems(order);
-  $("supplierForm").innerHTML=items.map((it,idx)=>{
-    const qty=Number(it.qty||it.jumlah||1);
-    const current=getFulfillment(it);
-    return `<div class="alloc" data-alloc-index="${idx}">
-      <div class="alloc-name">${esc(it.nama||it.name||it.produk||"Produk")} · ${qty} pcs</div>
-      <div class="alloc-rows">
-        ${SUPPLIERS.map((sp,si)=>{
-          const found=current.find(x=>x.supplierId===sp.id || x.supplierName===sp.name);
-          return `<div class="alloc-row"><label>${esc(sp.name)}${sp.wa?` · ${esc(sp.wa)}`:""}${sp.wa?` <a href="${waUrl(sp.wa,`Halo ${sp.name}, mohon cek stok barang untuk pesanan ${order.nomorPesanan||order.id}.`)}" target="_blank" rel="noopener" style="margin-left:5px;color:#16a34a;font-weight:900;text-decoration:none">WA</a>`:` <a href="https://wa.me/?text=${encodeURIComponent(`Halo, saya dari FIXZY BUSINESS. Mohon bantu cek supplier untuk pesanan ${order.nomorPesanan||order.id}.`)}" target="_blank" rel="noopener" style="margin-left:5px;color:#16a34a;font-weight:900;text-decoration:none">WA</a>`}</label><input class="supplier-qty" data-supplier-id="${sp.id}" type="number" min="0" max="${qty}" value="${Number(found?.qty||0)}"></div>`;
-        }).join("")}
-      </div>
-      <div class="alloc-total">Alokasi: <b class="alloc-sum">0</b> / ${qty} pcs</div>
-    </div>`;
-  }).join("");
-  document.querySelectorAll(".alloc").forEach(updateAllocSum);
-  document.querySelectorAll(".supplier-qty").forEach(inp=>inp.addEventListener("input",()=>updateAllocSum(inp.closest(".alloc"))));
-  $("supplierModal").classList.add("show");
-}
-function updateAllocSum(box){
-  const sum=[...box.querySelectorAll(".supplier-qty")].reduce((a,x)=>a+Math.max(0,Number(x.value||0)),0);
-  box.querySelector(".alloc-sum").textContent=sum;
-  box.querySelector(".alloc-sum").style.color=sum===Number(box.querySelector(".supplier-qty")?.max||0)?"#16a34a":"#dc2626";
-}
-function closeSupplierModal(){ supplierOrder=null; $("supplierModal").classList.remove("show"); }
-async function saveSupplierAllocation(){
-  if(!supplierOrder || busy) return;
-  const boxes=[...document.querySelectorAll(".alloc")];
-  const items=getItems(supplierOrder).map(x=>({...x}));
-  const allocations=[];
-  for(const box of boxes){
-    const idx=Number(box.dataset.allocIndex), qty=Number(items[idx].qty||items[idx].jumlah||1);
-    const rows=[...box.querySelectorAll(".supplier-qty")].map(inp=>({supplierId:inp.dataset.supplierId,qty:Math.max(0,Number(inp.value||0))})).filter(x=>x.qty>0);
-    const sum=rows.reduce((a,x)=>a+x.qty,0);
-    if(sum!==qty){ alert(`Alokasi supplier untuk produk ke-${idx+1} harus tepat ${qty} pcs.`); return; }
-    allocations[idx]=rows.map(x=>{const sp=supplierById(x.supplierId);return {...x,supplierName:sp.name,whatsapp:sp.wa,status:"BELUM_DIPROSES"};});
-  }
-  busy=true;
-  try{
-    const newItems=items.map((it,idx)=>({...it,fulfillment:allocations[idx]}));
-    await updateDoc(doc(db,"orders",supplierOrder.id),{items:newItems,updatedAt:serverTimestamp(),supplierUpdatedAt:serverTimestamp(),supplierUpdatedBy:auth.currentUser.uid});
-    showMessage("Supplier pesanan berhasil disimpan.");
-    closeSupplierModal();
-    await loadOrders();
-  }catch(err){ console.error(err); showMessage(err.message||"Gagal menyimpan supplier.",false); }
-  finally{busy=false;}
-}
-function openSupplierWhatsApp(order){
-  const text=`Halo, saya dari FIXZY BUSINESS.\n\nMohon cek ketersediaan barang untuk pesanan ${order.nomorPesanan||order.id}.\nTotal: ${money(order.total||0)}\n\nMohon konfirmasi stok dan harga.`;
-  const url=waUrl("",text);
-  // Supplier cadangan tidak punya nomor tetap; buka WhatsApp umum agar admin memilih kontak.
-  window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank");
-}
-
 document.querySelectorAll(".filter").forEach(btn=>{
   btn.addEventListener("click",()=>{
     document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
@@ -626,20 +519,13 @@ $("orders").addEventListener("click",async e=>{
   if(!order) return;
 
   const action=btn.dataset.action;
-  if(action==="supplier-order") openSupplierModal(order);
-  else if(action==="supplier-item") openSupplierModal(order);
-  else if(action==="approve") await approveOrder(order);
+  if(action==="approve") await approveOrder(order);
   else if(action==="reject") await rejectOrder(order);
   else if(action==="pack") await changeStatus(order,"DIKEMAS");
   else if(action==="ship") await changeStatus(order,"DIKIRIM");
   else if(action==="deliver") await changeStatus(order,"DIANTAR");
   else if(action==="done") await changeStatus(order,"SELESAI");
 });
-
-$("closeSupplierModal").onclick=closeSupplierModal;
-$("cancelSupplier").onclick=closeSupplierModal;
-$("saveSupplier").onclick=saveSupplierAllocation;
-$("supplierModal").addEventListener("click",e=>{if(e.target.id==="supplierModal") closeSupplierModal();});
 
 onAuthStateChanged(auth,async user=>{
   if(!user){
