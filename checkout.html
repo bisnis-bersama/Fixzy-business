@@ -141,16 +141,43 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 const $=id=>document.getElementById(id);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+// Angka dari Spreadsheet bisa berbentuk Indonesia, misalnya "109.360".
+// Number("109.360") dibaca JavaScript sebagai 109, sehingga harus dinormalisasi dulu.
+function parseMoney(value){
+  if(value===null || value===undefined) return 0;
+  const raw=String(value).trim();
+  if(!raw) return 0;
+  let s=raw.replace(/Rp/gi,"").replace(/\s/g,"");
+  s=s.replace(/[^0-9,.-]/g,"");
+  if(!s) return 0;
+
+  if(s.includes(".") && s.includes(",")){
+    s=s.replace(/\./g,"").replace(",",".");
+  }else if(s.includes(".")){
+    const parts=s.split(".");
+    // 109.360 = 109360, bukan 109.36
+    if(parts.length>2 || (parts.length===2 && parts[1].length===3)) s=s.replace(/\./g,"");
+  }else if(s.includes(",")){
+    const parts=s.split(",");
+    if(parts.length>2 || (parts.length===2 && parts[1].length===3)) s=s.replace(/,/g,"");
+    else s=s.replace(",",".");
+  }
+  const n=Number(s);
+  return Number.isFinite(n)?n:0;
+}
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
 
 let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0;
 
 function cartKey(){return"fixzy_cart_"+user.uid}
 function saveCart(){localStorage.setItem(cartKey(),JSON.stringify(cart))}
 function getPrice(x,method){
-return Number(method==="LIMIT"
+const raw=method==="LIMIT"
 ?(x.hargaTempo??x.tempo??x.harga_tempo??x.priceTempo??0)
-:(x.hargaCash??x.hargaTunai??x.tunai??x.cash??x.harga??0))||0;
+:(x.hargaCash??x.hargaTunai??x.tunai??x.cash??x.harga??0);
+return parseMoney(raw);
 }
 function message(type,text){$("msg").innerHTML=`<div class="msg ${type}">${esc(text)}</div>`}
 
