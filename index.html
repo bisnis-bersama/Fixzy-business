@@ -48,7 +48,7 @@ button{font:inherit}
 .login h2{margin:0 0 6px;font-size:24px}.login p{color:var(--muted);font-size:13px;margin:0 0 18px}
 .field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px;outline:none;font-size:15px}
 .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#0b1426;color:#fff;font-weight:900;cursor:pointer}
-.err{color:#b42318;font-size:12px;min-height:18px;margin-top:9px}
+.err{color:#b42318;font-size:12px;min-height:18px;margin-top:9px}.register-link{display:block;text-align:center;margin-top:15px;color:#475467;text-decoration:none;font-size:13px}.register-link b{color:#0b1426}
 @media(max-width:360px){.menu{grid-template-columns:repeat(3,1fr)}.amount{font-size:27px}}
 </style>
 </head>
@@ -113,6 +113,7 @@ button{font:inherit}
       <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
       <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
       <button class="primary" type="submit">Masuk</button>
+      <a href="register.html" class="register-link">Belum punya akun? <b>Daftar Owner</b></a>
       <div class="err" id="loginError"></div>
     </form>
   </div>
