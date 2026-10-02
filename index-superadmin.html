@@ -213,6 +213,68 @@ body.auth-logged-in .landing{display:none}
 }
 </style>
 
+
+<style id="fixzy-one-white-panel-icons">
+/* Semua menu/icon berada dalam satu panel putih */
+.menu,
+.sa-menu{
+  background:#fff !important;
+  border:1px solid #e7eaf0 !important;
+  border-radius:20px !important;
+  padding:16px 10px !important;
+  box-shadow:0 8px 22px rgba(15,23,42,.06) !important;
+}
+
+/* Owner: icon tetap sederhana, tidak menjadi panel-panel kecil */
+.menu-btn{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:12px !important;
+}
+.menu-btn:hover,
+.menu-btn:focus{
+  background:#f8fafc !important;
+}
+.menu-btn .icon{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+/* Superadmin: hilangkan kotak putih per icon */
+.sa-btn{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  border-radius:12px !important;
+}
+.sa-btn:hover,
+.sa-btn:focus{
+  background:#f8fafc !important;
+}
+.sa-icon{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  height:58px !important;
+}
+
+/* Tetap rapi di HP */
+@media(max-width:600px){
+  .menu{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:12px 4px !important;
+    padding:14px 6px !important;
+  }
+  .sa-menu{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:12px 4px !important;
+    padding:14px 6px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
