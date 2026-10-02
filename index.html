@@ -10,7 +10,7 @@
 :root{--bg:#f4f6f8;--card:#fff;--ink:#101828;--muted:#667085;--dark:#0b1426;--gold:#f6bd24;--line:#e7eaf0;--green:#16a34a;--orange:#ea580c}
 body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button{font:inherit}
-.app{width:100%;max-width:680px;margin:auto;min-height:100vh;padding-bottom:82px}
+.app{width:100%;max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
 .top{background:linear-gradient(145deg,#081225,#14233c);color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand-left{display:flex;align-items:center;gap:11px;min-width:0}
@@ -40,7 +40,7 @@ button{font:inherit}
 .due strong{font-size:15px}.due p{font-size:11px;color:var(--muted);margin:5px 0 0}
 .badge{font-size:10px;font-weight:900;border-radius:999px;padding:7px 9px;background:#fff7ed;color:#c2410c;white-space:nowrap}
 .empty{text-align:left;color:var(--muted);font-size:12px;padding:4px 0}
-.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(680px,100%);background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}
 .nav{border:0;background:transparent;color:#7b8493;font-size:10px;font-weight:800;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}.nav.active{color:#111827}
 .overlay{position:fixed;inset:0;background:rgba(8,18,37,.72);display:none;align-items:flex-end;justify-content:center;padding:0;z-index:30}
 .overlay.show{display:flex}
@@ -93,6 +93,29 @@ button{font:inherit}
   .menu{gap:14px 4px}
   .menu-btn span{font-size:10px}
   .icon{font-size:23px}
+}
+</style>
+
+
+<style id="fixzy-desktop-layout">
+@media (min-width: 769px){
+  .top{padding:22px clamp(24px,4vw,54px) 88px}
+  .content{padding-left:clamp(24px,4vw,54px);padding-right:clamp(24px,4vw,54px)}
+  .balance{padding:24px 28px}
+  .amount{font-size:34px}
+  .menu{grid-template-columns:repeat(7,minmax(0,1fr));gap:22px}
+  .icon{height:44px;font-size:25px}
+  .menu-btn span{font-size:12px}
+  .section{margin-top:25px}
+  .section-title h2{font-size:17px}
+  .due{padding:4px 0}
+}
+@media (min-width:769px) and (max-width:1050px){
+  .menu{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:768px){
+  .app{max-width:none}
+  .top{padding-left:16px;padding-right:16px}
 }
 </style>
 
