@@ -35,7 +35,7 @@ h2{font-size:16px;margin:0 0 13px}
 .light{background:#eef0f3}
 .full{width:100%;margin-top:10px}
 .pay{display:flex;gap:10px;align-items:center;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:8px 0}
-.pay input{accent-color:#111}
+.pay input{accent-color:#111}.pay.disabled{opacity:.55;background:#f3f4f6}.pay.disabled input{cursor:not-allowed}
 .pay small{display:block;color:#667085;margin-top:3px}
 .row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px}
 .total{border-top:1px solid #eee;margin-top:7px;padding-top:12px;font-size:17px;font-weight:900}
@@ -87,7 +87,7 @@ textarea{min-height:90px}
 </label>
 <label class="pay">
 <input type="radio" name="pay" value="LIMIT">
-<div><b>Limit / Tempo</b><small id="limit">Memuat...</small></div>
+<div><b>Limit / Tempo</b><small id="limit">Memuat...</small><small id="limitRule">Minimal 3 pcs untuk Limit / Tempo.</small></div>
 </label>
 <small id="tempoInfo" style="display:block;color:#667085;margin-top:8px">Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.</small>
 </section>
@@ -227,6 +227,19 @@ return `<div class="item">
 $("qty").textContent=totalQty+" pcs";
 $("total").textContent=rupiah(total);
 tempoHari=getTempoHari(totalQty);
+
+const limitRadio=document.querySelector('input[name="pay"][value="LIMIT"]');
+const limitPay=limitRadio?.closest(".pay");
+const limitRule=$("limitRule");
+const limitAllowed=totalQty>=3;
+if(limitRadio){
+  limitRadio.disabled=!limitAllowed;
+  if(limitPay) limitPay.classList.toggle("disabled",!limitAllowed);
+  if(limitRule) limitRule.textContent=limitAllowed ? tempoLabel(totalQty) : "Minimal 3 pcs untuk Limit / Tempo.";
+  if(!limitAllowed && limitRadio.checked){
+    document.querySelector('input[name="pay"][value="SALDO_PRIBADI"]').checked=true;
+  }
+}
 const payMethod=document.querySelector("[name=pay]:checked")?.value||"SALDO_PRIBADI";
 if(payMethod==="LIMIT"){
   $("tempoInfo").textContent=tempoHari
