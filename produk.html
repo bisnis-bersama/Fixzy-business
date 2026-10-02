@@ -1,40 +1,477 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Belanja Produk | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Belanja Produk</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Belanja Produk | FIXZY BUSINESS</title>
+<style>
+:root{
+  --yellow:#FFC107;
+  --black:#111;
+  --bg:#f3f4f6;
+  --white:#fff;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --green:#16a34a;
+  --red:#dc2626;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:#111;
+}
+.header{
+  background:#111;
+  color:#fff;
+  padding:10px 14px;
+  position:sticky;
+  top:0;
+  z-index:20;
+  border-bottom:1px solid #2b2b2b;
+}
+.header-inner{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.logo{
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  object-fit:contain;
+  background:#111;
+  border:1px solid #FFC107;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+  flex:none;
+}
+.brand-text{
+  min-width:0;
+}
+.brand h1{
+  font-size:18px;
+  margin:0;
+  color:#FFC107;
+  white-space:nowrap;
+  line-height:1.15;
+}
+.brand small{
+  color:#d1d5db;
+  display:block;
+  margin-top:3px;
+  font-size:11px;
+}
+.home{
+  color:#FFC107;
+  text-decoration:none;
+  font-size:22px;
+  line-height:1;
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  flex:none;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:14px 14px 90px;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:15px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px #00000008;
+}
+.add-box{
+  background:#111;
+  color:#fff;
+  border-radius:16px;
+  padding:15px;
+}
+.add-box h2{
+  margin:0 0 5px;
+  font-size:18px;
+  color:var(--yellow);
+}
+.note{
+  color:#d1d5db;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:12px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:11px 14px;
+  border:0;
+  border-radius:11px;
+  background:#111;
+  color:#fff;
+  text-decoration:none;
+  text-align:center;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn.yellow{
+  background:var(--yellow);
+  color:#111;
+}
+.btn.light{
+  background:#eee;
+  color:#111;
+}
+.btn.red{
+  background:#fee2e2;
+  color:#991b1b;
+}
+.btn.full{width:100%}
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  margin:6px 0 10px;
+  font-size:15px;
+  background:#fff;
+}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-top:4px;
+}
+.hidden{display:none!important}
+.source-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.source{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid #ddd;
+  border-radius:11px;
+  background:#fafafa;
+}
+.source-info{min-width:0}
+.source-name{
+  font-weight:800;
+  font-size:14px;
+}
+.source-url{
+  color:var(--muted);
+  font-size:11px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width:100%;
+  margin-top:3px;
+}
+.source-actions{
+  display:flex;
+  gap:6px;
+  flex:none;
+}
+.source-actions button{
+  border:0;
+  border-radius:9px;
+  padding:8px 10px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+}
+.edit{background:#eee;color:#111}
+.delete{background:#fee2e2;color:#991b1b}
+.search-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px;
+  gap:10px;
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.section-title h2{
+  margin:0;
+  font-size:19px;
+}
+.count{
+  font-size:12px;
+  color:var(--muted);
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.product{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px;
+  min-width:0;
+}
+.product-name{
+  font-weight:800;
+  font-size:15px;
+  line-height:1.35;
+  margin-bottom:10px;
+  overflow-wrap:anywhere;
+}
+.product-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.info{
+  background:#f8f8f8;
+  border-radius:9px;
+  padding:8px;
+  min-width:0;
+}
+.info small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:3px;
+}
+.info b{
+  display:block;
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+.empty{
+  text-align:center;
+  padding:28px 15px;
+  color:var(--muted);
+  background:#fff;
+  border:1px dashed #d1d5db;
+  border-radius:14px;
+}
+.loading{text-align:center;color:var(--muted);padding:20px}
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border-radius:11px;
+  padding:11px;
+  font-size:12px;
+  line-height:1.5;
+}
+.success{
+  background:#dcfce7;
+  color:#166534;
+  border-radius:11px;
+  padding:11px;
+  font-size:12px;
+}
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:58px;
+  background:#111;
+  border-top:1px solid #2b2b2b;
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  z-index:30;
+}
+.bottom a{
+  max-width:180px;
+  flex:1;
+  padding:13px 4px 10px;
+  text-align:center;
+  text-decoration:none;
+  color:#FFC107;
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.bottom a.active{
+  color:#FFC107;
+  font-weight:900;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:50;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.modal-card{
+  width:min(600px,100%);
+  background:#fff;
+  border-radius:18px 18px 0 0;
+  padding:17px;
+}
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.modal-head h2{margin:0;font-size:18px}
+.close{
+  border:0;
+  background:#eee;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  cursor:pointer;
+  font-size:18px;
+}
+@media(min-width:760px){
+  .modal{align-items:center}
+  .modal-card{border-radius:18px}
+}
+@media(max-width:650px){
+  .products{grid-template-columns:1fr}
+  .search-row{grid-template-columns:1fr}
+  .source{align-items:flex-start}
+}
+@media(max-width:430px){
+  .container{padding:10px 10px 86px}
+  .header{padding:10px 12px}
+  .brand h1{font-size:16px}
+  .logo{width:42px;height:42px}
+  .source{flex-direction:column}
+  .source-actions{width:100%}
+  .source-actions button{flex:1}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img class="logo" src="logofixzy.png" onerror="this.style.display='none'" alt="FIXZY">
+      <div class="brand-text">
+        <h1>FIXZY BUSINESS</h1>
+        <small>Belanja Produk</small>
+      </div>
+    </div>
+    <a class="home" href="index.html" aria-label="Beranda">⌂</a>
+  </div>
+</header>
+
 <main class="container">
-<section class="card"><h2>Belanja Produk</h2><input placeholder="🔎 Cari produk..."><select><option>Semua kategori</option><option>LCD</option><option>Baterai</option><option>Sparepart</option><option>Aksesoris</option></select></section>
-<section class="list">
-<div class="item"><div class="row"><b>Contoh Produk LCD</b><b>Rp100.000</b></div><small>Stok tersedia • SKU-001</small><button class="btn yellow" style="margin-top:10px">Tambah ke Keranjang</button></div>
-<div class="item"><div class="row"><b>Contoh Baterai</b><b>Rp75.000</b></div><small>Stok tersedia • SKU-002</small><button class="btn yellow" style="margin-top:10px">Tambah ke Keranjang</button></div>
-</section>
-<a class="btn" href="checkout.html">Lanjut Checkout</a>
+
+  <section class="add-box">
+    <h2>Katalog Produk</h2>
+    <div class="note">
+      Produk tetap berada di Google Spreadsheet. FIXZY hanya menyimpan link Spreadsheet di Firebase dan membaca data produknya.
+    </div>
+    <button class="btn yellow full" id="btnAdd">＋ Tambah Link Spreadsheet</button>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Link Spreadsheet</h2>
+      <span class="count" id="sourceCount">0 link</span>
+    </div>
+    <div id="sourceList" class="source-list">
+      <div class="loading">Memuat link katalog...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Produk</h2>
+      <span class="count" id="productCount">0 produk</span>
+    </div>
+
+    <div class="search-row">
+      <input id="searchInput" placeholder="🔎 Cari nama produk...">
+      <select id="categoryFilter">
+        <option value="">Semua kategori</option>
+      </select>
+    </div>
+
+    <div id="message"></div>
+    <div id="products" class="products">
+      <div class="loading">Memuat produk...</div>
+    </div>
+  </section>
+
 </main>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="active" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
+  <a href="index.html">Beranda</a>
+  <a class="active" href="produk.html">Belanja</a>
+  <a href="tagihan.html">Tagihan</a>
+  <a href="riwayat.html">Riwayat</a>
+  <a href="profil.html">Profil</a>
+</nav>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="modalTitle">Tambah Link Spreadsheet</h2>
+      <button class="close" id="btnClose">×</button>
+    </div>
+
+    <label>Nama Katalog</label>
+    <input id="catalogName" placeholder="Contoh: Katalog LCD">
+
+    <label>Link Spreadsheet Published</label>
+    <input id="spreadsheetUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pubhtml?...">
+
+    <div id="modalMessage"></div>
+
+    <button class="btn yellow full" id="btnSave">Simpan Link</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
   apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
   authDomain: "teknisi-ponsel-maja.firebaseapp.com",
   projectId: "teknisi-ponsel-maja",
@@ -42,4 +479,478 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
   messagingSenderId: "835618012205",
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let catalogs = [];
+let products = [];
+let editingId = null;
+
+const $ = id => document.getElementById(id);
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function normalizeHeader(value){
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"")
+    .trim();
+}
+
+const aliases = {
+  nama: [
+    "namaproduk","namabarang","produk","barang","namaproduct",
+    "productname","itemname","description","deskripsi"
+  ],
+  tunai: [
+    "tunai","hargatunai","hargacash","cash","cashprice",
+    "hargacash","hargaoffline"
+  ],
+  tempo: [
+    "tempo","hargatempo","hargakredit","kredit","credit",
+    "creditprice","hargapiutang"
+  ],
+  stok: [
+    "stok","stock","persediaan","qty","quantity","jumlahstok",
+    "stocktersedia"
+  ],
+  supplier: [
+    "supplier","suplier","pemasok","distributor","vendor"
+  ],
+  kategori: [
+    "kategori","katagory","category","jenis","kelompok","type"
+  ]
+};
+
+function findHeaderIndex(headers, field){
+  const normalized = headers.map(normalizeHeader);
+  for(const alias of aliases[field]){
+    const i = normalized.indexOf(alias);
+    if(i >= 0) return i;
+  }
+  return -1;
+}
+
+function parseCSV(text){
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+
+    if(c === '"'){
+      if(quoted && text[i+1] === '"'){
+        cell += '"';
+        i++;
+      }else{
+        quoted = !quoted;
+      }
+    }else if(c === "," && !quoted){
+      row.push(cell);
+      cell = "";
+    }else if((c === "\n" || c === "\r") && !quoted){
+      if(c === "\r" && text[i+1] === "\n") i++;
+      row.push(cell);
+      cell = "";
+      if(row.some(v => String(v).trim() !== "")) rows.push(row);
+      row = [];
+    }else{
+      cell += c;
+    }
+  }
+
+  if(cell !== "" || row.length){
+    row.push(cell);
+    if(row.some(v => String(v).trim() !== "")) rows.push(row);
+  }
+  return rows;
+}
+
+function makeCSVUrl(url){
+  const u = new URL(url);
+
+  // Google published Spreadsheet:
+  // /pubhtml?...  -> /pub?...&output=csv
+  if(u.hostname === "docs.google.com"){
+    if(u.pathname.includes("/pubhtml")){
+      u.pathname = u.pathname.replace("/pubhtml","/pub");
+    }
+    u.searchParams.set("output","csv");
+    return u.toString();
+  }
+
+  return url;
+}
+
+function money(value){
+  if(value === null || value === undefined || String(value).trim() === "") return "-";
+
+  const raw = String(value).trim();
+
+  // Keep already formatted non-numeric values readable.
+  const cleaned = raw.replace(/[^\d,.-]/g,"");
+  if(!cleaned) return raw;
+
+  let normalized = cleaned;
+
+  // Handle common Indonesian formats:
+  // 100.000 -> 100000
+  // 100000,50 -> 100000.50
+  if(cleaned.includes(".") && cleaned.includes(",")){
+    normalized = cleaned.replace(/\./g,"").replace(",",".");
+  }else if(cleaned.includes(",")){
+    const parts = cleaned.split(",");
+    normalized = parts.length === 2 && parts[1].length <= 2
+      ? cleaned.replace(",",".")
+      : cleaned.replace(/,/g,"");
+  }else if(cleaned.includes(".")){
+    const parts = cleaned.split(".");
+    normalized = parts.length > 2 || (parts.length === 2 && parts[1].length === 3)
+      ? cleaned.replace(/\./g,"")
+      : cleaned;
+  }
+
+  const number = Number(normalized);
+  if(!Number.isFinite(number)) return raw;
+
+  return "Rp " + Math.round(number).toLocaleString("id-ID");
+}
+
+function cleanCell(value){
+  return String(value ?? "").trim();
+}
+
+function mapRows(rows, catalogName){
+  if(!rows.length) return [];
+
+  const headers = rows[0];
+  const idx = {
+    nama: findHeaderIndex(headers,"nama"),
+    tunai: findHeaderIndex(headers,"tunai"),
+    tempo: findHeaderIndex(headers,"tempo"),
+    stok: findHeaderIndex(headers,"stok"),
+    supplier: findHeaderIndex(headers,"supplier"),
+    kategori: findHeaderIndex(headers,"kategori")
+  };
+
+  // Nama produk adalah field wajib.
+  if(idx.nama < 0){
+    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
+  }
+
+  return rows.slice(1)
+    .map(row => ({
+      nama: cleanCell(row[idx.nama]),
+      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
+      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
+      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
+      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
+      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      katalog: catalogName
+    }))
+    .filter(p => p.nama);
+}
+
+async function loadCatalogs(){
+  const q = query(
+    collection(db,"productCatalogs"),
+    where("ownerUid","==",currentUser.uid)
+  );
+
+  const snap = await getDocs(q);
+  catalogs = snap.docs.map(d => ({id:d.id,...d.data()}));
+
+  $("sourceCount").textContent = `${catalogs.length} link`;
+  renderSources();
+  await loadAllProducts();
+}
+
+function renderSources(){
+  if(!catalogs.length){
+    $("sourceList").innerHTML = `
+      <div class="empty">
+        Belum ada link Spreadsheet.<br>
+        Tekan <b>+ Tambah Link Spreadsheet</b> untuk menambahkan katalog.
+      </div>`;
+    return;
+  }
+
+  $("sourceList").innerHTML = catalogs.map(c => `
+    <div class="source">
+      <div class="source-info">
+        <div class="source-name">${escapeHtml(c.nama || "Katalog Produk")}</div>
+        <div class="source-url">${escapeHtml(c.spreadsheetUrl || "")}</div>
+      </div>
+      <div class="source-actions">
+        <button class="edit" data-edit="${c.id}">Edit</button>
+        <button class="delete" data-delete="${c.id}">Hapus</button>
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll("[data-edit]").forEach(btn => {
+    btn.onclick = () => openEdit(btn.dataset.edit);
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(btn => {
+    btn.onclick = () => removeCatalog(btn.dataset.delete);
+  });
+}
+
+async function loadAllProducts(){
+  products = [];
+  $("products").innerHTML = `<div class="loading">Membaca Spreadsheet...</div>`;
+
+  if(!catalogs.length){
+    renderProducts();
+    return;
+  }
+
+  const errors = [];
+
+  for(const catalog of catalogs){
+    try{
+      const csvUrl = makeCSVUrl(catalog.spreadsheetUrl);
+      const response = await fetch(csvUrl, {cache:"no-store"});
+
+      if(!response.ok){
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const text = await response.text();
+
+      if(!text || text.trim().startsWith("<!DOCTYPE") || text.trim().startsWith("<html")){
+        throw new Error("Spreadsheet belum tersedia sebagai CSV publik.");
+      }
+
+      const rows = parseCSV(text);
+      const mapped = mapRows(rows, catalog.nama || "Katalog Produk");
+
+      mapped.forEach((p,i) => {
+        p._id = `${catalog.id}_${i}`;
+        products.push(p);
+      });
+    }catch(err){
+      errors.push(`${catalog.nama || "Katalog"}: ${err.message}`);
+    }
+  }
+
+  if(errors.length){
+    $("message").innerHTML = `
+      <div class="error">
+        <b>Sebagian katalog tidak bisa dibaca:</b><br>
+        ${errors.map(escapeHtml).join("<br>")}
+      </div>`;
+  }else{
+    $("message").innerHTML = "";
+  }
+
+  buildCategories();
+  renderProducts();
+}
+
+function buildCategories(){
+  const current = $("categoryFilter").value;
+  const categories = [...new Set(
+    products.map(p => p.kategori).filter(Boolean)
+  )].sort((a,b)=>a.localeCompare(b,"id"));
+
+  $("categoryFilter").innerHTML =
+    `<option value="">Semua kategori</option>` +
+    categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+
+  if(categories.includes(current)) $("categoryFilter").value = current;
+}
+
+function renderProducts(){
+  const search = $("searchInput").value.trim().toLowerCase();
+  const category = $("categoryFilter").value;
+
+  const filtered = products.filter(p => {
+    const text = `${p.nama} ${p.supplier} ${p.kategori}`.toLowerCase();
+    return (!search || text.includes(search))
+      && (!category || p.kategori === category);
+  });
+
+  $("productCount").textContent = `${filtered.length} produk`;
+
+  if(!filtered.length){
+    $("products").innerHTML = `
+      <div class="empty">
+        ${products.length ? "Produk tidak ditemukan." : "Belum ada produk yang dapat ditampilkan."}
+      </div>`;
+    return;
+  }
+
+  $("products").innerHTML = filtered.map(p => `
+    <article class="product">
+      <div class="product-name">${escapeHtml(p.nama)}</div>
+      <div class="product-grid">
+        <div class="info">
+          <small>Harga Tunai</small>
+          <b>${escapeHtml(money(p.tunai))}</b>
+        </div>
+        <div class="info">
+          <small>Harga Tempo</small>
+          <b>${escapeHtml(money(p.tempo))}</b>
+        </div>
+        <div class="info">
+          <small>Stok</small>
+          <b>${escapeHtml(p.stok || "-")}</b>
+        </div>
+        <div class="info">
+          <small>Supplier</small>
+          <b>${escapeHtml(p.supplier || "-")}</b>
+        </div>
+        <div class="info" style="grid-column:1/-1">
+          <small>Kategori</small>
+          <b>${escapeHtml(p.kategori || "-")}</b>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+function openAdd(){
+  editingId = null;
+  $("modalTitle").textContent = "Tambah Link Spreadsheet";
+  $("catalogName").value = "";
+  $("spreadsheetUrl").value = "";
+  $("modalMessage").innerHTML = "";
+  $("btnSave").textContent = "Simpan Link";
+  $("modal").classList.remove("hidden");
+}
+
+function openEdit(id){
+  const item = catalogs.find(c => c.id === id);
+  if(!item) return;
+
+  editingId = id;
+  $("modalTitle").textContent = "Edit Link Spreadsheet";
+  $("catalogName").value = item.nama || "";
+  $("spreadsheetUrl").value = item.spreadsheetUrl || "";
+  $("modalMessage").innerHTML = "";
+  $("btnSave").textContent = "Simpan Perubahan";
+  $("modal").classList.remove("hidden");
+}
+
+function closeModal(){
+  $("modal").classList.add("hidden");
+}
+
+async function saveCatalog(){
+  const nama = $("catalogName").value.trim();
+  const spreadsheetUrl = $("spreadsheetUrl").value.trim();
+
+  if(!nama){
+    $("modalMessage").innerHTML = `<div class="error">Nama katalog wajib diisi.</div>`;
+    return;
+  }
+
+  if(!spreadsheetUrl || !spreadsheetUrl.startsWith("https://docs.google.com/")){
+    $("modalMessage").innerHTML = `<div class="error">Masukkan link Google Spreadsheet yang valid.</div>`;
+    return;
+  }
+
+  $("btnSave").disabled = true;
+  $("btnSave").textContent = "Menyimpan...";
+
+  try{
+    // Tes sumber terlebih dahulu supaya link yang disimpan memang bisa dibaca.
+    const testUrl = makeCSVUrl(spreadsheetUrl);
+    const testResponse = await fetch(testUrl,{cache:"no-store"});
+
+    if(!testResponse.ok){
+      throw new Error("Spreadsheet tidak dapat dibaca. Pastikan sudah dipublish ke web.");
+    }
+
+    const testText = await testResponse.text();
+    const rows = parseCSV(testText);
+    mapRows(rows,nama);
+
+    if(editingId){
+      await updateDoc(doc(db,"productCatalogs",editingId),{
+        nama,
+        spreadsheetUrl,
+        updatedAt:serverTimestamp()
+      });
+    }else{
+      await addDoc(collection(db,"productCatalogs"),{
+        ownerUid:currentUser.uid,
+        nama,
+        spreadsheetUrl,
+        aktif:true,
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      });
+    }
+
+    closeModal();
+    await loadCatalogs();
+  }catch(err){
+    $("modalMessage").innerHTML =
+      `<div class="error">${escapeHtml(err.message || "Gagal menyimpan link.")}</div>`;
+  }finally{
+    $("btnSave").disabled = false;
+    $("btnSave").textContent = editingId ? "Simpan Perubahan" : "Simpan Link";
+  }
+}
+
+async function removeCatalog(id){
+  const item = catalogs.find(c => c.id === id);
+  if(!item) return;
+
+  if(!confirm(`Hapus link "${item.nama || "Katalog Produk"}"?`)) return;
+
+  try{
+    await deleteDoc(doc(db,"productCatalogs",id));
+    await loadCatalogs();
+  }catch(err){
+    $("message").innerHTML =
+      `<div class="error">Gagal menghapus link: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+$("btnAdd").onclick = openAdd;
+$("btnClose").onclick = closeModal;
+$("btnSave").onclick = saveCatalog;
+$("searchInput").oninput = renderProducts;
+$("categoryFilter").onchange = renderProducts;
+
+$("modal").addEventListener("click",e=>{
+  if(e.target === $("modal")) closeModal();
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    location.href = "index.html";
+    return;
+  }
+
+  currentUser = user;
+
+  try{
+    await loadCatalogs();
+  }catch(err){
+    $("sourceList").innerHTML =
+      `<div class="error">Gagal memuat katalog: ${escapeHtml(err.message)}</div>`;
+    $("products").innerHTML = "";
+  }
+});
+</script>
+</body>
+</html>
