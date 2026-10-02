@@ -2,244 +2,1096 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FIXZY BUSINESS | Verifikasi Top Up</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FIXZY BUSINESS | Approval Top Up</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f5f8;color:#101828;font-family:Arial,sans-serif}
-.header{background:#07152b;color:#fff;padding:24px 18px 28px;border-radius:0 0 28px 28px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand img{width:58px;height:58px;border-radius:16px;object-fit:cover;background:#fff}
-.brand h1{font-size:22px;margin:0}.brand p{margin:5px 0 0;color:#aab6c8;font-size:13px}
-.wrap{max-width:720px;margin:auto;padding-bottom:40px}
-.card{background:#fff;border-radius:20px;margin:16px;padding:18px;box-shadow:0 5px 22px #10182812}
-.title{font-size:17px;font-weight:800;margin-bottom:12px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.stat{background:#f8fafc;border-radius:14px;padding:13px}.stat small{color:#667085}.stat b{display:block;font-size:20px;margin-top:5px}
-.item{border:1px solid #eaecf0;border-radius:16px;padding:15px;margin-top:12px}
-.row{display:flex;justify-content:space-between;gap:12px}.amount{font-size:19px;font-weight:800}
-.muted{color:#667085;font-size:12px;line-height:1.55}
-.badge{background:#fff4e5;color:#b54708;padding:7px 10px;border-radius:20px;font-size:11px;font-weight:800;height:max-content}
-.detail{background:#f8fafc;border-radius:12px;padding:10px;margin-top:10px;font-size:12px;line-height:1.7}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
-button{border:0;border-radius:12px;padding:13px;font-weight:800;font-size:14px}
-.approve{background:#12b76a;color:#fff}.reject{background:#fee4e2;color:#b42318}
-.empty{text-align:center;color:#667085;padding:28px 10px}
-.msg{padding:11px 13px;border-radius:12px;font-size:12px;margin-top:10px;display:none}
-.success{display:block;background:#ecfdf3;color:#027a48}.error{display:block;background:#fef3f2;color:#b42318}
-.login{padding:18px}
-.logout{float:right;background:#fff2;color:#fff;border:1px solid #ffffff44;padding:9px 12px}
-@media(max-width:480px){.stats{grid-template-columns:1fr 1fr}.row{align-items:flex-start}}
+:root{
+  --navy:#07152b;
+  --navy2:#0d203d;
+  --text:#101828;
+  --muted:#667085;
+  --line:#e4e7ec;
+  --bg:#f3f5f8;
+  --green:#12b76a;
+  --red:#d92d20;
+  --orange:#f79009;
+}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+button{font-family:inherit;cursor:pointer}
+.app{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  min-height:100vh;
+}
+.header{
+  background:var(--navy);
+  color:#fff;
+  padding:22px 18px 25px;
+  border-radius:0 0 28px 28px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.logo{
+  width:62px;
+  height:62px;
+  border-radius:17px;
+  background:#fff;
+  overflow:hidden;
+  flex:0 0 62px;
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.brand h1{
+  margin:0;
+  font-size:23px;
+  line-height:1.1;
+}
+.brand p{
+  margin:6px 0 0;
+  color:#aab6c8;
+  font-size:13px;
+}
+.logout{
+  border:1px solid #ffffff38;
+  background:#ffffff12;
+  color:#fff;
+  border-radius:13px;
+  padding:11px 15px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.content{
+  padding:16px;
+}
+.card{
+  background:#fff;
+  border:1px solid #eaecf0;
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:14px;
+  box-shadow:0 5px 22px rgba(16,24,40,.06);
+}
+.title-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:13px;
+}
+.title{
+  font-size:19px;
+  font-weight:900;
+}
+.refresh{
+  border:0;
+  background:#eef2f6;
+  color:#344054;
+  border-radius:11px;
+  padding:9px 12px;
+  font-weight:800;
+}
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.stat{
+  background:#f8fafc;
+  border-radius:15px;
+  padding:14px;
+}
+.stat small{
+  color:var(--muted);
+  font-size:12px;
+}
+.stat b{
+  display:block;
+  margin-top:5px;
+  font-size:21px;
+}
+.notice{
+  background:#eef4ff;
+  color:#344054;
+  border-radius:14px;
+  padding:12px 13px;
+  font-size:12px;
+  line-height:1.55;
+  margin-top:12px;
+}
+.item{
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:15px;
+  margin-top:12px;
+}
+.item:first-child{margin-top:0}
+.top-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.owner{
+  font-size:15px;
+  font-weight:900;
+}
+.amount{
+  font-size:21px;
+  font-weight:900;
+  margin-top:4px;
+}
+.meta{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+  margin-top:4px;
+}
+.badge{
+  background:#fff4e5;
+  color:#b54708;
+  border-radius:20px;
+  padding:7px 10px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.detail{
+  margin-top:12px;
+  padding:12px;
+  background:#f8fafc;
+  border-radius:13px;
+  font-size:12px;
+  line-height:1.8;
+  word-break:break-word;
+}
+.detail strong{color:#344054}
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px;
+}
+.btn{
+  border:0;
+  border-radius:13px;
+  padding:13px 10px;
+  font-size:14px;
+  font-weight:900;
+}
+.approve{
+  background:var(--green);
+  color:#fff;
+}
+.reject{
+  background:#fff0ef;
+  color:var(--red);
+  border:1px solid #fecdca;
+}
+.btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:30px 10px;
+  font-size:13px;
+}
+.loading{
+  text-align:center;
+  color:var(--muted);
+  padding:28px 10px;
+}
+.message{
+  display:none;
+  padding:12px 13px;
+  border-radius:13px;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:14px;
+}
+.message.show{display:block}
+.message.success{
+  background:#ecfdf3;
+  color:#027a48;
+}
+.message.error{
+  background:#fef3f2;
+  color:#b42318;
+}
+.access{
+  text-align:center;
+  padding:38px 18px;
+}
+.access h2{
+  margin:0 0 8px;
+  font-size:20px;
+}
+.access p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.back{
+  width:100%;
+  border:0;
+  background:var(--navy);
+  color:#fff;
+  border-radius:13px;
+  padding:13px;
+  font-weight:900;
+  margin-top:10px;
+}
+@media(max-width:420px){
+  .brand h1{font-size:20px}
+  .logo{width:56px;height:56px;flex-basis:56px}
+  .stats{grid-template-columns:1fr 1fr}
+  .amount{font-size:19px}
+}
 </style>
 </head>
+
 <body>
-<div class="wrap">
-<header class="header">
-  <button class="logout" id="logout">Keluar</button>
-  <div class="brand">
-    <img src="logofixzy.png" onerror="this.style.display='none'">
-    <div><h1>FIXZY BUSINESS</h1><p>Superadmin • Verifikasi Top Up</p></div>
-  </div>
-</header>
+<div class="app">
 
-
-<section class="card" id="loginCard">
-  <div class="title">Verifikasi Superadmin</div>
-  <div class="muted">
-    Halaman ini otomatis menggunakan akun Firebase yang sedang login di FIXZY BUSINESS.
-    Pastikan akun tersebut memiliki <b>role = superadmin</b> pada <b>users/{UID}</b>.
-  </div>
-  <div id="loginMsg" class="msg"></div>
-</section>
-
-
-<main id="app" style="display:none">
-  <section class="card">
-    <div class="title">Ringkasan</div>
-    <div class="stats">
-      <div class="stat"><small>Menunggu</small><b id="count">0</b></div>
-      <div class="stat"><small>Total Pengajuan</small><b id="total">Rp0</b></div>
+  <header class="header">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo">
+          <img src="logofixzy.png" alt="FIXZY BUSINESS">
+        </div>
+        <div>
+          <h1>FIXZY BUSINESS</h1>
+          <p>Superadmin • Approval Top Up</p>
+        </div>
+      </div>
+      <button class="logout" id="logoutBtn">Keluar</button>
     </div>
-    <div id="msg" class="msg"></div>
-  </section>
+  </header>
 
-  <section class="card">
-    <div class="title">Top Up Menunggu Verifikasi</div>
-    <div id="list"><div class="empty">Memuat...</div></div>
-  </section>
-</main>
+  <main class="content">
+
+    <div id="message" class="message"></div>
+
+    <section class="card">
+      <div class="title-row">
+        <div class="title">Approval Top Up</div>
+        <button class="refresh" id="refreshBtn">↻ Refresh</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <small>TOP UP MENUNGGU</small>
+          <b id="waitingCount">0</b>
+        </div>
+        <div class="stat">
+          <small>TOTAL NOMINAL</small>
+          <b id="waitingTotal">Rp0</b>
+        </div>
+      </div>
+
+      <div class="notice">
+        Setujui hanya setelah bukti transfer Owner sudah diperiksa.
+        Saat disetujui, saldo pribadi Owner otomatis bertambah sesuai
+        <b>Nominal Top Up</b>, bukan kode unik.
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="title">Menunggu Verifikasi</div>
+      <div id="list">
+        <div class="loading">Memeriksa akses Superadmin...</div>
+      </div>
+    </section>
+
+  </main>
 </div>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,signOut,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {getFirestore,collection,query,where,getDocs,doc,getDoc,runTransaction,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
-const firebaseConfig={
- apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
- authDomain:"teknisi-ponsel-maja.firebaseapp.com",
- projectId:"teknisi-ponsel-maja",
- storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
- messagingSenderId:"835618012205",
- appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+
+/* =====================================================
+   FIREBASE
+   ===================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
+  projectId: "teknisi-ponsel-maja",
+  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId: "835618012205",
+  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
 
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-const $=id=>document.getElementById(id);
-const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-function showMsg(text,type="success"){
- const el=$("msg");el.className="msg "+type;el.textContent=text;
+
+/* =====================================================
+   ELEMENT
+   ===================================================== */
+
+const $ = id => document.getElementById(id);
+
+const rupiah = value =>
+  new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0
+  }).format(Number(value) || 0);
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
-function showLoginMsg(text,type="error"){
- const el=$("loginMsg");el.className="msg "+type;el.textContent=text;
+
+function showMessage(text, type="success"){
+  const el = $("message");
+  el.className = "message show " + type;
+  el.textContent = text;
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-async function verifySuperadmin(user){
-  // Superadmin ditentukan oleh Firebase Custom Claim.
-  // Ini harus sama dengan yang dipakai Firestore Rules:
-  // request.auth.token.role == "superadmin"
-  const tokenResult = await user.getIdTokenResult(true);
-  return tokenResult.claims?.role === "superadmin";
+function hideMessage(){
+  $("message").className = "message";
 }
-
-$("logout").onclick=()=>signOut(auth);
-
-await setPersistence(auth,browserLocalPersistence);
 
 function formatDate(ts){
- return ts?.toDate ? ts.toDate().toLocaleString("id-ID") : "-";
+  if(!ts) return "-";
+
+  try{
+    if(typeof ts.toDate === "function"){
+      return ts.toDate().toLocaleString("id-ID");
+    }
+
+    if(ts.seconds){
+      return new Date(ts.seconds * 1000).toLocaleString("id-ID");
+    }
+
+    return new Date(ts).toLocaleString("id-ID");
+  }catch{
+    return "-";
+  }
 }
+
+
+/* =====================================================
+   CEK SUPERADMIN
+   =====================================================
+   Role dibaca dari:
+   users/{UID}.role
+
+   BUKAN Custom Claims.
+   ===================================================== */
+
+async function verifySuperadmin(user){
+
+  const ref = doc(db,"users",user.uid);
+  const snap = await getDoc(ref);
+
+  if(!snap.exists()){
+    return false;
+  }
+
+  const data = snap.data();
+
+  return data.role === "superadmin";
+}
+
+
+/* =====================================================
+   AMBIL NAMA OWNER
+   ===================================================== */
+
+async function loadOwners(){
+
+  const map = {};
+
+  try{
+
+    const snap = await getDocs(collection(db,"users"));
+
+    snap.forEach(item => {
+
+      const data = item.data();
+
+      if(data.role === "owner"){
+
+        map[item.id] =
+          data.nama ||
+          data.namaUsaha ||
+          data.email ||
+          item.id;
+
+      }
+
+    });
+
+  }catch(error){
+
+    console.error("Gagal memuat owner:",error);
+
+  }
+
+  return map;
+}
+
+
+/* =====================================================
+   LOAD TOP UP
+   ===================================================== */
 
 async function loadTopups(){
- $("list").innerHTML='<div class="empty">Memuat data...</div>';
- const q=query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"));
- const snap=await getDocs(q);
- const rows=[];
- snap.forEach(d=>rows.push({id:d.id,...d.data()}));
- rows.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 
- $("count").textContent=rows.length;
- $("total").textContent=rupiah(rows.reduce((s,x)=>s+(Number(x.nominal)||0),0));
+  hideMessage();
 
- if(!rows.length){
-   $("list").innerHTML='<div class="empty">Tidak ada Top Up yang menunggu verifikasi.</div>';
-   return;
- }
+  $("list").innerHTML =
+    '<div class="loading">Memuat Top Up...</div>';
 
- $("list").innerHTML="";
- rows.forEach(x=>{
-   const el=document.createElement("div");
-   el.className="item";
-   el.innerHTML=`
-    <div class="row">
-      <div>
-        <div class="amount">${rupiah(x.nominal)}</div>
-        <div class="muted">${formatDate(x.createdAt)} • ${x.metode||"-"}</div>
-      </div>
-      <span class="badge">MENUNGGU</span>
-    </div>
-    <div class="detail">
-      Owner UID: ${x.ownerUid||"-"}<br>
-      Kode unik: <b>${x.kodeUnik||"-"}</b><br>
-      Total transfer: <b>${rupiah(x.totalTransfer || ((Number(x.nominal)||0)+(Number(x.kodeUnik)||0)))}</b><br>
-      Referensi: ${x.referensi||"-"}
-    </div>
-    <div class="actions">
-      <button class="approve">SETUJUI</button>
-      <button class="reject">TOLAK</button>
-    </div>`;
-   el.querySelector(".approve").onclick=()=>processTopup(x,true,el);
-   el.querySelector(".reject").onclick=()=>processTopup(x,false,el);
-   $("list").appendChild(el);
- });
+  try{
+
+    /*
+      Tidak menggunakan query where agar tidak bergantung
+      pada composite index Firestore.
+    */
+
+    const snap =
+      await getDocs(collection(db,"walletTransactions"));
+
+    const owners = await loadOwners();
+
+    const rows = [];
+
+    snap.forEach(item => {
+
+      const data = item.data();
+
+      if(
+        data.type === "TOPUP" &&
+        data.status === "MENUNGGU"
+      ){
+
+        rows.push({
+          id:item.id,
+          ...data,
+          ownerName:
+            owners[data.ownerUid] ||
+            data.namaOwner ||
+            data.emailOwner ||
+            data.ownerUid ||
+            "-"
+        });
+
+      }
+
+    });
+
+
+    rows.sort((a,b) => {
+
+      const ta =
+        a.createdAt?.toMillis?.() ||
+        a.createdAt?.seconds * 1000 ||
+        0;
+
+      const tb =
+        b.createdAt?.toMillis?.() ||
+        b.createdAt?.seconds * 1000 ||
+        0;
+
+      return tb - ta;
+
+    });
+
+
+    $("waitingCount").textContent = rows.length;
+
+    $("waitingTotal").textContent =
+      rupiah(
+        rows.reduce(
+          (total,item) =>
+            total + (Number(item.nominal) || 0),
+          0
+        )
+      );
+
+
+    if(!rows.length){
+
+      $("list").innerHTML =
+        '<div class="empty">Tidak ada Top Up yang menunggu verifikasi.</div>';
+
+      return;
+    }
+
+
+    $("list").innerHTML = "";
+
+    rows.forEach(item => {
+
+      const el = document.createElement("div");
+
+      el.className = "item";
+
+      const nominal =
+        Number(item.nominal) || 0;
+
+      const kodeUnik =
+        Number(item.kodeUnik) || 0;
+
+      const totalTransfer =
+        Number(item.totalTransfer) ||
+        (nominal + kodeUnik);
+
+
+      el.innerHTML = `
+
+        <div class="top-row">
+
+          <div>
+
+            <div class="owner">
+              ${escapeHtml(item.ownerName)}
+            </div>
+
+            <div class="amount">
+              ${rupiah(nominal)}
+            </div>
+
+            <div class="meta">
+              ${escapeHtml(formatDate(item.createdAt))}
+              • ${escapeHtml(item.metode || "-")}
+            </div>
+
+          </div>
+
+          <span class="badge">
+            MENUNGGU
+          </span>
+
+        </div>
+
+
+        <div class="detail">
+
+          <strong>Owner UID:</strong>
+          ${escapeHtml(item.ownerUid || "-")}
+          <br>
+
+          <strong>Kode Unik:</strong>
+          ${escapeHtml(item.kodeUnik ?? "-")}
+          <br>
+
+          <strong>Total Transfer:</strong>
+          ${rupiah(totalTransfer)}
+          <br>
+
+          <strong>Referensi:</strong>
+          ${escapeHtml(item.referensi || "-")}
+          <br>
+
+          <strong>Metode:</strong>
+          ${escapeHtml(item.metode || "-")}
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn approve"
+            data-action="approve">
+            ✓ SETUJUI
+          </button>
+
+          <button
+            class="btn reject"
+            data-action="reject">
+            ✕ TOLAK
+          </button>
+
+        </div>
+
+      `;
+
+
+      el.querySelector("[data-action='approve']")
+        .addEventListener(
+          "click",
+          () => processTopup(item,true,el)
+        );
+
+
+      el.querySelector("[data-action='reject']")
+        .addEventListener(
+          "click",
+          () => processTopup(item,false,el)
+        );
+
+
+      $("list").appendChild(el);
+
+    });
+
+
+  }catch(error){
+
+    console.error(error);
+
+    $("list").innerHTML =
+      '<div class="empty">Gagal memuat data Top Up.</div>';
+
+    showMessage(
+      error.message || "Gagal memuat data.",
+      "error"
+    );
+
+  }
+
 }
 
-async function processTopup(x,approved,el){
- if(!confirm(approved ? "Setujui Top Up ini? Saldo Owner akan bertambah sesuai nominal Top Up." : "Tolak Top Up ini?")) return;
- const btns=el.querySelectorAll("button");btns.forEach(b=>b.disabled=true);
 
- try{
-   await runTransaction(db,async(tx)=>{
-     const txRef=doc(db,"walletTransactions",x.id);
-     const txSnap=await tx.get(txRef);
-     if(!txSnap.exists()) throw new Error("Transaksi tidak ditemukan.");
-     const current=txSnap.data();
-     if(current.status!=="MENUNGGU") throw new Error("Transaksi sudah diproses.");
+/* =====================================================
+   APPROVAL / PENOLAKAN
+   ===================================================== */
 
-     if(!approved){
-       tx.update(txRef,{
-         status:"DITOLAK",
-         verifiedBy:auth.currentUser.uid,
-         verifiedAt:serverTimestamp()
-       });
-       return;
-     }
+async function processTopup(item,approved,card){
 
-     const walletRef=doc(db,"wallets",x.ownerUid);
-     const walletSnap=await tx.get(walletRef);
-     const walletData=walletSnap.exists() ? (walletSnap.data() || {}) : {};
-     const oldBalance=Number(walletData.saldoPribadi ?? walletData.saldo ?? 0) || 0;
-     const add=Number(current.nominal)||0;
-     const newBalance=oldBalance+add;
+  const message = approved
+    ? "Setujui Top Up ini?\n\nSaldo Owner akan bertambah sesuai Nominal Top Up."
+    : "Tolak Top Up ini?";
 
-     if(walletSnap.exists()){
-       tx.update(walletRef,{
-         saldo:newBalance,
-         saldoPribadi:newBalance,
-         ownerUid:x.ownerUid,
-         updatedAt:serverTimestamp()
-       });
-     }else{
-       tx.set(walletRef,{
-         ownerUid:x.ownerUid,
-         saldo:newBalance,
-         saldoPribadi:newBalance,
-         status:"AKTIF",
-         updatedAt:serverTimestamp()
-       });
-     }
 
-     tx.update(txRef,{
-       status:"DISETUJUI",
-       saldoSebelum:oldBalance,
-       saldoSesudah:newBalance,
-       verifiedBy:auth.currentUser.uid,
-       verifiedAt:serverTimestamp()
-     });
-   });
+  if(!confirm(message)){
+    return;
+  }
 
-   showMsg(approved ? "Top Up disetujui dan saldo Owner sudah ditambahkan." : "Top Up ditolak.");
-   await loadTopups();
- }catch(e){
-   btns.forEach(b=>b.disabled=false);
-   showMsg(e.message||"Proses gagal.","error");
- }
+
+  const buttons =
+    card.querySelectorAll("button");
+
+  buttons.forEach(btn => {
+    btn.disabled = true;
+  });
+
+
+  try{
+
+    await runTransaction(
+      db,
+      async transaction => {
+
+        /*
+          1. Baca transaksi Top Up.
+        */
+
+        const transactionRef =
+          doc(
+            db,
+            "walletTransactions",
+            item.id
+          );
+
+        const transactionSnap =
+          await transaction.get(transactionRef);
+
+
+        if(!transactionSnap.exists()){
+          throw new Error(
+            "Transaksi Top Up tidak ditemukan."
+          );
+        }
+
+
+        const current =
+          transactionSnap.data();
+
+
+        /*
+          Mencegah transaksi diproses dua kali.
+        */
+
+        if(current.status !== "MENUNGGU"){
+
+          throw new Error(
+            "Transaksi ini sudah diproses."
+          );
+
+        }
+
+
+        /*
+          ===============================================
+          TOLAK
+          ===============================================
+        */
+
+        if(!approved){
+
+          transaction.update(
+            transactionRef,
+            {
+              status:"DITOLAK",
+              verifiedBy:auth.currentUser.uid,
+              verifiedAt:serverTimestamp()
+            }
+          );
+
+          return;
+        }
+
+
+        /*
+          ===============================================
+          SETUJUI
+          ===============================================
+        */
+
+        const ownerUid =
+          current.ownerUid;
+
+
+        if(!ownerUid){
+
+          throw new Error(
+            "Owner UID pada transaksi tidak ditemukan."
+          );
+
+        }
+
+
+        /*
+          Ambil wallet Owner.
+        */
+
+        const walletRef =
+          doc(
+            db,
+            "wallets",
+            ownerUid
+          );
+
+
+        const walletSnap =
+          await transaction.get(walletRef);
+
+
+        /*
+          FIELD SALDO YANG DIPAKAI FIXZY:
+          saldoPribadi
+        */
+
+        const oldBalance =
+          walletSnap.exists()
+            ? Number(
+                walletSnap.data().saldoPribadi
+              ) || 0
+            : 0;
+
+
+        /*
+          Yang masuk saldo hanya NOMINAL.
+          Kode unik bukan saldo Owner.
+        */
+
+        const addAmount =
+          Number(current.nominal) || 0;
+
+
+        if(addAmount <= 0){
+
+          throw new Error(
+            "Nominal Top Up tidak valid."
+          );
+
+        }
+
+
+        const newBalance =
+          oldBalance + addAmount;
+
+
+        /*
+          Jika wallet sudah ada,
+          update saldoPribadi.
+        */
+
+        if(walletSnap.exists()){
+
+          transaction.update(
+            walletRef,
+            {
+              saldoPribadi:newBalance,
+              ownerUid:ownerUid,
+              updatedAt:serverTimestamp()
+            }
+          );
+
+        }else{
+
+          /*
+            Wallet belum ada.
+            Superadmin membuat wallet.
+          */
+
+          transaction.set(
+            walletRef,
+            {
+              ownerUid:ownerUid,
+              saldoPribadi:newBalance,
+              status:"AKTIF",
+              createdAt:serverTimestamp(),
+              updatedAt:serverTimestamp()
+            }
+          );
+
+        }
+
+
+        /*
+          Update transaksi menjadi DISETUJUI.
+        */
+
+        transaction.update(
+          transactionRef,
+          {
+            status:"DISETUJUI",
+
+            saldoSebelum:oldBalance,
+
+            saldoDitambahkan:addAmount,
+
+            saldoSesudah:newBalance,
+
+            verifiedBy:auth.currentUser.uid,
+
+            verifiedAt:serverTimestamp()
+          }
+        );
+
+      }
+    );
+
+
+    showMessage(
+      approved
+        ? "Top Up berhasil disetujui. Saldo Owner sudah bertambah."
+        : "Top Up berhasil ditolak.",
+      "success"
+    );
+
+
+    await loadTopups();
+
+
+  }catch(error){
+
+    console.error(error);
+
+    buttons.forEach(btn => {
+      btn.disabled = false;
+    });
+
+
+    showMessage(
+      error.message ||
+      "Proses Top Up gagal.",
+      "error"
+    );
+
+  }
+
 }
 
-onAuthStateChanged(async user=>{
- if(!user){
-   $("app").style.display="none";
-   $("loginCard").style.display="block";
-   showLoginMsg("Belum ada akun FIXZY yang sedang login. Kembali ke index.html dan login sebagai Superadmin terlebih dahulu.","error");
-   return;
- }
- try{
-   if(await verifySuperadmin(user)){
-     $("loginCard").style.display="none";
-     $("app").style.display="block";
-     await loadTopups();
-   }else{
-     showLoginMsg("Akun login tidak memiliki Custom Claim role = superadmin. Silakan logout lalu login kembali setelah role Superadmin diaktifkan.","error");
-     await signOut(auth);
-   }
- }catch(e){
-   await signOut(auth);
-   showLoginMsg(e.message||"Akses Superadmin gagal.");
- }
-});
+
+/* =====================================================
+   REFRESH
+   ===================================================== */
+
+$("refreshBtn").addEventListener(
+  "click",
+  loadTopups
+);
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+$("logoutBtn").addEventListener(
+  "click",
+  async () => {
+
+    if(
+      confirm(
+        "Keluar dari akun FIXZY BUSINESS?"
+      )
+    ){
+
+      await signOut(auth);
+
+      location.href = "index.html";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   AUTH
+   ===================================================== */
+
+onAuthStateChanged(
+  auth,
+  async user => {
+
+    if(!user){
+
+      $("list").innerHTML = `
+        <div class="access">
+
+          <h2>Belum Login</h2>
+
+          <p>
+            Silakan login ke FIXZY BUSINESS
+            terlebih dahulu.
+          </p>
+
+          <button
+            class="back"
+            onclick="location.href='index.html'">
+            Kembali ke FIXZY BUSINESS
+          </button>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    try{
+
+      /*
+        Role Superadmin dibaca dari:
+        users/{UID}.role
+      */
+
+      const allowed =
+        await verifySuperadmin(user);
+
+
+      if(!allowed){
+
+        $("list").innerHTML = `
+          <div class="access">
+
+            <h2>Akses Ditolak</h2>
+
+            <p>
+              Akun yang sedang login bukan
+              Superadmin FIXZY BUSINESS.
+            </p>
+
+            <button
+              class="back"
+              onclick="location.href='index.html'">
+              Kembali
+            </button>
+
+          </div>
+        `;
+
+        return;
+      }
+
+
+      /*
+        Superadmin valid.
+        Tidak meminta login ulang.
+      */
+
+      await loadTopups();
+
+
+    }catch(error){
+
+      console.error(error);
+
+      $("list").innerHTML = `
+        <div class="access">
+
+          <h2>Gagal Memuat</h2>
+
+          <p>
+            ${escapeHtml(
+              error.message ||
+              "Terjadi kesalahan."
+            )}
+          </p>
+
+          <button
+            class="back"
+            onclick="location.href='index.html'">
+            Kembali
+          </button>
+
+        </div>
+      `;
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>
