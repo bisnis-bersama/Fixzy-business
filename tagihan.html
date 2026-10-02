@@ -131,7 +131,9 @@ import {
   where,
   getDocs,
   getDoc,
-  doc
+  doc,
+  addDoc,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -279,13 +281,20 @@ async function requestPayment(invoiceId){
     const walletSnap=await getDoc(doc(db,"wallets",auth.currentUser.uid));
     const saldo=walletSnap.exists()?Number(walletSnap.data().saldoPribadi||0):0;
 
-    if(saldo<=0){
-      $("message").textContent="Saldo pribadi Owner belum tersedia.";
-      $("message").className="message show errmsg";
+    // Pembayaran tagihan harus menggunakan saldo pribadi yang cukup.
+    // Jika saldo belum mencukupi untuk melunasi tagihan, arahkan Owner ke Top Up.
+    if(saldo < remaining){
+      alert(
+        "Saldo pribadi tidak mencukupi untuk membayar tagihan ini.\n\n"+
+        "Sisa tagihan: "+money(remaining)+"\n"+
+        "Saldo pribadi: "+money(saldo)+"\n\n"+
+        "Silakan Top Up terlebih dahulu."
+      );
+      location.href="topup.html";
       return;
     }
 
-    const defaultAmount=Math.min(remaining,saldo);
+    const defaultAmount=remaining;
     const raw=prompt(
       "Masukkan nominal pembayaran.\nSisa tagihan: "+money(remaining)+"\nSaldo pribadi: "+money(saldo),
       String(defaultAmount)
