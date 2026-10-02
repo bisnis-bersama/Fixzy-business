@@ -21,18 +21,19 @@ body{
   font-family:Arial,sans-serif;
   background:var(--bg);
   color:#111;
+  overflow-x:hidden;
 }
 .header{
-  background:#111;
+  background:#111111;
   color:#fff;
-  padding:12px 16px 52px;
+  padding:18px 18px 82px;
   position:relative;
   z-index:20;
-  border-bottom:0;
-  border-radius:0 0 42px 42px;
+  border-radius:0 0 30px 30px;
 }
 .header-inner{
-  max-width:1000px;
+  width:100%;
+  max-width:1180px;
   margin:auto;
   display:flex;
   align-items:center;
@@ -42,43 +43,52 @@ body{
 .brand{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:11px;
   min-width:0;
 }
 .logo{
-  width:64px;
-  height:64px;
-  border-radius:16px;
-  object-fit:contain;
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  overflow:hidden;
   background:#111;
   border:1px solid #FFC107;
+  display:grid;
+  place-items:center;
+  flex:0 0 48px;
   box-shadow:0 4px 12px rgba(0,0,0,.25);
-  flex:none;
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 .brand-text{
   min-width:0;
 }
 .brand h1{
-  font-size:22px;
+  font-size:17px;
   margin:0;
+  font-weight:900;
+  letter-spacing:.2px;
   color:#FFC107;
   white-space:nowrap;
   line-height:1.15;
-  font-weight:800;
 }
 .brand small{
-  color:#d1d5db;
   display:block;
-  margin-top:5px;
-  font-size:15px;
+  color:#d1d5db;
+  margin-top:3px;
+  font-size:12px;
 }
 .logout{
-  border:1px solid #3a3a3a;
-  background:#181818;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
   color:#fff;
-  border-radius:16px;
-  padding:12px 18px;
-  font-size:15px;
+  border-radius:11px;
+  padding:9px 11px;
+  font-size:12px;
   cursor:pointer;
   flex:none;
 }
@@ -87,9 +97,10 @@ body{
 }
 
 .container{
-  max-width:1000px;
+  width:100%;
+  max-width:1180px;
   margin:auto;
-  padding:14px 14px 100px;
+  padding:0 clamp(14px,3vw,28px) 100px;
 }
 .card{
   background:#fff;
@@ -175,7 +186,7 @@ label{
   border-radius:11px;
   background:#fafafa;
 }
-.source-info{min-width:0}
+.source-info{min-width:0;max-width:100%;overflow:hidden}
 .source-name{
   font-weight:800;
   font-size:14px;
@@ -183,11 +194,12 @@ label{
 .source-url{
   color:var(--muted);
   font-size:11px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  max-width:100%;
   margin-top:3px;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  white-space:normal;
+  line-height:1.4;
 }
 .source-actions{
   display:flex;
@@ -291,27 +303,29 @@ label{
 }
 .bottom{
   position:fixed;
+  left:50%;
   bottom:0;
-  left:0;
-  right:0;
-  height:76px;
+  transform:translateX(-50%);
+  width:min(1180px,100%);
+  height:auto;
   background:#111;
   border-top:1px solid #2b2b2b;
-  display:flex;
-  justify-content:center;
-  align-items:stretch;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
   z-index:30;
-  padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -5px 18px rgba(0,0,0,.14);
 }
 .bottom a{
-  max-width:180px;
-  flex:1;
-  padding:8px 3px 7px;
+  max-width:none;
+  flex:none;
+  min-width:0;
+  padding:0;
   text-align:center;
   text-decoration:none;
   color:#FFC107;
-  font-size:11px;
-  font-weight:700;
+  font-size:10px;
+  font-weight:800;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -324,12 +338,9 @@ label{
 }
 .nav-icon{
   display:block;
-  font-size:24px;
+  font-size:21px;
   line-height:1;
-  min-height:25px;
-}
-.bottom a span:last-child{
-  line-height:1.1;
+  min-height:21px;
 }
 
 .modal{
@@ -381,6 +392,18 @@ label{
   .source{flex-direction:column}
   .source-actions{width:100%}
   .source-actions button{flex:1}
+}
+
+@media(max-width:420px){
+  .brand h1{font-size:17px}
+  .brand small{font-size:12px}
+  .logout{font-size:12px;padding:9px 11px}
+  .bottom a{font-size:10px}
+  .nav-icon{font-size:21px}
+}
+@media(min-width:769px){
+  .header{padding-left:24px;padding-right:24px}
+  .container{padding-left:28px;padding-right:28px}
 }
 </style>
 </head>
