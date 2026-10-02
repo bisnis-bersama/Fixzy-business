@@ -350,6 +350,17 @@ label{
   min-height:21px;
 }
 
+
+.product-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.product-actions button{border:0;border-radius:10px;padding:10px 8px;font-weight:800;cursor:pointer;font-size:12px}
+.btn-cart{background:#111;color:#fff}
+.btn-buy{background:#FFC107;color:#111}
+.cart-bar{position:fixed;right:14px;bottom:86px;z-index:25;background:#111;color:#fff;border:1px solid #333;border-radius:14px;padding:10px 14px;box-shadow:0 8px 22px rgba(0,0,0,.22);font-weight:800;cursor:pointer}
+.cart-bar b{color:#FFC107}
+.superadmin-only{display:none}
+body.is-superadmin .superadmin-only{display:block}
+body.is-superadmin .owner-only-hide{display:none!important}
+@media(max-width:420px){.product-actions{grid-template-columns:1fr 1fr}.cart-bar{right:10px;bottom:82px}}
 .modal{
   position:fixed;
   inset:0;
@@ -433,7 +444,7 @@ label{
 
 <main class="container">
 
-  <section class="add-box">
+  <section class="add-box superadmin-only">
     <h2>Katalog Produk</h2>
     <div class="note">
       Produk tetap berada di Google Spreadsheet. FIXZY hanya menyimpan link Spreadsheet di Firebase dan membaca data produknya.
@@ -441,7 +452,7 @@ label{
     <button class="btn yellow full" id="btnAdd">＋ Tambah Link Spreadsheet</button>
   </section>
 
-  <section class="card">
+  <section class="card superadmin-only">
     <div class="section-title">
       <h2>Link Spreadsheet</h2>
       <span class="count" id="sourceCount">0 link</span>
@@ -471,6 +482,8 @@ label{
   </section>
 
 </main>
+
+<button class="cart-bar" id="cartBar" type="button">🛒 Keranjang <b id="cartCount">0</b></button>
 
 <nav class="bottom">
   <a href="index.html"><span class="nav-icon">⌂</span><span>Beranda</span></a>
@@ -536,6 +549,8 @@ let currentUser = null;
 let catalogs = [];
 let products = [];
 let editingId = null;
+let currentRole = "owner";
+let cart = [];
 
 const $ = id => document.getElementById(id);
 
@@ -719,7 +734,7 @@ async function loadOwnerName(){
     if(snap.exists()){
       const data = snap.data();
       const name = data.namaUsaha || data.nama || data.businessName || data.ownerName || data.displayName;
-      if(name) $("ownerName").textContent = name;
+      if(name && currentRole !== "superadmin") $("ownerName").textContent = name;
     }
   }catch(e){
     // Keep the default display name if the profile cannot be read.
@@ -727,11 +742,9 @@ async function loadOwnerName(){
 }
 
 async function loadCatalogs(){
-  const q = query(
-    collection(db,"productCatalogs"),
-    where("ownerUid","==",currentUser.uid)
-  );
-
+  // Katalog sekarang bersifat global. Hanya Superadmin yang boleh
+  // menambah/mengubah/menghapus link Spreadsheet. Owner hanya membaca.
+  const q = query(collection(db,"productCatalogs"));
   const snap = await getDocs(q);
   catalogs = snap.docs.map(d => ({id:d.id,...d.data()}));
 
@@ -743,10 +756,7 @@ async function loadCatalogs(){
 function renderSources(){
   if(!catalogs.length){
     $("sourceList").innerHTML = `
-      <div class="empty">
-        Belum ada link Spreadsheet.<br>
-        Tekan <b>+ Tambah Link Spreadsheet</b> untuk menambahkan katalog.
-      </div>`;
+      <div class="empty">Belum ada katalog produk yang tersedia.</div>`;
     return;
   }
 
@@ -882,11 +892,83 @@ function renderProducts(){
           <b>${escapeHtml(p.kategori || "-")}</b>
         </div>
       </div>
+      <div class="product-actions">
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒 Tambah ke Keranjang</button>
+        <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
+      </div>
     </article>
   `).join("");
 }
 
+function cartKey(){
+  return `fixzy_cart_${currentUser?.uid || "guest"}`;
+}
+
+function loadCart(){
+  try{
+    cart = JSON.parse(localStorage.getItem(cartKey()) || "[]");
+    if(!Array.isArray(cart)) cart=[];
+  }catch(e){ cart=[]; }
+  updateCartCount();
+}
+
+function saveCart(){
+  localStorage.setItem(cartKey(), JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateCartCount(){
+  const total = cart.reduce((sum,item)=>sum + Number(item.qty||0),0);
+  $("cartCount").textContent = total;
+}
+
+function addToCart(id, buyNow=false){
+  const p = products.find(x => x._id === id);
+  if(!p) return;
+
+  const stock = Number(String(p.stok).replace(/[^0-9-]/g,""));
+  if(Number.isFinite(stock) && stock <= 0){
+    alert("Stok produk sedang kosong.");
+    return;
+  }
+
+  const found = cart.find(x => x.id === id);
+  if(found){
+    if(Number.isFinite(stock) && found.qty >= stock){
+      alert("Jumlah melebihi stok tersedia.");
+      return;
+    }
+    found.qty += 1;
+  }else{
+    cart.push({
+      id:p._id,
+      nama:p.nama,
+      tunai:p.tunai,
+      tempo:p.tempo,
+      supplier:p.supplier,
+      stok:p.stok,
+      qty:1
+    });
+  }
+  saveCart();
+  if(buyNow){
+    alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
+  }else{
+    alert("Produk ditambahkan ke keranjang.");
+  }
+}
+
+function bindProductActions(){
+  document.querySelectorAll("[data-cart]").forEach(btn=>{
+    btn.onclick=()=>addToCart(btn.dataset.cart,false);
+  });
+  document.querySelectorAll("[data-buy]").forEach(btn=>{
+    btn.onclick=()=>addToCart(btn.dataset.buy,true);
+  });
+}
+
 function openAdd(){
+  if(currentRole !== "superadmin") return;
   editingId = null;
   $("modalTitle").textContent = "Tambah Link Spreadsheet";
   $("catalogName").value = "";
@@ -897,6 +979,7 @@ function openAdd(){
 }
 
 function openEdit(id){
+  if(currentRole !== "superadmin") return;
   const item = catalogs.find(c => c.id === id);
   if(!item) return;
 
@@ -914,6 +997,7 @@ function closeModal(){
 }
 
 async function saveCatalog(){
+  if(currentRole !== "superadmin") return;
   const nama = $("catalogName").value.trim();
   const spreadsheetUrl = $("spreadsheetUrl").value.trim();
 
@@ -972,6 +1056,7 @@ async function saveCatalog(){
 }
 
 async function removeCatalog(id){
+  if(currentRole !== "superadmin") return;
   const item = catalogs.find(c => c.id === id);
   if(!item) return;
 
@@ -987,6 +1072,10 @@ async function removeCatalog(id){
 }
 
 $("btnAdd").onclick = openAdd;
+$("cartBar").onclick = () => {
+  if(!cart.length){ alert("Keranjang masih kosong."); return; }
+  alert(`Ada ${cart.reduce((s,x)=>s+Number(x.qty||0),0)} produk di keranjang. Checkout akan kita buat setelah alur pembelian ditetapkan.`);
+};
 $("btnClose").onclick = closeModal;
 $("logoutBtn").onclick = async () => {
   try{
@@ -1012,7 +1101,20 @@ onAuthStateChanged(auth, async user => {
   }
 
   currentUser = user;
+
+  // Role diambil dari users/{uid}. Hanya Superadmin yang boleh mengelola katalog.
+  try{
+    const profileSnap = await getDoc(doc(db,"users",user.uid));
+    const profile = profileSnap.exists() ? profileSnap.data() : {};
+    currentRole = profile.role === "superadmin" ? "superadmin" : "owner";
+  }catch(e){
+    currentRole = "owner";
+  }
+
+  document.body.classList.toggle("is-superadmin", currentRole === "superadmin");
+  if(currentRole === "superadmin") $("ownerName").textContent = "Superadmin";
   await loadOwnerName();
+  loadCart();
 
   try{
     await loadCatalogs();
