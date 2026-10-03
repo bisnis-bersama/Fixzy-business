@@ -132,7 +132,7 @@ import {
   getDocs,
   getDoc,
   doc,
-  addDoc,
+  runTransaction,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
@@ -208,8 +208,16 @@ function renderInvoice(inv){
       }).join("")}</div>`
     : "";
 
+  const dueNow=isDueTodayOrPast(inv.jatuhTempo);
+  const payHint = dueNow
+    ? `<div class="note" style="margin-top:10px;color:#991b1b;font-weight:700">⚠️ Jatuh tempo. Pembayaran wajib penuh. Jika saldo kurang, wajib Top Up.</div>`
+    : `<div class="note" style="margin-top:10px;color:#166534;font-weight:700">✓ Belum jatuh tempo. Boleh membayar sebagian.</div>`;
+
   const payArea = remaining > 0
-    ? `<div class="pay-area"><button class="btn yellow pay-btn" data-pay="${esc(inv.id)}">💳 Bayar Tagihan</button></div>`
+    ? `<div class="pay-area">
+         <button class="btn yellow pay-btn" data-pay="${esc(inv.id)}">💳 Bayar Tagihan</button>
+         ${payHint}
+       </div>`
     : "";
 
   return `<article class="invoice">
@@ -244,6 +252,29 @@ function renderInvoice(inv){
   </article>`;
 }
 
+function dateKey(v){
+  const d=dateValue(v);
+  if(!d) return "";
+  return new Intl.DateTimeFormat("en-CA",{
+    timeZone:"Asia/Jakarta",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit"
+  }).format(d);
+}
+
+function isDueTodayOrPast(v){
+  const due=dateKey(v);
+  if(!due) return false;
+  const today=new Intl.DateTimeFormat("en-CA",{
+    timeZone:"Asia/Jakarta",
+    year:"numeric",
+    month:"2-digit",
+    day:"2-digit"
+  }).format(new Date());
+  return due<=today;
+}
+
 async function requestPayment(invoiceId){
   try{
     const invSnap=await getDoc(doc(db,"invoices",invoiceId));
@@ -252,91 +283,191 @@ async function requestPayment(invoiceId){
     const inv={id:invSnap.id,...invSnap.data()};
     const total=Number(inv.total ?? inv.totalTagihan ?? 0);
     const paid=Number(inv.totalTerbayar ?? inv.terbayar ?? 0);
-    const remaining=Number(inv.sisaTagihan ?? Math.max(0,total-paid));
+    const remaining=Math.max(0,Number(inv.sisaTagihan ?? Math.max(0,total-paid)));
 
     if(remaining<=0){
       $("message").textContent="Tagihan ini sudah lunas.";
-      $("message").className="message show errmsg";
-      return;
-    }
-
-    // Pastikan tidak ada permintaan pembayaran yang masih menunggu untuk invoice yang sama.
-    const paymentSnap=await getDocs(
-      query(
-        collection(db,"payments"),
-        where("ownerUid","==",auth.currentUser.uid)
-      )
-    );
-
-    const pending=paymentSnap.docs
-      .map(d=>({id:d.id,...d.data()}))
-      .find(p=>p.invoiceId===invoiceId && String(p.status||"").toUpperCase()==="MENUNGGU");
-
-    if(pending){
-      $("message").textContent="Permintaan pembayaran untuk tagihan ini masih menunggu verifikasi Superadmin.";
-      $("message").className="message show errmsg";
+      $("message").className="message show";
       return;
     }
 
     const walletSnap=await getDoc(doc(db,"wallets",auth.currentUser.uid));
     const saldo=walletSnap.exists()?Number(walletSnap.data().saldoPribadi||0):0;
+    const dueNow=isDueTodayOrPast(inv.jatuhTempo);
 
-    // Pembayaran tagihan harus menggunakan saldo pribadi yang cukup.
-    // Jika saldo belum mencukupi untuk melunasi tagihan, arahkan Owner ke Top Up.
-    if(saldo < remaining){
+    /*
+      Aturan pembayaran:
+      - Jatuh tempo hari ini / sudah lewat: WAJIB LUNAS FULL.
+      - Sebelum jatuh tempo: BOLEH BAYAR SEBAGIAN.
+      - Pembayaran selalu memakai SALDO PRIBADI.
+      - LIMIT TIDAK BOLEH dipakai membayar tagihan.
+      - Tidak ada persetujuan Superadmin.
+    */
+
+    if(dueNow && saldo < remaining){
       alert(
-        "Saldo pribadi tidak mencukupi untuk membayar tagihan ini.\n\n"+
+        "Tagihan sudah jatuh tempo dan wajib dibayar penuh.\n\n"+
         "Sisa tagihan: "+money(remaining)+"\n"+
         "Saldo pribadi: "+money(saldo)+"\n\n"+
+        "Saldo tidak mencukupi. Silakan Top Up terlebih dahulu."
+      );
+      location.href="topup.html";
+      return;
+    }
+
+    if(!dueNow && saldo<=0){
+      alert(
+        "Saldo pribadi belum mencukupi untuk melakukan pembayaran sebagian.\n\n"+
         "Silakan Top Up terlebih dahulu."
       );
       location.href="topup.html";
       return;
     }
 
-    const defaultAmount=remaining;
-    const raw=prompt(
-      "Masukkan nominal pembayaran.\nSisa tagihan: "+money(remaining)+"\nSaldo pribadi: "+money(saldo),
-      String(defaultAmount)
-    );
+    let nominal;
 
-    if(raw===null) return;
+    if(dueNow){
+      const ok=confirm(
+        "Tagihan sudah jatuh tempo.\n\n"+
+        "Pembayaran wajib penuh sebesar "+money(remaining)+".\n\n"+
+        "Saldo pribadi: "+money(saldo)+"\n\n"+
+        "Lanjut bayar sekarang?"
+      );
+      if(!ok) return;
+      nominal=remaining;
+    }else{
+      const maxBayar=Math.min(remaining,saldo);
+      const raw=prompt(
+        "Masukkan nominal pembayaran.\n\n"+
+        "Sisa tagihan: "+money(remaining)+"\n"+
+        "Saldo pribadi: "+money(saldo)+"\n"+
+        "Maksimal pembayaran sekarang: "+money(maxBayar)+"\n\n"+
+        "Sebelum jatuh tempo, pembayaran boleh sebagian.",
+        String(maxBayar)
+      );
 
-    const nominal=Number(String(raw).replace(/\\D/g,""));
-    if(!Number.isInteger(nominal)||nominal<=0){
-      $("message").textContent="Nominal pembayaran tidak valid.";
-      $("message").className="message show errmsg";
-      return;
+      if(raw===null) return;
+
+      nominal=Number(String(raw).replace(/\D/g,""));
+
+      if(!Number.isInteger(nominal)||nominal<=0){
+        $("message").textContent="Nominal pembayaran tidak valid.";
+        $("message").className="message show errmsg";
+        return;
+      }
+
+      if(nominal>remaining){
+        $("message").textContent="Nominal melebihi sisa tagihan.";
+        $("message").className="message show errmsg";
+        return;
+      }
+
+      if(nominal>saldo){
+        $("message").textContent="Nominal melebihi saldo pribadi. Jika ingin membayar lebih, silakan Top Up terlebih dahulu.";
+        $("message").className="message show errmsg";
+        return;
+      }
     }
 
-    if(nominal>remaining){
-      $("message").textContent="Nominal melebihi sisa tagihan.";
-      $("message").className="message show errmsg";
-      return;
-    }
+    /*
+      Pembayaran langsung secara transaction:
+      wallet saldo pribadi berkurang,
+      invoice berkurang,
+      dan limit yang sebelumnya terpakai dikembalikan sebesar pembayaran.
+      Ketiga perubahan terjadi dalam satu transaksi Firestore.
+    */
+    await runTransaction(db,async tx=>{
+      const invRef=doc(db,"invoices",invoiceId);
+      const walletRef=doc(db,"wallets",auth.currentUser.uid);
+      const limitRef=doc(db,"limits",auth.currentUser.uid);
 
-    if(nominal>saldo){
-      $("message").textContent="Nominal melebihi saldo pribadi Owner.";
-      $("message").className="message show errmsg";
-      return;
-    }
+      const [freshInvSnap,walletSnap,limitSnap]=await Promise.all([
+        tx.get(invRef),
+        tx.get(walletRef),
+        tx.get(limitRef)
+      ]);
 
-    await addDoc(collection(db,"payments"),{
-      ownerUid:auth.currentUser.uid,
-      invoiceId:invoiceId,
-      nomorPesanan:inv.nomorPesanan||"",
-      nominal:nominal,
-      metode:"SALDO_PRIBADI",
-      status:"MENUNGGU",
-      createdAt:serverTimestamp()
+      if(!freshInvSnap.exists()) throw new Error("Tagihan tidak ditemukan.");
+      if(!walletSnap.exists()) throw new Error("Saldo pribadi Owner tidak ditemukan.");
+
+      const freshInv=freshInvSnap.data();
+      const freshTotal=Number(freshInv.total ?? freshInv.totalTagihan ?? 0);
+      const freshPaid=Number(freshInv.totalTerbayar ?? freshInv.terbayar ?? 0);
+      const freshRemaining=Math.max(
+        0,
+        Number(freshInv.sisaTagihan ?? Math.max(0,freshTotal-freshPaid))
+      );
+
+      if(freshRemaining<=0) throw new Error("Tagihan sudah lunas.");
+
+      const freshDue=isDueTodayOrPast(freshInv.jatuhTempo);
+      const wallet=walletSnap.data();
+      const freshSaldo=Number(wallet.saldoPribadi||0);
+
+      if(freshSaldo<nominal) throw new Error("Saldo pribadi tidak mencukupi.");
+
+      if(freshDue && nominal!==freshRemaining){
+        throw new Error("Tagihan sudah jatuh tempo. Pembayaran wajib penuh.");
+      }
+
+      if(!freshDue && nominal>freshRemaining){
+        throw new Error("Nominal melebihi sisa tagihan.");
+      }
+
+      const newPaid=Math.min(freshTotal,freshPaid+nominal);
+      const newRemaining=Math.max(0,freshTotal-newPaid);
+
+      tx.update(walletRef,{
+        saldoPribadi:freshSaldo-nominal,
+        updatedAt:serverTimestamp()
+      });
+
+      /*
+        Tagihan berasal dari belanja LIMIT/TEMPO.
+        Pembayaran dari saldo pribadi mengembalikan limit yang terpakai.
+      */
+      if(limitSnap.exists()){
+        const limit=limitSnap.data();
+        const usedBefore=Math.max(0,Number(limit.limitTerpakai||0));
+        const approved=Math.max(0,Number(limit.limitDisetujui||0));
+        const availableBefore=Math.max(
+          0,
+          Number(limit.limitTersedia ?? Math.max(0,approved-usedBefore))
+        );
+
+        const returned=Math.min(nominal,usedBefore);
+        const usedAfter=Math.max(0,usedBefore-returned);
+        const availableAfter=Math.max(
+          0,
+          Number(limit.limitTersedia ?? availableBefore)+returned
+        );
+
+        tx.update(limitRef,{
+          limitTerpakai:usedAfter,
+          limitTersedia:availableAfter,
+          updatedAt:serverTimestamp()
+        });
+      }
+
+      tx.update(invRef,{
+        totalTerbayar:newPaid,
+        sisaTagihan:newRemaining,
+        status:newRemaining===0?"LUNAS":"BELUM_LUNAS",
+        lastPaymentAt:serverTimestamp(),
+        lastPaymentNominal:nominal
+      });
     });
 
-    $("message").textContent="Permintaan pembayaran berhasil dikirim. Menunggu verifikasi Superadmin.";
+    $("message").textContent =
+      nominal===remaining
+        ? "Pembayaran lunas berhasil. Saldo pribadi sudah dipotong dan limit yang terpakai sudah dikembalikan."
+        : "Pembayaran sebagian berhasil. Sisa tagihan tetap tercatat dan limit yang terpakai sudah dikembalikan sesuai pembayaran.";
     $("message").className="message show";
     await loadInvoices(auth.currentUser);
+
   }catch(err){
     console.error(err);
-    $("message").textContent=err.message||"Gagal mengajukan pembayaran.";
+    $("message").textContent=err.message||"Gagal melakukan pembayaran.";
     $("message").className="message show errmsg";
   }
 }
