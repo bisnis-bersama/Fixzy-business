@@ -132,9 +132,12 @@ onAuthStateChanged(auth,async user=>{
 
    q.forEach(s=>{
     const x=s.data();
-    const status=String(x.status||"").toUpperCase();
+    const status=String(x.status||"")
+     .trim()
+     .toUpperCase()
+     .replace(/[\s-]+/g,"_");
 
-    if(["BELUM_LUNAS","JATUH_TEMPO"].includes(status)){
+    if(status==="BELUM_LUNAS" || status==="JATUH_TEMPO"){
      const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
 
      if(sisa>0){
