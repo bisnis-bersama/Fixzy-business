@@ -230,7 +230,7 @@ const firebaseConfig = {
   projectId: "teknisi-ponsel-maja",
   storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
   messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95d1a56c761d4ca4"
+  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -641,49 +641,65 @@ async function loadReplacementProducts(){
   if(replacementLoaded) return replacementProducts;
 
   replacementProducts=[];
+  const errors=[];
 
   const snap=await getDocs(collection(db,"productCatalogs"));
   const catalogs=snap.docs
     .map(d=>({id:d.id,...d.data()}))
-    .filter(c=>c.aktif!==false);
+    .filter(c=>c.aktif !== false);
+
+  if(!catalogs.length){
+    throw new Error("Tidak ada katalog productCatalogs yang aktif.");
+  }
 
   for(const catalog of catalogs){
     try{
+      if(!catalog.spreadsheetUrl){
+        throw new Error("spreadsheetUrl kosong");
+      }
+
+      // Sama persis dengan mekanisme halaman produk yang sudah terbukti bekerja.
       const csvUrl=makeCSVUrl(catalog.spreadsheetUrl);
       const response=await fetch(csvUrl,{cache:"no-store"});
 
       if(!response.ok){
-        console.warn("Katalog gagal:",catalog.nama,"HTTP",response.status);
-        continue;
+        throw new Error(`HTTP ${response.status}`);
       }
 
-      const raw=await response.text();
-
-      if(!raw || raw.trim().startsWith("<!DOCTYPE") || raw.trim().startsWith("<html")){
-        console.warn("Katalog bukan CSV publik:",catalog.nama);
-        continue;
+      const text=await response.text();
+      if(!text || text.trim().startsWith("<!DOCTYPE") || text.trim().startsWith("<html")){
+        throw new Error("Spreadsheet belum tersedia sebagai CSV publik.");
       }
 
-      const rows=parseCSV(raw);
+      const rows=parseCSV(text);
       const mapped=mapRows(rows,catalog.nama || "Katalog Produk");
 
       mapped.forEach((p,i)=>{
         replacementProducts.push({
           id:`${catalog.id}_${i}`,
           nama:p.nama || "",
-          tunai:catalogNumber(p.tunai),
-          tempo:catalogNumber(p.tempo),
-          stok:catalogNumber(p.stok),
+          tunai:p.tunai || "",
+          tempo:p.tempo || "",
+          stok:p.stok || "",
           supplier:p.supplier || "",
           kategori:p.kategori || ""
         });
       });
     }catch(err){
+      errors.push(`${catalog.nama || "Katalog"}: ${err.message || err}`);
       console.warn("Gagal membaca katalog pengganti:",catalog.nama,err);
     }
   }
 
   replacementLoaded=true;
+
+  // Simpan diagnostik agar hasil LOAD tidak terlihat seperti sekadar "tidak ditemukan".
+  window.__replacementCatalogDebug={
+    katalogAktif:catalogs.length,
+    jumlahProduk:replacementProducts.length,
+    errors
+  };
+
   return replacementProducts;
 }
 
@@ -703,7 +719,9 @@ function renderReplacementResults(){
   box.style.display="block";
 
   if(!list.length){
-    box.innerHTML='<div class="replace-empty">Produk pengganti tidak ditemukan.</div>';
+    const d=window.__replacementCatalogDebug||{};
+    const extra=d.errors?.length ? `<br><small>${esc(d.errors.join(' | '))}</small>` : `<br><small>Katalog aktif: ${Number(d.katalogAktif||0)} · Produk terbaca: ${Number(d.jumlahProduk||0)}</small>`;
+    box.innerHTML=`<div class="replace-empty">Produk pengganti tidak ditemukan.${extra}</div>`;
     return;
   }
 
