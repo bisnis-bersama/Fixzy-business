@@ -41,6 +41,11 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
 .nearest-due{background:#fee2e2;color:#991b1b}
 .nearest-btn{width:100%;margin-top:12px}
 .nearest-empty{color:var(--muted);font-size:12px}
+
+.nearest-toggle{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.nearest-toggle:active{background:#f8f8f8}
+.nearest-hidden{display:none;margin-top:10px}
+.nearest-hidden.show{display:block}
 @media(max-width:600px){.top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}.promo-list{grid-template-columns:1fr}.landing{padding-top:18px}.promo-main h2{font-size:27px}.brand h1{font-size:16px}.logout{padding:8px 10px}}
 </style>
 </head>
@@ -90,11 +95,13 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
   <h2>Tagihan Terdekat</h2>
   <span id="invoiceCount">0 tagihan</span>
  </div>
- <div id="nearestInvoiceBox">
-  <div class="nearest-card">
-   <div class="nearest-empty">Memuat tagihan...</div>
-  </div>
- </div>
+
+ <button id="nearestToggle" class="nearest-toggle" type="button">
+  <span>📋 Lihat tagihan terdekat</span>
+  <span id="nearestArrow">⌄</span>
+ </button>
+
+ <div id="nearestInvoiceBox" class="nearest-hidden"></div>
 </section>
 </main>
 </div>
@@ -137,13 +144,14 @@ onAuthStateChanged(auth,async user=>{
      .toUpperCase()
      .replace(/[\s-]+/g,"_");
 
-    if(status==="BELUM_LUNAS" || status==="JATUH_TEMPO"){
-     const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
+    const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
 
-     if(sisa>0){
-      total+=sisa;
-      invoices.push({id:s.id,...x,sisaTagihan:sisa});
-     }
+    if(
+     sisa>0 &&
+     !["LUNAS","SUDAH_DIBAYAR","DIBAYAR"].includes(status)
+    ){
+     total+=sisa;
+     invoices.push({id:s.id,...x,sisaTagihan:sisa});
     }
    });
   }catch(e){
@@ -154,17 +162,15 @@ onAuthStateChanged(auth,async user=>{
 
   const invoiceCount=document.getElementById("invoiceCount");
   const nearestBox=document.getElementById("nearestInvoiceBox");
+  const nearestToggle=document.getElementById("nearestToggle");
+  const nearestArrow=document.getElementById("nearestArrow");
 
   invoiceCount.textContent=invoices.length+" tagihan";
 
   if(!invoices.length){
-
-   nearestBox.innerHTML=`
-    <div class="nearest-card">
-     <div class="nearest-empty">Belum ada tagihan yang belum lunas.</div>
-    </div>
-   `;
-
+   nearestToggle.innerHTML="<span>📋 Tidak ada tagihan yang belum lunas</span><span>›</span>";
+   nearestToggle.disabled=true;
+   nearestBox.innerHTML="";
   }else{
 
    const toDate=v=>{
@@ -210,22 +216,26 @@ onAuthStateChanged(auth,async user=>{
         Jatuh tempo: ${tanggal}
        </div>
       </div>
-
       <div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">
        ${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}
       </div>
      </div>
-
-     <button class="topup nearest-btn" id="nearestInvoiceBtn">
+     <button class="topup nearest-btn" id="nearestInvoiceBtn" type="button">
       Lihat & Bayar Tagihan
      </button>
     </div>
    `;
 
+   nearestToggle.onclick=()=>{
+    const open=nearestBox.classList.toggle("show");
+    nearestArrow.textContent=open?"⌃":"⌄";
+   };
+
    document.getElementById("nearestInvoiceBtn").onclick=()=>{
     location.href="tagihan.html";
    };
   }
+
  }catch{document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Owner tidak tersedia."}
 });
 </script>
