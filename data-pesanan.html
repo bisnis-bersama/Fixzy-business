@@ -597,12 +597,12 @@ function mapRows(rows, catalogName){
 
   return rows.slice(1)
     .map(row => ({
-      nama: cleanCell(row[idx.nama]),
-      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
-      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
-      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
-      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
-      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      nama: cleanCatalogCell(row[idx.nama]),
+      tunai: idx.tunai >= 0 ? cleanCatalogCell(row[idx.tunai]) : "",
+      tempo: idx.tempo >= 0 ? cleanCatalogCell(row[idx.tempo]) : "",
+      stok: idx.stok >= 0 ? cleanCatalogCell(row[idx.stok]) : "",
+      supplier: idx.supplier >= 0 ? cleanCatalogCell(row[idx.supplier]) : "",
+      kategori: idx.kategori >= 0 ? cleanCatalogCell(row[idx.kategori]) : "",
       katalog: catalogName
     }))
     .filter(p => p.nama);
