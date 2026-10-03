@@ -678,8 +678,8 @@ async function loadReplacementProducts(){
         replacementProducts.push({
           id:`${catalog.id}_${i}`,
           nama:p.nama || "",
-          tunai:p.tunai || "",
-          tempo:p.tempo || "",
+          tunai:catalogNumber(p.tunai),
+          tempo:catalogNumber(p.tempo),
           stok:p.stok || "",
           supplier:p.supplier || "",
           kategori:p.kategori || ""
@@ -728,7 +728,7 @@ function renderReplacementResults(){
   box.innerHTML=list.map(p=>`
     <button type="button" class="replace-item" data-replacement-id="${esc(p.id)}">
       <b>${esc(p.nama)}</b>
-      <small>${esc(p.supplier||"-")} · Tunai ${money(p.tunai)} · Tempo ${money(p.tempo)} · Stok ${Number(p.stok||0)} pcs</small>
+      <small>${esc(p.supplier||"-")} · Tunai ${money(catalogNumber(p.tunai))} · Tempo ${money(catalogNumber(p.tempo))} · Stok ${catalogNumber(p.stok)} pcs</small>
     </button>
   `).join("");
 
@@ -743,7 +743,7 @@ function selectReplacementProduct(id){
 
   const order=editingProduct ? allOrders.find(x=>x.id===editingProduct.orderId) : null;
   const payment=String(order?.metodePembayaran||order?.paymentMethod||"").toUpperCase();
-  const price=(payment==="LIMIT" || payment==="TEMPO") ? p.tempo : p.tunai;
+  const price=(payment==="LIMIT" || payment==="TEMPO") ? catalogNumber(p.tempo) : catalogNumber(p.tunai);
 
   $("editProductName").value=p.nama;
   $("editProductPrice").value=price||0;
@@ -837,6 +837,28 @@ async function saveEditProduct(){
       const q=Number(x.qty ?? x.jumlah ?? 1);
       return a+p*q;
     },0);
+
+    // Untuk pesanan LIMIT/TEMPO, total seluruh produk setelah penggantian
+    // tidak boleh melebihi limit tersedia Owner. Jika melebihi, perubahan
+    // ditolak dan pesanan tidak disimpan.
+    const payment=String(current.metodePembayaran||current.paymentMethod||"").toUpperCase();
+    if(payment==="LIMIT" || payment==="LIMIT / TEMPO" || payment==="TEMPO") {
+      const limitRef=doc(db,"limits",current.ownerUid);
+      const limitSnap=await getDoc(limitRef);
+      if(!limitSnap.exists()) throw new Error("Data limit Owner belum tersedia.");
+
+      const limitData=limitSnap.data();
+      const tersedia=Number(limitData.limitTersedia||0);
+      if(!Number.isFinite(tersedia) || tersedia<0) {
+        throw new Error("Data limit Owner tidak valid.");
+      }
+
+      if(total>tersedia){
+        throw new Error(
+          `Perubahan ditolak. Total pesanan ${money(total)} melebihi limit tersedia ${money(tersedia)}.`
+        );
+      }
+    }
 
     await updateDoc(ref,{
       items,
