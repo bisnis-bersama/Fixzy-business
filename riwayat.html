@@ -20,22 +20,228 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
 @media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
 </style></head><body>
 <header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Riwayat Transaksi</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
+
 <main class="container">
-<section class="card"><h2>Riwayat Transaksi</h2><select><option>Semua transaksi</option><option>Top Up</option><option>Belanja</option><option>Pembayaran</option><option>Limit</option></select></section>
-<section class="list"><div class="item"><div class="row"><b>Belum ada transaksi</b><span class="badge">-</span></div></div></section>
+<section class="hero">
+  <small>RIWAYAT BISNIS</small>
+  <strong id="historyCount">0 transaksi</strong>
+  <div class="note" style="color:#ccc;margin-top:6px">Pesanan yang sudah selesai, transaksi saldo, dan tagihan tercatat di sini.</div>
+</section>
+
+<section class="card">
+  <h2>Riwayat Transaksi</h2>
+  <select id="filter">
+    <option value="SEMUA">Semua transaksi</option>
+    <option value="BELANJA">Belanja</option>
+    <option value="TAGIHAN">Tagihan</option>
+    <option value="PEMBAYARAN">Pembayaran</option>
+    <option value="TOPUP">Top Up</option>
+    <option value="LIMIT">Limit</option>
+  </select>
+</section>
+
+<section class="list" id="historyList">
+  <div class="item"><div class="row"><b>Memuat riwayat...</b><span class="badge wait">...</span></div></div>
+</section>
 </main>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
+<a href="index.html">Beranda</a>
+<a href="produk.html">Belanja</a>
+<a href="tagihan.html">Tagihan</a>
 <a class="active" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+<a href="profil.html">Profil</a>
+</nav>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,query,where,getDocs,doc,getDoc} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+ authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+ projectId:"teknisi-ponsel-maja",
+ storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+ messagingSenderId:"835618012205",
+ appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const dateValue=v=>{
+ if(v && typeof v.toDate==="function") return v.toDate();
+ if(v?.seconds) return new Date(v.seconds*1000);
+ if(v){const d=new Date(v); if(!isNaN(d.getTime())) return d;}
+ return null;
+};
+const dateText=v=>{
+ const d=dateValue(v);
+ return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"-";
+};
+const norm=v=>String(v??"").trim().toUpperCase().replace(/[\\s-]+/g,"_");
+
+let all=[];
+
+function orderTotal(x){
+ return Number(x.total??x.totalHarga??x.grandTotal??x.totalBelanja??0);
+}
+function orderQty(x){
+ if(Number(x.totalQty)>0) return Number(x.totalQty);
+ if(Number(x.jumlahBarang)>0) return Number(x.jumlahBarang);
+ if(Array.isArray(x.items)) return x.items.reduce((s,i)=>s+Number(i.qty??i.jumlah??1),0);
+ return 0;
+}
+function orderDate(x){
+ return x.updatedAt||x.completedAt||x.selesaiAt||x.deliveredAt||x.createdAt;
+}
+function orderStatus(x){
+ return norm(x.status||x.orderStatus||"");
+}
+function isFinishedOrder(x){
+ const s=orderStatus(x);
+ return ["SELESAI","COMPLETED","DITERIMA","BARANG_DITERIMA"].includes(s);
+}
+
+async function load(){
+ const u=auth.currentUser;
+ if(!u)return;
+
+ const rows=[];
+
+ // 1. PESANAN: masuk riwayat setelah barang benar-benar selesai/diterima.
+ try{
+  const qs=await getDocs(query(collection(db,"orders"),where("ownerUid","==",u.uid)));
+  qs.forEach(d=>{
+   const x=d.data(), s=orderStatus(x);
+   if(!isFinishedOrder(x)) return;
+   const pay=norm(x.paymentMethod||x.metodePembayaran||x.payment||"");
+   const limitPay=["LIMIT","LIMIT_TEMPO","TEMPO","LIMIT_TEMPO"].includes(pay);
+   rows.push({
+    type:"BELANJA",
+    date:orderDate(x),
+    id:"order_"+d.id,
+    title:"Pesanan selesai",
+    ref:x.orderNo||x.nomorPesanan||d.id,
+    amount:orderTotal(x),
+    detail:`${orderQty(x)} pcs • ${limitPay?"LIMIT / TEMPO":"SALDO PRIBADI"}`,
+    badge:limitPay?"TAGIHAN":"DIBAYAR SALDO",
+    badgeClass:limitPay?"wait":"ok"
+   });
+  });
+ }catch(e){console.error("orders",e)}
+
+ // 2. INVOICE: tagihan limit/tempo. Lunas tetap tercatat sebagai pembayaran.
+ try{
+  const qs=await getDocs(query(collection(db,"invoices"),where("ownerUid","==",u.uid)));
+  qs.forEach(d=>{
+   const x=d.data();
+   const total=Number(x.total??x.totalTagihan??0);
+   const paid=Number(x.totalTerbayar??0);
+   const sisa=Number(x.sisaTagihan??Math.max(0,total-paid));
+   const st=norm(x.status||"");
+   const lunas=sisa<=0 || st==="LUNAS";
+   rows.push({
+    type:lunas?"PEMBAYARAN":"TAGIHAN",
+    date:x.lastPaymentAt||x.updatedAt||x.jatuhTempo||x.createdAt,
+    id:"invoice_"+d.id,
+    title:lunas?"Pembayaran tagihan":"Tagihan LIMIT / TEMPO",
+    ref:x.nomorInvoice||x.nomorPesanan||d.id,
+    amount:lunas?(Number(x.totalTerbayar||total)):sisa,
+    detail:lunas?"Tagihan sudah lunas":`Sisa tagihan • Jatuh tempo ${dateText(x.jatuhTempo)}`,
+    badge:lunas?"LUNAS":"BELUM LUNAS",
+    badgeClass:lunas?"ok":"wait"
+   });
+  });
+ }catch(e){console.error("invoices",e)}
+
+ // 3. TOP UP: hanya transaksi milik owner dan yang sudah disetujui/ditolak.
+ try{
+  const qs=await getDocs(query(collection(db,"walletTransactions"),where("ownerUid","==",u.uid)));
+  qs.forEach(d=>{
+   const x=d.data(), st=norm(x.status||"");
+   if(!["DISETUJUI","DITOLAK","APPROVED","REJECTED"].includes(st)) return;
+   const ok=["DISETUJUI","APPROVED"].includes(st);
+   rows.push({
+    type:"TOPUP",
+    date:x.verifiedAt||x.updatedAt||x.createdAt,
+    id:"topup_"+d.id,
+    title:"Top Up Saldo",
+    ref:x.referensi||x.reference||d.id,
+    amount:Number(x.nominal||0),
+    detail:x.metode||x.method||"Top Up",
+    badge:ok?"DISETUJUI":"DITOLAK",
+    badgeClass:ok?"ok":"bad"
+   });
+  });
+ }catch(e){console.error("walletTransactions",e)}
+
+ // 4. LIMIT: catatan perubahan limit yang sudah diproses.
+ try{
+  const qs=await getDocs(query(collection(db,"limitTransactions"),where("ownerUid","==",u.uid)));
+  qs.forEach(d=>{
+   const x=d.data(), st=norm(x.status||"");
+   if(st && !["DISETUJUI","APPROVED","SELESAI","COMPLETED"].includes(st)) return;
+   const nominal=Number(x.nominal||x.jumlah||x.amount||0);
+   if(!nominal)return;
+   rows.push({
+    type:"LIMIT",
+    date:x.approvedAt||x.updatedAt||x.createdAt,
+    id:"limit_"+d.id,
+    title:"Perubahan Limit",
+    ref:x.referensi||x.reference||d.id,
+    amount:nominal,
+    detail:x.keterangan||x.jenis||"Limit",
+    badge:"DIPROSES",
+    badgeClass:"ok"
+   });
+  });
+ }catch(e){console.error("limitTransactions",e)}
+
+ all=rows.sort((a,b)=>(dateValue(b.date)?.getTime()||0)-(dateValue(a.date)?.getTime()||0));
+ render();
+}
+
+function render(){
+ const f=document.getElementById("filter").value;
+ const data=f==="SEMUA"?all:all.filter(x=>x.type===f);
+ document.getElementById("historyCount").textContent=data.length+" transaksi";
+ const box=document.getElementById("historyList");
+
+ if(!data.length){
+  box.innerHTML=`<div class="item"><div class="row"><b>Belum ada transaksi</b><span class="badge">-</span></div><div class="note" style="margin-top:7px">Riwayat akan muncul setelah pesanan selesai, top up diproses, atau tagihan tercatat.</div></div>`;
+  return;
+ }
+
+ box.innerHTML=data.map(x=>`
+ <article class="item">
+  <div class="row">
+   <div>
+    <h3 style="margin:0">${esc(x.title)}</h3>
+    <div class="note">${esc(x.ref)}</div>
+   </div>
+   <span class="badge ${x.badgeClass||""}">${esc(x.badge)}</span>
+  </div>
+  <div class="row" style="margin-top:10px">
+   <span class="note">${esc(x.detail)}</span>
+   <b>${rupiah(x.amount)}</b>
+  </div>
+  <div class="note" style="margin-top:7px">${dateText(x.date)}</div>
+ </article>`).join("");
+}
+
+document.getElementById("filter").addEventListener("change",render);
+
+onAuthStateChanged(auth,async u=>{
+ if(!u){location.href="index.html";return}
+ try{
+  const me=await getDoc(doc(db,"users",u.uid));
+  if(!me.exists()||me.data().role!=="owner"){location.href="index.html";return}
+  await load();
+ }catch(e){
+  console.error(e);
+  document.getElementById("historyList").innerHTML=`<div class="item"><b>Gagal memuat riwayat.</b><div class="note">${esc(e.message||"Silakan coba lagi.")}</div></div>`;
+ }
+});
 </script></body></html>
