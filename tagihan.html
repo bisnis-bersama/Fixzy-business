@@ -423,10 +423,23 @@ async function requestPayment(invoiceId){
       });
 
       /*
-        Tagihan berasal dari belanja LIMIT/TEMPO.
-        Pembayaran dari saldo pribadi mengembalikan limit yang terpakai.
+        Hanya invoice LIMIT/TEMPO yang mengembalikan limit.
+        Invoice tunai/SALDO_PRIBADI tidak menyentuh limit.
       */
-      if(limitSnap.exists()){
+      const method=String(
+        freshInv.metodePembayaran ??
+        freshInv.metode ??
+        ""
+      ).toUpperCase().trim();
+
+      const isLimitInvoice=[
+        "LIMIT",
+        "TEMPO",
+        "LIMIT / TEMPO",
+        "LIMIT/TEMPO"
+      ].includes(method);
+
+      if(isLimitInvoice && limitSnap.exists()){
         const limit=limitSnap.data();
         const usedBefore=Math.max(0,Number(limit.limitTerpakai||0));
         const approved=Math.max(0,Number(limit.limitDisetujui||0));
@@ -445,6 +458,9 @@ async function requestPayment(invoiceId){
         tx.update(limitRef,{
           limitTerpakai:usedAfter,
           limitTersedia:availableAfter,
+          lastPaymentInvoiceId:invoiceId,
+          lastPaymentNominal:nominal,
+          lastPaymentAt:serverTimestamp(),
           updatedAt:serverTimestamp()
         });
       }
