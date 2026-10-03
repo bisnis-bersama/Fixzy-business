@@ -30,7 +30,7 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
 @media(max-width:520px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 
 .ktp-photo{margin-top:16px;padding:14px;border:1px solid #e7eaf0;border-radius:16px;background:#fafafa}.ktp-photo-title{font-weight:900;margin-bottom:5px}.ktp-photo-note{font-size:11px;color:#667085;line-height:1.45;margin-bottom:10px}.photo-preview{width:100%;max-height:210px;object-fit:contain;background:#eee;border-radius:12px;display:none;margin-top:10px}.photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.photo-btn{border:1px solid #d0d5dd;border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer}.photo-btn.primary-photo{background:#111;color:#FFC107;border-color:#111}.photo-status{font-size:11px;margin-top:8px;color:#667085}
-</style>
+.save-result{display:none;margin:12px 0;padding:14px 16px;border-radius:14px;font-weight:800;text-align:center;line-height:1.4}.save-result.success{display:block;background:#e8f7ee;color:#087443;border:1px solid #9ed9b7}.save-result.error{display:block;background:#fff0f0;color:#b42318;border:1px solid #f0aaaa}</style>
 </head>
 <body>
 <div class="app">
@@ -83,7 +83,8 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
       <span>Saya menyatakan data yang saya isi sesuai dengan KTP dan dapat digunakan FIXZY BUSINESS sebagai data identitas/alamat penagihan.</span>
     </label>
 
-    <button class="primary" id="saveBtn">Simpan Data Identitas</button>
+    <div id="saveResult" class="save-result" role="alert"></div>
+<button class="primary" id="saveBtn">Simpan Data Identitas</button>
   </section>
 </main>
 
@@ -143,6 +144,13 @@ $("galleryBtn").onclick=()=>$("ktpGallery").click();
 $("ktpCamera").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
 $("ktpGallery").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
 
+function showSaveResult(ok,text){
+ const el=$("saveResult");
+ el.className="save-result "+(ok?"success":"error");
+ el.textContent=(ok?"✓ ":"✕ ")+text;
+ el.style.display="block";
+ el.scrollIntoView({behavior:"smooth",block:"center"});
+}
 function message(t,type="success"){ $("message").textContent=t; $("message").className="msg show "+type; }
 function fill(x){
  const k=x?.dataKtp||{};
@@ -204,23 +212,49 @@ $("saveBtn").onclick=async()=>{
  const k=read(),err=validate(k);
  if(err){message(err,"error");return;}
  const b=$("saveBtn");b.disabled=true;b.textContent="Menyimpan...";
- try{
-  const user=auth.currentUser;
-  let fotoKtpPath=existingKtpPath;
-  if(selectedKtpFile){
-   const compressed=await compressKtp(selectedKtpFile);
-   const storageRef=ref(storage,`ktp/${user.uid}/ktp.jpg`);
-   $("photoStatus").textContent=`Mengunggah foto terkompresi (${Math.round(compressed.size/1024)} KB)...`;
-   await uploadBytes(storageRef,compressed,{contentType:"image/jpeg",cacheControl:"private,max-age=3600"});
-   fotoKtpPath=`ktp/${user.uid}/ktp.jpg`;
-  }
-  await setDoc(doc(db,"users",user.uid),{dataKtp:{...k,fotoKtpPath},updatedAt:serverTimestamp()},{merge:true});
-  message("Data identitas dan foto KTP berhasil disimpan.");
-  setTimeout(()=>location.href="limit.html",500);
- }catch(e){
-  console.error(e);
-  message("Data/foto KTP gagal disimpan: "+(e.message||e),"error");
- }finally{b.disabled=false;b.textContent="Simpan Data Identitas";}
+try{
+ const user=auth.currentUser;
+ if(!user) throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
+
+ let fotoKtpPath=existingKtpPath;
+
+ if(selectedKtpFile){
+  $("photoStatus").textContent="1/3 Memproses dan mengompres foto KTP...";
+  const compressed=await compressKtp(selectedKtpFile);
+  $("photoStatus").textContent=`2/3 Mengunggah foto KTP (${Math.round(compressed.size/1024)} KB)...`;
+
+  const storagePath=`ktp/${user.uid}/ktp.jpg`;
+  const storageRef=ref(storage,storagePath);
+
+  await Promise.race([
+   uploadBytes(storageRef,compressed,{contentType:"image/jpeg",cacheControl:"private,max-age=3600"}),
+   new Promise((_,reject)=>setTimeout(()=>reject(new Error("Upload foto KTP timeout. Periksa Firebase Storage Rules dan koneksi internet.")),30000))
+  ]);
+
+  fotoKtpPath=storagePath;
+ }
+
+ $("photoStatus").textContent="3/3 Menyimpan data identitas...";
+ await Promise.race([
+  setDoc(doc(db,"users",user.uid),{dataKtp:{...k,fotoKtpPath},updatedAt:serverTimestamp()},{merge:true}),
+  new Promise((_,reject)=>setTimeout(()=>reject(new Error("Penyimpanan data timeout. Periksa Firestore Rules dan koneksi internet.")),20000))
+ ]);
+
+ $("photoStatus").textContent="Berhasil disimpan.";
+ showSaveResult(true,"Data identitas dan foto KTP berhasil disimpan.");
+ message("Data identitas dan foto KTP berhasil disimpan.");
+ setTimeout(()=>location.replace("limit.html"),1500);
+
+}catch(e){
+ console.error(e);
+ const errText="Gagal menyimpan: "+(e.message||e);
+ $("photoStatus").textContent="Penyimpanan gagal.";
+ showSaveResult(false,errText);
+ message(errText,"error");
+}finally{
+ b.disabled=false;
+ b.textContent="Simpan Data Identitas";
+}
 };
 
 $("backBtn").onclick=()=>location.href="limit.html";
