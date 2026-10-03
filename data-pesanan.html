@@ -47,30 +47,6 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
 .products{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;margin:10px 0}
 .product-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:12px}
 .product-row span:first-child{max-width:70%}
-.product-row-main{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;width:100%}
-.product-edit{margin-top:5px;border:1px solid var(--border);background:#fff;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900;cursor:pointer}
-.product-edit:hover{background:#f8f8f8}
-.edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:60}
-.edit-modal.show{display:flex}
-.edit-box{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px 22px 0 0;padding:18px}
-.edit-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
-.edit-head h3{margin:0;font-size:18px}
-.edit-field{margin-bottom:11px}
-.edit-field label{display:block;font-size:11px;font-weight:900;color:#374151;margin-bottom:5px}
-.edit-field input,.edit-field select{width:100%;padding:11px;border:1px solid var(--border);border-radius:10px;font-size:13px;box-sizing:border-box}
-.edit-note{background:#fff7d6;border-radius:10px;padding:10px;font-size:11px;line-height:1.45;margin-bottom:12px;color:#6b4e00}
-.replace-box{border:1px solid var(--border);border-radius:13px;padding:11px;margin-bottom:13px;background:#fafafa}
-.replace-title{font-size:12px;font-weight:900;margin-bottom:8px}
-.replace-row{display:flex;gap:7px}
-.replace-row input{flex:1;padding:10px;border:1px solid var(--border);border-radius:9px;font-size:12px}
-.replace-row button{white-space:nowrap}
-.replace-list{margin-top:8px;max-height:210px;overflow:auto;display:none}
-.replace-item{width:100%;text-align:left;border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px;margin-bottom:6px;cursor:pointer}
-.replace-item b{display:block;font-size:12px}
-.replace-item small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-.replace-empty{padding:9px;color:var(--muted);font-size:11px}
-.edit-actions{display:flex;gap:8px;margin-top:14px}
-.edit-actions .btn{flex:1}
 .address{font-size:12px;line-height:1.5;background:#f8f8f8;border-radius:11px;padding:10px;margin-bottom:10px}
 .address b{display:block;margin-bottom:3px}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
@@ -100,6 +76,30 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
   .info-grid{grid-template-columns:1fr 1fr}
   .order-head{flex-direction:column}
 }
+
+.edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:60}
+.edit-modal.show{display:flex}
+.edit-box{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px 22px 0 0;padding:18px}
+.edit-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.edit-head h3{margin:0;font-size:18px}
+.edit-note{background:#fff7d6;border-radius:11px;padding:10px;font-size:11px;line-height:1.45;margin-bottom:12px;color:#6b4e00}
+.edit-field{margin-bottom:10px}
+.edit-field label{display:block;font-size:11px;font-weight:900;margin-bottom:4px}
+.edit-field input{width:100%;box-sizing:border-box}
+.edit-actions{display:flex;gap:8px;margin-top:12px}
+.edit-actions .btn{flex:1}
+.product-row-main{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;width:100%}
+.product-edit{margin-top:6px;border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:6px 9px;font-size:10px;font-weight:900;cursor:pointer}
+.replace-box{border:1px solid #e5e7eb;border-radius:13px;padding:11px;margin-bottom:12px;background:#fafafa}
+.replace-title{font-size:12px;font-weight:900;margin-bottom:7px}
+.replace-row{display:flex;gap:7px}
+.replace-row input{flex:1;margin:0}
+.replace-row button{min-width:72px}
+.replace-list{margin-top:8px;max-height:220px;overflow:auto;display:none}
+.replace-item{width:100%;text-align:left;border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px;margin-bottom:6px;cursor:pointer}
+.replace-item b{display:block;font-size:12px}
+.replace-item small{display:block;color:#6b7280;font-size:10px;margin-top:3px;line-height:1.4}
+.replace-empty{padding:9px;color:#6b7280;font-size:11px}
 </style>
 </head>
 <body>
@@ -166,15 +166,18 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
       <h3>Edit Produk Pesanan</h3>
       <button class="close" id="closeEditProduct" type="button">✕</button>
     </div>
+
     <div class="edit-note">
-      Perubahan produk hanya dilakukan sebelum pesanan disetujui. Jika nama/merk atau harga berubah,
-      status ketersediaan supplier akan dikembalikan agar barang dikonfirmasi ulang.
+      Produk hanya dapat diubah sebelum pesanan disetujui.
+      Jika produk atau harga berubah, status supplier akan kembali menjadi
+      belum dikonfirmasi sehingga supplier perlu dicek ulang.
     </div>
 
     <div class="replace-box">
-      <div class="replace-title">🔄 Load Produk Pengganti dari Katalog Spreadsheet</div>
+      <div class="replace-title">🔄 Produk Pengganti dari Spreadsheet</div>
       <div class="replace-row">
-        <input id="replacementSearch" type="text" placeholder="Ketik minimal 2 huruf nama / merk...">
+        <input id="replacementSearch" type="text"
+          placeholder="Ketik minimal 2 huruf nama / merk...">
         <button class="btn yellow" id="loadReplacementBtn" type="button">LOAD</button>
       </div>
       <div class="replace-list" id="replacementList"></div>
@@ -184,14 +187,17 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
       <label>Nama Produk / Merk</label>
       <input id="editProductName" type="text" placeholder="Nama produk">
     </div>
+
     <div class="edit-field">
       <label>Harga per Pcs</label>
-      <input id="editProductPrice" type="number" min="0" step="1" placeholder="Harga">
+      <input id="editProductPrice" type="number" min="0" step="1">
     </div>
+
     <div class="edit-field">
       <label>Jumlah (pcs)</label>
-      <input id="editProductQty" type="number" min="1" step="1" placeholder="Jumlah">
+      <input id="editProductQty" type="number" min="1" step="1">
     </div>
+
     <div class="edit-actions">
       <button class="btn light" id="cancelEditProduct" type="button">Batal</button>
       <button class="btn green" id="saveEditProduct" type="button">Simpan Perubahan</button>
@@ -224,7 +230,7 @@ const firebaseConfig = {
   projectId: "teknisi-ponsel-maja",
   storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
   messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+  appId: "1:835618012205:web:95d1a56c761d4ca4"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -440,249 +446,163 @@ function render(){
 async function loadOrders(){
   $("loading").style.display="block";
   $("orders").innerHTML="";
+
   try{
-    const snap=await getDocs(collection(db,"orders"));
-    allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const result = await Promise.race([
+      getDocs(collection(db,"orders")),
+      new Promise((_,reject)=>
+        setTimeout(()=>reject(new Error("Waktu memuat pesanan habis. Periksa koneksi Firebase dan Firestore Rules.")),12000)
+      )
+    ]);
+
+    allOrders=result.docs.map(d=>({id:d.id,...d.data()}));
+
     allOrders.sort((a,b)=>{
-      const ta=a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt||0).getTime();
-      const tb=b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt||0).getTime();
+      const ta=a.createdAt?.toMillis
+        ? a.createdAt.toMillis()
+        : new Date(a.createdAt||0).getTime();
+      const tb=b.createdAt?.toMillis
+        ? b.createdAt.toMillis()
+        : new Date(b.createdAt||0).getTime();
       return tb-ta;
     });
+
     render();
   }catch(err){
-    console.error(err);
+    console.error("FIXZY loadOrders:",err);
     $("loading").style.display="none";
-    $("orders").innerHTML=`<div class="empty">Gagal memuat pesanan.<br><small>${esc(err.message)}</small></div>`;
+    $("orders").innerHTML=
+      `<div class="empty">
+        <b>Gagal memuat data pesanan.</b><br>
+        <small>${esc(err?.message || err)}</small>
+      </div>`;
   }
 }
 
 
-
-function normalizeHeader(value){
-  return String(value ?? "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^a-z0-9]+/g,"")
-    .trim();
+function cleanCatalogCell(v){
+  return String(v ?? "").replace(/^\uFEFF/,"").trim();
 }
 
-const aliases = {
-  nama: [
-    "namaproduk","namabarang","produk","barang","namaproduct",
-    "productname","itemname","description","deskripsi"
-  ],
-  tunai: [
-    "tunai","hargatunai","hargacash","cash","cashprice",
-    "hargacash","hargaoffline"
-  ],
-  tempo: [
-    "tempo","hargatempo","hargakredit","kredit","credit",
-    "creditprice","hargapiutang"
-  ],
-  stok: [
-    "stok","stock","persediaan","qty","quantity","jumlahstok",
-    "stocktersedia"
-  ],
-  supplier: [
-    "supplier","suplier","pemasok","distributor","vendor"
-  ],
-  kategori: [
-    "kategori","katagory","category","jenis","kelompok","type"
-  ]
-};
-
-function findHeaderIndex(headers, field){
-  const normalized = headers.map(normalizeHeader);
-  for(const alias of aliases[field]){
-    const i = normalized.indexOf(alias);
-    if(i >= 0) return i;
-  }
-  return -1;
+function catalogNumber(v){
+  let s=cleanCatalogCell(v).replace(/Rp/gi,"").replace(/\s/g,"");
+  if(!s) return 0;
+  if(s.includes(".") && s.includes(",")) s=s.replace(/\./g,"").replace(",",".");
+  else if(s.includes(".")) s=s.replace(/\./g,"");
+  else if(s.includes(",")) s=s.replace(/,/g,"");
+  const n=Number(s);
+  return Number.isFinite(n) ? n : 0;
 }
 
-function parseCSV(text){
-  const rows = [];
-  let row = [];
-  let cell = "";
-  let quoted = false;
-
+function parseCatalogCSV(text){
+  const rows=[]; let row=[],cell="",quoted=false;
+  text=String(text||"").replace(/^\uFEFF/,"");
   for(let i=0;i<text.length;i++){
-    const c = text[i];
-
-    if(c === '"'){
-      if(quoted && text[i+1] === '"'){
-        cell += '"';
-        i++;
-      }else{
-        quoted = !quoted;
-      }
-    }else if(c === "," && !quoted){
-      row.push(cell);
-      cell = "";
-    }else if((c === "\n" || c === "\r") && !quoted){
-      if(c === "\r" && text[i+1] === "\n") i++;
-      row.push(cell);
-      cell = "";
-      if(row.some(v => String(v).trim() !== "")) rows.push(row);
-      row = [];
-    }else{
-      cell += c;
-    }
+    const c=text[i], n=text[i+1];
+    if(c==='"'){
+      if(quoted && n==='"'){cell+='"';i++;}
+      else quoted=!quoted;
+    }else if(c==="," && !quoted){
+      row.push(cell);cell="";
+    }else if((c==="\\n" || c==="\\r") && !quoted){
+      if(c==="\\r" && n==="\\n") i++;
+      row.push(cell);cell="";
+      if(row.some(v=>String(v).trim())) rows.push(row);
+      row=[];
+    }else cell+=c;
   }
-
-  if(cell !== "" || row.length){
+  if(cell!=="" || row.length){
     row.push(cell);
-    if(row.some(v => String(v).trim() !== "")) rows.push(row);
+    if(row.some(v=>String(v).trim())) rows.push(row);
   }
   return rows;
 }
 
-function makeCSVUrl(url){
-  const u = new URL(url);
+function catalogHeaderIndex(headers,names){
+  const h=headers.map(v=>cleanCatalogCell(v).toLowerCase().replace(/[^a-z0-9]+/g,""));
+  for(const name of names){
+    const i=h.indexOf(name.toLowerCase().replace(/[^a-z0-9]+/g,""));
+    if(i>=0) return i;
+  }
+  return -1;
+}
 
-  // Google published Spreadsheet:
-  // /pubhtml?...  -> /pub?...&output=csv
-  if(u.hostname === "docs.google.com"){
-    if(u.pathname.includes("/pubhtml")){
-      u.pathname = u.pathname.replace("/pubhtml","/pub");
-    }
+function catalogCSVUrl(url){
+  try{
+    const u=new URL(url);
+    if(u.hostname!=="docs.google.com") return url;
+    if(u.pathname.includes("/pubhtml")) u.pathname=u.pathname.replace("/pubhtml","/pub");
     u.searchParams.set("output","csv");
     return u.toString();
-  }
-
-  return url;
-}
-
-function money(value){
-  if(value === null || value === undefined || String(value).trim() === "") return "-";
-
-  const raw = String(value).trim();
-
-  // Keep already formatted non-numeric values readable.
-  const cleaned = raw.replace(/[^\d,.-]/g,"");
-  if(!cleaned) return raw;
-
-  let normalized = cleaned;
-
-  // Handle common Indonesian formats:
-  // 100.000 -> 100000
-  // 100000,50 -> 100000.50
-  if(cleaned.includes(".") && cleaned.includes(",")){
-    normalized = cleaned.replace(/\./g,"").replace(",",".");
-  }else if(cleaned.includes(",")){
-    const parts = cleaned.split(",");
-    normalized = parts.length === 2 && parts[1].length <= 2
-      ? cleaned.replace(",",".")
-      : cleaned.replace(/,/g,"");
-  }else if(cleaned.includes(".")){
-    const parts = cleaned.split(".");
-    normalized = parts.length > 2 || (parts.length === 2 && parts[1].length === 3)
-      ? cleaned.replace(/\./g,"")
-      : cleaned;
-  }
-
-  const number = Number(normalized);
-  if(!Number.isFinite(number)) return raw;
-
-  return "Rp " + Math.round(number).toLocaleString("id-ID");
-}
-
-function cleanCell(value){
-  return String(value ?? "").trim();
-}
-
-function mapRows(rows, catalogName){
-  if(!rows.length) return [];
-
-  const headers = rows[0];
-  const idx = {
-    nama: findHeaderIndex(headers,"nama"),
-    tunai: findHeaderIndex(headers,"tunai"),
-    tempo: findHeaderIndex(headers,"tempo"),
-    stok: findHeaderIndex(headers,"stok"),
-    supplier: findHeaderIndex(headers,"supplier"),
-    kategori: findHeaderIndex(headers,"kategori")
-  };
-
-  // Nama produk adalah field wajib.
-  if(idx.nama < 0){
-    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
-  }
-
-  return rows.slice(1)
-    .map(row => ({
-      nama: cleanCell(row[idx.nama]),
-      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
-      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
-      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
-      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
-      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
-      katalog: catalogName
-    }))
-    .filter(p => p.nama);
+  }catch{return url;}
 }
 
 async function loadReplacementProducts(){
   if(replacementLoaded) return replacementProducts;
 
-  replacementProducts=[];
-
-  // Gunakan katalog GLOBAL dan format Spreadsheet yang sama
-  // dengan halaman produk.html.
   const snap=await getDocs(collection(db,"productCatalogs"));
   const catalogs=snap.docs
     .map(d=>({id:d.id,...d.data()}))
-    .filter(c=>c.aktif !== false);
+    .filter(c=>c.aktif!==false);
+
+  const result=[];
 
   for(const catalog of catalogs){
     try{
-      const csvUrl=makeCSVUrl(catalog.spreadsheetUrl);
-      const response=await fetch(csvUrl,{cache:"no-store"});
+      const response=await fetch(catalogCSVUrl(catalog.spreadsheetUrl),{cache:"no-store"});
       if(!response.ok) continue;
 
       const raw=await response.text();
-      if(!raw || raw.trim().startsWith("<!DOCTYPE") || raw.trim().startsWith("<html")){
-        continue;
-      }
+      if(/^\s*<(!doctype|html)/i.test(raw)) continue;
 
-      const rows=parseCSV(raw);
-      const mapped=mapRows(rows,catalog.nama || "Katalog Produk");
+      const rows=parseCatalogCSV(raw);
+      if(!rows.length) continue;
 
-      mapped.forEach((p,i)=>{
-        replacementProducts.push({
+      const h=rows[0];
+      const idxNama=catalogHeaderIndex(h,["namaproduk","nama","produk","barang","product"]);
+      const idxTunai=catalogHeaderIndex(h,["hargatunai","tunai","cash","harga"]);
+      const idxTempo=catalogHeaderIndex(h,["hargatempo","tempo","hargakredit","kredit"]);
+      const idxStok=catalogHeaderIndex(h,["stok","stock","persediaan","qty","quantity"]);
+      const idxSupplier=catalogHeaderIndex(h,["supplier","suplier","pemasok","distributor","vendor"]);
+      const idxKategori=catalogHeaderIndex(h,["kategori","category","jenis","kelompok"]);
+
+      if(idxNama<0) continue;
+
+      rows.slice(1).forEach((r,i)=>{
+        const nama=cleanCatalogCell(r[idxNama]);
+        if(!nama) return;
+        result.push({
           id:`${catalog.id}_${i}`,
-          nama:p.nama,
-          tunai:p.tunai,
-          tempo:p.tempo,
-          stok:p.stok,
-          supplier:p.supplier,
-          kategori:p.kategori,
-          katalog:p.katalog
+          nama,
+          tunai:idxTunai>=0 ? catalogNumber(r[idxTunai]) : 0,
+          tempo:idxTempo>=0 ? catalogNumber(r[idxTempo]) : 0,
+          stok:idxStok>=0 ? catalogNumber(r[idxStok]) : 0,
+          supplier:idxSupplier>=0 ? cleanCatalogCell(r[idxSupplier]) : "",
+          kategori:idxKategori>=0 ? cleanCatalogCell(r[idxKategori]) : ""
         });
       });
     }catch(err){
-      console.warn("Gagal membaca katalog pengganti:",catalog.nama,err);
+      console.warn("Katalog tidak terbaca:",catalog.nama,err);
     }
   }
 
+  replacementProducts=result;
   replacementLoaded=true;
-  return replacementProducts;
+  return result;
 }
 
 function renderReplacementResults(){
   const box=$("replacementList");
   const q=$("replacementSearch").value.trim().toLowerCase();
 
-  if(!replacementProducts.length){
-    box.style.display="block";
-    box.innerHTML='<div class="replace-empty">Belum ada produk dari Spreadsheet.</div>';
+  if(q.length<2){
+    box.style.display="none";
     return;
   }
 
   const list=replacementProducts
-    .filter(p=>!q || `${p.nama} ${p.supplier} ${p.kategori}`.toLowerCase().includes(q))
-    .slice(0,50);
+    .filter(p=>`${p.nama} ${p.supplier} ${p.kategori}`.toLowerCase().includes(q))
+    .slice(0,40);
 
   box.style.display="block";
 
@@ -694,12 +614,7 @@ function renderReplacementResults(){
   box.innerHTML=list.map(p=>`
     <button type="button" class="replace-item" data-replacement-id="${esc(p.id)}">
       <b>${esc(p.nama)}</b>
-      <small>
-        ${esc(p.supplier || "Supplier -")}
-        · Tunai ${money(p.tunai)}
-        · Tempo ${money(p.tempo)}
-        · Stok ${Number(p.stok||0)} pcs
-      </small>
+      <small>${esc(p.supplier||"-")} · Tunai ${money(p.tunai)} · Tempo ${money(p.tempo)} · Stok ${Number(p.stok||0)} pcs</small>
     </button>
   `).join("");
 
@@ -712,179 +627,126 @@ function selectReplacementProduct(id){
   const p=replacementProducts.find(x=>x.id===id);
   if(!p) return;
 
-  const order=editingProduct
-    ? allOrders.find(x=>x.id===editingProduct.orderId)
-    : null;
-
+  const order=editingProduct ? allOrders.find(x=>x.id===editingProduct.orderId) : null;
   const payment=String(order?.metodePembayaran||order?.paymentMethod||"").toUpperCase();
   const price=(payment==="LIMIT" || payment==="TEMPO") ? p.tempo : p.tunai;
 
   $("editProductName").value=p.nama;
-  $("editProductPrice").value=price || 0;
-
-  // Simpan informasi supplier dari produk pengganti untuk dipakai
-  // saat supplier dikonfirmasi ulang.
-  $("editProductName").dataset.replacementSupplier=p.supplier || "";
-  $("editProductName").dataset.replacementStock=String(p.stok||0);
-  $("editProductName").dataset.replacementCategory=p.kategori || "";
-  $("editProductName").dataset.replacementCatalog=p.katalog || "";
-
-  $("replacementSearch").value=p.nama;
+  $("editProductPrice").value=price||0;
+  $("editProductName").dataset.supplier=p.supplier||"";
+  $("editProductName").dataset.stok=String(p.stok||0);
+  $("editProductName").dataset.kategori=p.kategori||"";
   $("replacementList").style.display="none";
 }
 
-async function loadReplacementUI(){
-  $("loadReplacementBtn").disabled=true;
-  $("loadReplacementBtn").textContent="MEMUAT...";
-  try{
-    await loadReplacementProducts();
-    renderReplacementResults();
-  }catch(err){
-    $("replacementList").style.display="block";
-    $("replacementList").innerHTML=`<div class="replace-empty">Gagal memuat katalog: ${esc(err.message||err)}</div>`;
-  }finally{
-    $("loadReplacementBtn").disabled=false;
-    $("loadReplacementBtn").textContent="LOAD";
-  }
-}
-
-function openEditProduct(order, index){
-  const items = getItems(order);
-  const item = items[index];
-  if(!item) return;
-
+function openEditProduct(order,index){
   if(normalizeStatus(order.status)!=="MENUNGGU_PERSETUJUAN"){
     showMessage("Produk hanya bisa diedit sebelum pesanan disetujui.",false);
     return;
   }
 
-  editingProduct = {orderId:order.id, index};
-  $("replacementSearch").value = "";
-  $("replacementList").style.display = "none";
-  $("editProductName").dataset.replacementSupplier = "";
-  $("editProductName").dataset.replacementStock = "";
-  $("editProductName").dataset.replacementCategory = "";
-  $("editProductName").dataset.replacementCatalog = "";
-  $("editProductName").value = item.nama || item.name || item.produk || "";
-  $("editProductPrice").value = Number(
-    item.harga ?? item.price ?? item.tunai ?? item.hargaTunai ?? item.tempo ?? item.hargaTempo ?? 0
-  );
-  $("editProductQty").value = Number(item.qty ?? item.jumlah ?? 1);
+  const item=getItems(order)[index];
+  if(!item) return;
+
+  editingProduct={orderId:order.id,index};
+
+  $("replacementSearch").value="";
+  $("replacementList").style.display="none";
+
+  $("editProductName").value=item.nama||item.name||item.produk||"";
+  $("editProductPrice").value=Number(item.harga ?? item.price ?? item.tunai ?? item.hargaTunai ?? item.tempo ?? item.hargaTempo ?? 0);
+  $("editProductQty").value=Number(item.qty ?? item.jumlah ?? 1);
+  $("editProductName").dataset.supplier="";
+  $("editProductName").dataset.stok="";
+  $("editProductName").dataset.kategori="";
+
   $("editProductModal").classList.add("show");
 }
 
 function closeEditProduct(){
-  editingProduct = null;
+  editingProduct=null;
   $("editProductModal").classList.remove("show");
 }
 
 async function saveEditProduct(){
   if(!editingProduct || busy) return;
 
-  const order = allOrders.find(x=>x.id===editingProduct.orderId);
+  const order=allOrders.find(x=>x.id===editingProduct.orderId);
   if(!order) return;
 
-  const name = $("editProductName").value.trim();
-  const price = Number($("editProductPrice").value);
-  const qty = Number($("editProductQty").value);
+  const name=$("editProductName").value.trim();
+  const price=Number($("editProductPrice").value);
+  const qty=Number($("editProductQty").value);
 
-  if(!name){
-    alert("Nama produk / merk wajib diisi.");
-    return;
-  }
-  if(!Number.isFinite(price) || price < 0){
-    alert("Harga produk tidak valid.");
-    return;
-  }
-  if(!Number.isInteger(qty) || qty < 1){
-    alert("Jumlah produk minimal 1 pcs.");
-    return;
-  }
+  if(!name) return alert("Nama produk wajib diisi.");
+  if(!Number.isFinite(price) || price<0) return alert("Harga tidak valid.");
+  if(!Number.isInteger(qty) || qty<1) return alert("Jumlah minimal 1 pcs.");
 
-  if(normalizeStatus(order.status)!=="MENUNGGU_PERSETUJUAN"){
-    alert("Pesanan sudah disetujui dan tidak dapat diedit.");
-    closeEditProduct();
-    return;
-  }
+  busy=true;
 
-  busy = true;
   try{
-    const orderRef = doc(db,"orders",order.id);
-    const snap = await getDoc(orderRef);
+    const ref=doc(db,"orders",order.id);
+    const snap=await getDoc(ref);
     if(!snap.exists()) throw new Error("Pesanan tidak ditemukan.");
 
-    const current = snap.data();
+    const current=snap.data();
     if(normalizeStatus(current.status)!=="MENUNGGU_PERSETUJUAN"){
-      throw new Error("Pesanan sudah diproses sebelumnya.");
+      throw new Error("Pesanan sudah diproses dan tidak dapat diedit.");
     }
 
-    const items = Array.isArray(current.items) ? current.items.map(x=>({...x})) : [];
-    const item = items[editingProduct.index];
+    const items=Array.isArray(current.items)
+      ? current.items.map(x=>({...x}))
+      : [];
+
+    const item=items[editingProduct.index];
     if(!item) throw new Error("Produk tidak ditemukan.");
 
-    // Pertahankan field produk lainnya, tetapi nama/merk, harga dan qty diperbarui.
-    item.nama = name;
-    item.harga = price;
-    item.qty = qty;
+    item.nama=name;
+    item.harga=price;
+    item.qty=qty;
 
-    const replacementSupplier = $("editProductName").dataset.replacementSupplier || "";
-    const replacementStock = $("editProductName").dataset.replacementStock || "";
-    const replacementCategory = $("editProductName").dataset.replacementCategory || "";
-    const replacementCatalog = $("editProductName").dataset.replacementCatalog || "";
+    if("name" in item) item.name=name;
+    if("produk" in item) item.produk=name;
+    if("price" in item) item.price=price;
 
-    if(replacementSupplier){
-      item.supplier = replacementSupplier;
-      item.supplierPengganti = replacementSupplier;
-    }
-    if(replacementStock !== "") item.stokKatalog = Number(replacementStock);
-    if(replacementCategory) item.kategori = replacementCategory;
-    if(replacementCatalog) item.katalogProduk = replacementCatalog;
+    const supplier=$("editProductName").dataset.supplier||"";
+    const stok=$("editProductName").dataset.stok||"";
+    const kategori=$("editProductName").dataset.kategori||"";
 
-    // Jika sistem memakai nama alternatif, sinkronkan juga.
-    if("name" in item) item.name = name;
-    if("produk" in item) item.produk = name;
-    if("price" in item) item.price = price;
+    if(supplier) item.supplier=supplier;
+    if(stok!=="") item.stokKatalog=Number(stok);
+    if(kategori) item.kategori=kategori;
 
-    // Harga item lama bisa berasal dari field tunai/tempo.
-    const payment = String(current.metodePembayaran||current.paymentMethod||"").toUpperCase();
-    if(payment==="LIMIT" || payment==="TEMPO"){
-      if("hargaTempo" in item) item.hargaTempo = price;
-      if("tempo" in item) item.tempo = price;
-    }else{
-      if("hargaTunai" in item) item.hargaTunai = price;
-      if("tunai" in item) item.tunai = price;
-    }
-
-    const totalQty = items.reduce((sum,x)=>sum+Number(x.qty||x.jumlah||1),0);
-    const total = items.reduce((sum,x)=>{
-      const p = Number(x.harga ?? x.price ?? x.tunai ?? x.hargaTunai ?? x.tempo ?? x.hargaTempo ?? 0);
-      const q = Number(x.qty ?? x.jumlah ?? 1);
-      return sum + (p*q);
+    const totalQty=items.reduce((a,x)=>a+Number(x.qty||x.jumlah||1),0);
+    const total=items.reduce((a,x)=>{
+      const p=Number(x.harga ?? x.price ?? x.tunai ?? x.hargaTunai ?? x.tempo ?? x.hargaTempo ?? 0);
+      const q=Number(x.qty ?? x.jumlah ?? 1);
+      return a+p*q;
     },0);
 
-    // Perubahan produk/harga membuat konfirmasi supplier lama tidak lagi dianggap valid.
-    await updateDoc(orderRef,{
+    await updateDoc(ref,{
       items,
       total,
       totalQty,
       procurementStatus:"BELUM_DISETUJUI",
       supplierConfirmedAt:null,
       supplierConfirmedBy:null,
-      updatedAt:serverTimestamp(),
       productEditedAt:serverTimestamp(),
-      productEditedBy:auth.currentUser.uid
+      productEditedBy:auth.currentUser.uid,
+      updatedAt:serverTimestamp()
     });
 
     closeEditProduct();
-    showMessage("Produk berhasil diubah. Total pesanan dan jumlah barang sudah diperbarui. Supplier perlu dikonfirmasi ulang.");
+    showMessage("Produk berhasil diganti. Supplier harus dikonfirmasi ulang.");
     await loadOrders();
   }catch(err){
-    console.error(err);
+    console.error("FIXZY edit product:",err);
     showMessage(err.message||"Gagal mengubah produk.",false);
   }finally{
     busy=false;
   }
 }
+
 
 async function approveOrder(order){
   if(busy) return;
@@ -1071,48 +933,42 @@ $("orders").addEventListener("click",async e=>{
   else if(action==="done") await changeStatus(order,"SELESAI");
 });
 
-$("loadReplacementBtn").onclick=loadReplacementUI;
 
-let replacementSearchTimer = null;
+$("loadReplacementBtn").onclick=async ()=>{
+  const q=$("replacementSearch").value.trim();
+  if(q.length<2){
+    alert("Ketik minimal 2 huruf terlebih dahulu.");
+    return;
+  }
+  $("replacementList").style.display="block";
+  $("replacementList").innerHTML='<div class="replace-empty">Memuat produk...</div>';
+  try{
+    await loadReplacementProducts();
+    renderReplacementResults();
+  }catch(err){
+    $("replacementList").innerHTML=`<div class="replace-empty">Gagal memuat produk: ${esc(err.message||err)}</div>`;
+  }
+};
 
-$("replacementSearch").addEventListener("input",async ()=>{
-  const value=$("replacementSearch").value.trim();
+let replacementTimer=null;
+$("replacementSearch").addEventListener("input",()=>{
+  clearTimeout(replacementTimer);
+  const q=$("replacementSearch").value.trim();
 
-  clearTimeout(replacementSearchTimer);
-
-  // Minimal 2 huruf.
-  if(value.length < 2){
+  if(q.length<2){
     $("replacementList").style.display="none";
     return;
   }
 
-  // 2 huruf langsung memicu pencarian.
-  replacementSearchTimer=setTimeout(async ()=>{
+  replacementTimer=setTimeout(async ()=>{
     try{
-      if(!replacementLoaded){
-        $("replacementList").style.display="block";
-        $("replacementList").innerHTML=
-          '<div class="replace-empty">Memuat produk...</div>';
-        await loadReplacementProducts();
-      }
+      if(!replacementLoaded) await loadReplacementProducts();
       renderReplacementResults();
     }catch(err){
       $("replacementList").style.display="block";
-      $("replacementList").innerHTML=
-        `<div class="replace-empty">Gagal memuat produk: ${esc(err.message||err)}</div>`;
+      $("replacementList").innerHTML=`<div class="replace-empty">Gagal memuat produk: ${esc(err.message||err)}</div>`;
     }
-  },120);
-});
-
-$("replacementSearch").addEventListener("focus",async ()=>{
-  const value=$("replacementSearch").value.trim();
-  if(value.length < 2) return;
-
-  if(!replacementLoaded){
-    await loadReplacementUI();
-  }else{
-    renderReplacementResults();
-  }
+  },180);
 });
 
 $("closeEditProduct").onclick=closeEditProduct;
@@ -1121,6 +977,7 @@ $("saveEditProduct").onclick=saveEditProduct;
 $("editProductModal").addEventListener("click",e=>{
   if(e.target.id==="editProductModal") closeEditProduct();
 });
+
 
 onAuthStateChanged(auth,async user=>{
   if(!user){
