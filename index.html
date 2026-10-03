@@ -41,11 +41,8 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
 .nearest-due{background:#fee2e2;color:#991b1b}
 .nearest-btn{width:100%;margin-top:12px}
 .nearest-empty{color:var(--muted);font-size:12px}
+.order-status-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);margin-bottom:10px}.order-status-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.order-status-number{font-size:11px;color:var(--muted);font-weight:800}.order-status-total{font-size:16px;font-weight:900;margin-top:3px}.order-status-badge{padding:7px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}.status-approved{background:#dbeafe;color:#1d4ed8}.status-packed{background:#fef3c7;color:#92400e}.status-shipped{background:#e0e7ff;color:#4338ca}.status-delivery{background:#cffafe;color:#0e7490}.status-done{background:#dcfce7;color:#166534}.order-status-info{font-size:11px;color:var(--muted);line-height:1.5;margin-top:7px}.order-status-btn{width:100%;margin-top:10px}
 
-.nearest-toggle{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.05)}
-.nearest-toggle:active{background:#f8f8f8}
-.nearest-hidden{display:none;margin-top:10px}
-.nearest-hidden.show{display:block}
 @media(max-width:600px){.top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}.promo-list{grid-template-columns:1fr}.landing{padding-top:18px}.promo-main h2{font-size:27px}.brand h1{font-size:16px}.logout{padding:8px 10px}}
 </style>
 </head>
@@ -95,13 +92,20 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
   <h2>Tagihan Terdekat</h2>
   <span id="invoiceCount">0 tagihan</span>
  </div>
-
- <button id="nearestToggle" class="nearest-toggle" type="button">
-  <span>📋 Lihat tagihan terdekat</span>
-  <span id="nearestArrow">⌄</span>
- </button>
-
- <div id="nearestInvoiceBox" class="nearest-hidden"></div>
+ <div id="nearestInvoiceBox">
+  <div class="nearest-card">
+   <div class="nearest-empty">Memuat tagihan...</div>
+  </div>
+ </div>
+</section>
+<section class="section">
+ <div class="section-title">
+  <h2>Status Pesanan</h2>
+  <span id="orderStatusCount">0 pesanan</span>
+ </div>
+ <div id="orderStatusBox">
+  <div class="nearest-card"><div class="nearest-empty">Memuat status pesanan...</div></div>
+ </div>
 </section>
 </main>
 </div>
@@ -144,14 +148,13 @@ onAuthStateChanged(auth,async user=>{
      .toUpperCase()
      .replace(/[\s-]+/g,"_");
 
-    const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
+    if(status==="BELUM_LUNAS" || status==="JATUH_TEMPO"){
+     const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
 
-    if(
-     sisa>0 &&
-     !["LUNAS","SUDAH_DIBAYAR","DIBAYAR"].includes(status)
-    ){
-     total+=sisa;
-     invoices.push({id:s.id,...x,sisaTagihan:sisa});
+     if(sisa>0){
+      total+=sisa;
+      invoices.push({id:s.id,...x,sisaTagihan:sisa});
+     }
     }
    });
   }catch(e){
@@ -160,17 +163,58 @@ onAuthStateChanged(auth,async user=>{
 
   totalInvoice.textContent=rupiah(total);
 
+  // Status pesanan aktif agar Owner tahu pesanan sedang diproses, dikirim, atau diantar.
+  const orderStatusCount=document.getElementById("orderStatusCount");
+  const orderStatusBox=document.getElementById("orderStatusBox");
+  try{
+   const oq=await getDocs(query(collection(db,"orders"),where("ownerUid","==",user.uid)));
+   const active=[];
+   oq.forEach(os=>{
+    const o=os.data();
+    const st=String(o.status||o.orderStatus||"").trim().toUpperCase().replace(/[\s-]+/g,"_");
+    if(["DISETUJUI","DIKEMAS","DIKIRIM","DIANTAR"].includes(st)){
+     active.push({id:os.id,...o,status:st});
+    }
+   });
+   const statusMap={
+    DISETUJUI:{label:"PESANAN DISETUJUI",cls:"status-approved"},
+    DIKEMAS:{label:"SEDANG DIKEMAS",cls:"status-packed"},
+    DIKIRIM:{label:"SUDAH DIKIRIM",cls:"status-shipped"},
+    DIANTAR:{label:"SEDANG DIANTAR",cls:"status-delivery"}
+   };
+   const toDate=v=>{if(v&&typeof v.toDate==="function")return v.toDate();if(!v)return null;const d=new Date(v);return isNaN(d.getTime())?null:d};
+   active.sort((a,b)=>{const da=toDate(a.updatedAt||a.diperbaruiAt||a.createdAt);const db=toDate(b.updatedAt||b.diperbaruiAt||b.createdAt);return (db?db.getTime():0)-(da?da.getTime():0)});
+   orderStatusCount.textContent=active.length+" pesanan";
+   if(!active.length){
+    orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada pesanan yang sedang diproses.</div></div>';
+   }else{
+    orderStatusBox.innerHTML=active.slice(0,5).map(o=>{
+     const m=statusMap[o.status]||statusMap.DISETUJUI;
+     const nomor=o.orderNo||o.nomorPesanan||o.invoiceNo||o.id;
+     const totalPesanan=Number(o.total||o.grandTotal||o.totalHarga||0);
+     return `<div class="order-status-card"><div class="order-status-head"><div><div class="order-status-number">${nomor}</div><div class="order-status-total">${rupiah(totalPesanan)}</div></div><div class="order-status-badge ${m.cls}">${m.label}</div></div><div class="order-status-info">Owner akan mendapat informasi saat pesanan berubah status.</div><button class="topup order-status-btn" data-page="riwayat.html">Lihat Pesanan</button></div>`;
+    }).join('');
+    orderStatusBox.querySelectorAll('[data-page="riwayat.html"]').forEach(btn=>btn.onclick=()=>location.href='riwayat.html');
+   }
+  }catch(e){
+   console.error("Gagal membaca status pesanan:",e);
+   orderStatusCount.textContent="-";
+   orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Status pesanan belum dapat dimuat.</div></div>';
+  }
+
   const invoiceCount=document.getElementById("invoiceCount");
   const nearestBox=document.getElementById("nearestInvoiceBox");
-  const nearestToggle=document.getElementById("nearestToggle");
-  const nearestArrow=document.getElementById("nearestArrow");
 
   invoiceCount.textContent=invoices.length+" tagihan";
 
   if(!invoices.length){
-   nearestToggle.innerHTML="<span>📋 Tidak ada tagihan yang belum lunas</span><span>›</span>";
-   nearestToggle.disabled=true;
-   nearestBox.innerHTML="";
+
+   nearestBox.innerHTML=`
+    <div class="nearest-card">
+     <div class="nearest-empty">Belum ada tagihan yang belum lunas.</div>
+    </div>
+   `;
+
   }else{
 
    const toDate=v=>{
@@ -216,26 +260,22 @@ onAuthStateChanged(auth,async user=>{
         Jatuh tempo: ${tanggal}
        </div>
       </div>
+
       <div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">
        ${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}
       </div>
      </div>
-     <button class="topup nearest-btn" id="nearestInvoiceBtn" type="button">
+
+     <button class="topup nearest-btn" id="nearestInvoiceBtn">
       Lihat & Bayar Tagihan
      </button>
     </div>
    `;
 
-   nearestToggle.onclick=()=>{
-    const open=nearestBox.classList.toggle("show");
-    nearestArrow.textContent=open?"⌃":"⌄";
-   };
-
    document.getElementById("nearestInvoiceBtn").onclick=()=>{
     location.href="tagihan.html";
    };
   }
-
  }catch{document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Owner tidak tersedia."}
 });
 </script>
