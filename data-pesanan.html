@@ -174,7 +174,7 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
     <div class="replace-box">
       <div class="replace-title">🔄 Load Produk Pengganti dari Katalog Spreadsheet</div>
       <div class="replace-row">
-        <input id="replacementSearch" type="text" placeholder="Cari nama / merk produk pengganti...">
+        <input id="replacementSearch" type="text" placeholder="Ketik minimal 2 huruf nama / merk...">
         <button class="btn yellow" id="loadReplacementBtn" type="button">LOAD</button>
       </div>
       <div class="replace-list" id="replacementList"></div>
@@ -458,120 +458,207 @@ async function loadOrders(){
 
 
 
-function cleanCatalogCell(v){
-  return String(v ?? "").replace(/^\uFEFF/,"").trim();
+function normalizeHeader(value){
+  return String(value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"")
+    .trim();
 }
 
-function catalogNumber(v){
-  let s=String(v ?? "").trim();
-  if(!s) return 0;
-  s=s.replace(/Rp/gi,"").replace(/\s/g,"");
-  if(s.includes(".") && s.includes(",")){
-    s=s.replace(/\./g,"").replace(",",".");
-  }else if(s.includes(".")){
-    s=s.replace(/\./g,"");
-  }else if(s.includes(",")){
-    s=s.replace(/,/g,"");
-  }
-  const n=Number(s);
-  return Number.isFinite(n) ? n : 0;
-}
+const aliases = {
+  nama: [
+    "namaproduk","namabarang","produk","barang","namaproduct",
+    "productname","itemname","description","deskripsi"
+  ],
+  tunai: [
+    "tunai","hargatunai","hargacash","cash","cashprice",
+    "hargacash","hargaoffline"
+  ],
+  tempo: [
+    "tempo","hargatempo","hargakredit","kredit","credit",
+    "creditprice","hargapiutang"
+  ],
+  stok: [
+    "stok","stock","persediaan","qty","quantity","jumlahstok",
+    "stocktersedia"
+  ],
+  supplier: [
+    "supplier","suplier","pemasok","distributor","vendor"
+  ],
+  kategori: [
+    "kategori","katagory","category","jenis","kelompok","type"
+  ]
+};
 
-function parseCatalogCSV(text){
-  const out=[]; let row=[], cell="", quoted=false;
-  text=String(text||"").replace(/^\uFEFF/,"");
-  for(let i=0;i<text.length;i++){
-    const c=text[i], n=text[i+1];
-    if(c==='"'){
-      if(quoted && n==='"'){ cell+='"'; i++; }
-      else quoted=!quoted;
-    }else if(c==="," && !quoted){
-      row.push(cell); cell="";
-    }else if((c==="\\n" || c==="\\r") && !quoted){
-      if(c==="\\r" && n==="\\n") i++;
-      row.push(cell); cell="";
-      if(row.some(v=>String(v).trim())) out.push(row);
-      row=[];
-    }else{
-      cell+=c;
-    }
-  }
-  if(cell!=="" || row.length){
-    row.push(cell);
-    if(row.some(v=>String(v).trim())) out.push(row);
-  }
-  return out;
-}
-
-function headerIndex(headers, names){
-  const cleanHeaders=headers.map(x=>cleanCatalogCell(x).toLowerCase());
-  for(const name of names){
-    const i=cleanHeaders.indexOf(name.toLowerCase());
-    if(i>=0) return i;
+function findHeaderIndex(headers, field){
+  const normalized = headers.map(normalizeHeader);
+  for(const alias of aliases[field]){
+    const i = normalized.indexOf(alias);
+    if(i >= 0) return i;
   }
   return -1;
 }
 
-function catalogCSVUrl(url){
-  const u=new URL(url);
-  if(!u.hostname.toLowerCase().includes("docs.google.com") || !u.pathname.includes("/spreadsheets/")){
-    return url;
+function parseCSV(text){
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+
+    if(c === '"'){
+      if(quoted && text[i+1] === '"'){
+        cell += '"';
+        i++;
+      }else{
+        quoted = !quoted;
+      }
+    }else if(c === "," && !quoted){
+      row.push(cell);
+      cell = "";
+    }else if((c === "\n" || c === "\r") && !quoted){
+      if(c === "\r" && text[i+1] === "\n") i++;
+      row.push(cell);
+      cell = "";
+      if(row.some(v => String(v).trim() !== "")) rows.push(row);
+      row = [];
+    }else{
+      cell += c;
+    }
   }
-  const gid=u.searchParams.get("gid") || "0";
-  const pub=u.pathname.match(/\/spreadsheets\/d\/e\/([^/]+)\/pub(?:html)?/i);
-  if(pub){
-    return `https://docs.google.com/spreadsheets/d/e/${pub[1]}/pub?gid=${encodeURIComponent(gid)}&single=true&output=csv`;
+
+  if(cell !== "" || row.length){
+    row.push(cell);
+    if(row.some(v => String(v).trim() !== "")) rows.push(row);
   }
-  const id=u.pathname.match(/\/spreadsheets\/d\/([^/]+)/i);
-  if(id){
-    return `https://docs.google.com/spreadsheets/d/${id[1]}/export?format=csv&gid=${encodeURIComponent(gid)}`;
+  return rows;
+}
+
+function makeCSVUrl(url){
+  const u = new URL(url);
+
+  // Google published Spreadsheet:
+  // /pubhtml?...  -> /pub?...&output=csv
+  if(u.hostname === "docs.google.com"){
+    if(u.pathname.includes("/pubhtml")){
+      u.pathname = u.pathname.replace("/pubhtml","/pub");
+    }
+    u.searchParams.set("output","csv");
+    return u.toString();
   }
+
   return url;
+}
+
+function money(value){
+  if(value === null || value === undefined || String(value).trim() === "") return "-";
+
+  const raw = String(value).trim();
+
+  // Keep already formatted non-numeric values readable.
+  const cleaned = raw.replace(/[^\d,.-]/g,"");
+  if(!cleaned) return raw;
+
+  let normalized = cleaned;
+
+  // Handle common Indonesian formats:
+  // 100.000 -> 100000
+  // 100000,50 -> 100000.50
+  if(cleaned.includes(".") && cleaned.includes(",")){
+    normalized = cleaned.replace(/\./g,"").replace(",",".");
+  }else if(cleaned.includes(",")){
+    const parts = cleaned.split(",");
+    normalized = parts.length === 2 && parts[1].length <= 2
+      ? cleaned.replace(",",".")
+      : cleaned.replace(/,/g,"");
+  }else if(cleaned.includes(".")){
+    const parts = cleaned.split(".");
+    normalized = parts.length > 2 || (parts.length === 2 && parts[1].length === 3)
+      ? cleaned.replace(/\./g,"")
+      : cleaned;
+  }
+
+  const number = Number(normalized);
+  if(!Number.isFinite(number)) return raw;
+
+  return "Rp " + Math.round(number).toLocaleString("id-ID");
+}
+
+function cleanCell(value){
+  return String(value ?? "").trim();
+}
+
+function mapRows(rows, catalogName){
+  if(!rows.length) return [];
+
+  const headers = rows[0];
+  const idx = {
+    nama: findHeaderIndex(headers,"nama"),
+    tunai: findHeaderIndex(headers,"tunai"),
+    tempo: findHeaderIndex(headers,"tempo"),
+    stok: findHeaderIndex(headers,"stok"),
+    supplier: findHeaderIndex(headers,"supplier"),
+    kategori: findHeaderIndex(headers,"kategori")
+  };
+
+  // Nama produk adalah field wajib.
+  if(idx.nama < 0){
+    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
+  }
+
+  return rows.slice(1)
+    .map(row => ({
+      nama: cleanCell(row[idx.nama]),
+      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
+      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
+      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
+      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
+      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      katalog: catalogName
+    }))
+    .filter(p => p.nama);
 }
 
 async function loadReplacementProducts(){
   if(replacementLoaded) return replacementProducts;
 
   replacementProducts=[];
+
+  // Gunakan katalog GLOBAL dan format Spreadsheet yang sama
+  // dengan halaman produk.html.
   const snap=await getDocs(collection(db,"productCatalogs"));
   const catalogs=snap.docs
     .map(d=>({id:d.id,...d.data()}))
-    .filter(c=>c.aktif!==false);
+    .filter(c=>c.aktif !== false);
 
   for(const catalog of catalogs){
     try{
-      const response=await fetch(catalogCSVUrl(catalog.spreadsheetUrl),{cache:"no-store"});
+      const csvUrl=makeCSVUrl(catalog.spreadsheetUrl);
+      const response=await fetch(csvUrl,{cache:"no-store"});
       if(!response.ok) continue;
 
       const raw=await response.text();
-      if(/^\s*<(!doctype|html)/i.test(raw)) continue;
+      if(!raw || raw.trim().startsWith("<!DOCTYPE") || raw.trim().startsWith("<html")){
+        continue;
+      }
 
-      const rows=parseCatalogCSV(raw);
-      if(!rows.length) continue;
+      const rows=parseCSV(raw);
+      const mapped=mapRows(rows,catalog.nama || "Katalog Produk");
 
-      const h=rows[0];
-      const idxNama=headerIndex(h,["nama produk","nama","produk","product","barang","nama barang"]);
-      const idxTunai=headerIndex(h,["harga tunai","harga jual tunai","cash","tunai","harga"]);
-      const idxTempo=headerIndex(h,["harga tempo","harga kredit","tempo","credit price"]);
-      const idxStok=headerIndex(h,["stok","stock","sisa","sisa stok","qty","jumlah stok"]);
-      const idxSupplier=headerIndex(h,["supplier","suplier","vendor","merk","brand"]);
-      const idxKategori=headerIndex(h,["kategori","category"]);
-
-      if(idxNama<0) continue;
-
-      rows.slice(1).forEach((r,i)=>{
-        const nama=cleanCatalogCell(r[idxNama]);
-        if(!nama) return;
-
+      mapped.forEach((p,i)=>{
         replacementProducts.push({
           id:`${catalog.id}_${i}`,
-          nama,
-          tunai:idxTunai>=0 ? catalogNumber(r[idxTunai]) : 0,
-          tempo:idxTempo>=0 ? catalogNumber(r[idxTempo]) : 0,
-          stok:idxStok>=0 ? catalogNumber(r[idxStok]) : 0,
-          supplier:idxSupplier>=0 ? cleanCatalogCell(r[idxSupplier]) : "",
-          kategori:idxKategori>=0 ? cleanCatalogCell(r[idxKategori]) : "",
-          katalog:catalog.nama || "Katalog Produk"
+          nama:p.nama,
+          tunai:p.tunai,
+          tempo:p.tempo,
+          stok:p.stok,
+          supplier:p.supplier,
+          kategori:p.kategori,
+          katalog:p.katalog
         });
       });
     }catch(err){
@@ -985,11 +1072,47 @@ $("orders").addEventListener("click",async e=>{
 });
 
 $("loadReplacementBtn").onclick=loadReplacementUI;
-$("replacementSearch").addEventListener("input",()=>{
-  if(replacementProducts.length) renderReplacementResults();
+
+let replacementSearchTimer = null;
+
+$("replacementSearch").addEventListener("input",async ()=>{
+  const value=$("replacementSearch").value.trim();
+
+  clearTimeout(replacementSearchTimer);
+
+  // Minimal 2 huruf.
+  if(value.length < 2){
+    $("replacementList").style.display="none";
+    return;
+  }
+
+  // 2 huruf langsung memicu pencarian.
+  replacementSearchTimer=setTimeout(async ()=>{
+    try{
+      if(!replacementLoaded){
+        $("replacementList").style.display="block";
+        $("replacementList").innerHTML=
+          '<div class="replace-empty">Memuat produk...</div>';
+        await loadReplacementProducts();
+      }
+      renderReplacementResults();
+    }catch(err){
+      $("replacementList").style.display="block";
+      $("replacementList").innerHTML=
+        `<div class="replace-empty">Gagal memuat produk: ${esc(err.message||err)}</div>`;
+    }
+  },120);
 });
-$("replacementSearch").addEventListener("focus",()=>{
-  if(replacementProducts.length) renderReplacementResults();
+
+$("replacementSearch").addEventListener("focus",async ()=>{
+  const value=$("replacementSearch").value.trim();
+  if(value.length < 2) return;
+
+  if(!replacementLoaded){
+    await loadReplacementUI();
+  }else{
+    renderReplacementResults();
+  }
 });
 
 $("closeEditProduct").onclick=closeEditProduct;
