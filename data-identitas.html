@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>FIXZY BUSINESS | Data Identitas</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f4f6f8;--card:#fff;--ink:#101828;--muted:#667085;--gold:#FFC107;--line:#e7eaf0;--black:#111}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,textarea{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;margin:auto;padding-bottom:86px}
+.top{background:#111;color:#fff;padding:16px 15px 66px;border-radius:0 0 28px 28px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid #FFC107;display:grid;place-items:center;flex:0 0 48px}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}.brand h1{margin:0;color:var(--gold);font-size:17px;font-weight:900}.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.header-btn{border:1px solid #3b3b3b;background:#1a1a1a;color:#fff;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:700;cursor:pointer}
+.content{max-width:720px;margin:-42px auto 0;padding:0 15px}.card{background:var(--card);border-radius:22px;padding:20px;margin-bottom:16px;box-shadow:0 10px 26px rgba(15,23,42,.08)}
+.title{margin:0 0 8px;font-size:22px;font-weight:900}.sub{color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:18px}
+.note{background:#fff8d9;border:1px solid #f1d34e;color:#6b5200;border-radius:14px;padding:13px;font-size:12px;line-height:1.55;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.full{grid-column:1/-1}
+label{display:block;margin:0 0 7px;font-size:12px;font-weight:800}
+input,textarea{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px;outline:none;background:#fff;color:var(--ink);font-size:15px}
+input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:vertical}
+.check{display:flex;gap:8px;align-items:flex-start;margin:15px 0;font-size:12px;line-height:1.5}.check input{width:18px;height:18px;flex:0 0 auto;margin:1px 0}
+.primary{width:100%;border:0;border-radius:13px;padding:14px;background:var(--gold);color:#111;font-weight:900;cursor:pointer}.primary:disabled{opacity:.55}
+.msg{display:none;border-radius:12px;padding:11px;margin-bottom:12px;font-size:12px}.msg.show{display:block}.msg.error{background:#fef3f2;color:#b42318}.msg.success{background:#ecfdf3;color:#027a48}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:2px solid var(--gold);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}
+.nav{border:0;background:transparent;color:var(--gold);font-size:10px;font-weight:800;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <div class="brand-left">
+      <div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+      <div><h1>FIXZY BUSINESS</h1><small>Data Identitas Owner</small></div>
+    </div>
+    <button class="header-btn" id="backBtn">Kembali</button>
+  </div>
+</header>
+
+<main class="content">
+  <div id="message" class="msg"></div>
+  <section class="card">
+    <h2 class="title">Data Identitas sesuai KTP</h2>
+    <div class="sub">Lengkapi data ini sebelum pengajuan Limit pertama. Data digunakan sebagai identitas dan alamat penagihan apabila terjadi tunggakan.</div>
+    <div class="note">Pastikan semua data sesuai KTP. Data ini hanya diisi satu kali dan dapat digunakan kembali saat proses penagihan atau pemeriksaan data Owner.</div>
+
+    <div class="grid">
+      <div class="field full"><label>Nama Lengkap sesuai KTP</label><input id="nama" autocomplete="name"></div>
+      <div class="field full"><label>NIK</label><input id="nik" inputmode="numeric" maxlength="16" placeholder="16 digit NIK"></div>
+      <div class="field full"><label>Alamat lengkap sesuai KTP</label><textarea id="alamat"></textarea></div>
+      <div class="field"><label>RT</label><input id="rt" inputmode="numeric" maxlength="3"></div>
+      <div class="field"><label>RW</label><input id="rw" inputmode="numeric" maxlength="3"></div>
+      <div class="field"><label>Desa / Kelurahan</label><input id="desa"></div>
+      <div class="field"><label>Kecamatan</label><input id="kecamatan"></div>
+      <div class="field"><label>Kabupaten / Kota</label><input id="kabupaten"></div>
+      <div class="field"><label>Provinsi</label><input id="provinsi"></div>
+      <div class="field full"><label>Nomor WhatsApp aktif</label><input id="whatsapp" inputmode="tel" autocomplete="tel"></div>
+    </div>
+
+    <label class="check">
+      <input type="checkbox" id="confirm">
+      <span>Saya menyatakan data yang saya isi sesuai dengan KTP dan dapat digunakan FIXZY BUSINESS sebagai data identitas/alamat penagihan.</span>
+    </label>
+
+    <button class="primary" id="saveBtn">Simpan Data Identitas</button>
+  </section>
+</main>
+
+<nav class="bottom">
+  <button class="nav" data-page="index.html"><i>⌂</i>Beranda</button>
+  <button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button>
+  <button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button>
+  <button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button>
+  <button class="nav" data-page="profil.html"><i>👤</i>Profil</button>
+</nav>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+ authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+ projectId:"teknisi-ponsel-maja",
+ storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+ messagingSenderId:"835618012205",
+ appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
+};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+await setPersistence(auth,browserLocalPersistence);
+const $=id=>document.getElementById(id);
+
+function message(t,type="success"){ $("message").textContent=t; $("message").className="msg show "+type; }
+function fill(x){
+ const k=x?.dataKtp||{};
+ $("nama").value=k.nama||x?.nama||"";
+ $("nik").value=k.nik||"";
+ $("alamat").value=k.alamat||"";
+ $("rt").value=k.rt||"";
+ $("rw").value=k.rw||"";
+ $("desa").value=k.desa||"";
+ $("kecamatan").value=k.kecamatan||"";
+ $("kabupaten").value=k.kabupaten||"";
+ $("provinsi").value=k.provinsi||"";
+ $("whatsapp").value=k.whatsapp||x?.whatsapp||"";
+}
+function read(){
+ return {
+  nama:$("nama").value.trim(),
+  nik:$("nik").value.replace(/\D/g,""),
+  alamat:$("alamat").value.trim(),
+  rt:$("rt").value.replace(/\D/g,""),
+  rw:$("rw").value.replace(/\D/g,""),
+  desa:$("desa").value.trim(),
+  kecamatan:$("kecamatan").value.trim(),
+  kabupaten:$("kabupaten").value.trim(),
+  provinsi:$("provinsi").value.trim(),
+  whatsapp:$("whatsapp").value.trim()
+ };
+}
+function validate(k){
+ if(!k.nama||!k.nik||!k.alamat||!k.rt||!k.rw||!k.desa||!k.kecamatan||!k.kabupaten||!k.provinsi||!k.whatsapp)
+  return "Lengkapi seluruh data sesuai KTP.";
+ if(!/^\d{16}$/.test(k.nik)) return "NIK harus 16 digit.";
+ if(!/^\d{2,3}$/.test(k.rt)||!/^\d{2,3}$/.test(k.rw)) return "RT/RW belum benar.";
+ if(k.whatsapp.replace(/\D/g,"").length<10) return "Nomor WhatsApp belum valid.";
+ if(!$("confirm").checked) return "Centang pernyataan bahwa data sesuai KTP.";
+ return "";
+}
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){location.href="index.html";return;}
+ try{
+  const s=await getDoc(doc(db,"users",user.uid));
+  if(!s.exists() || s.data().role!=="owner" || s.data().ownerUid!==user.uid){
+   message("Akses halaman hanya untuk Owner.","error"); return;
+  }
+  fill(s.data());
+  // Jika data identitas sudah lengkap, halaman tetap dapat dibuka untuk koreksi.
+ }catch(e){console.error(e);message("Gagal membaca data Owner.","error");}
+});
+
+$("saveBtn").onclick=async()=>{
+ const k=read(),err=validate(k);
+ if(err){message(err,"error");return;}
+ const b=$("saveBtn");b.disabled=true;b.textContent="Menyimpan...";
+ try{
+  const user=auth.currentUser;
+  await setDoc(doc(db,"users",user.uid),{dataKtp:k,updatedAt:serverTimestamp()},{merge:true});
+  message("Data identitas berhasil disimpan.");
+  setTimeout(()=>location.href="limit.html",500);
+ }catch(e){console.error(e);message("Data gagal disimpan. Periksa Firestore Rules.","error");}
+ finally{b.disabled=false;b.textContent="Simpan Data Identitas";}
+};
+
+$("backBtn").onclick=()=>location.href="limit.html";
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>location.href=b.dataset.page);
+</script>
+</body>
+</html>
