@@ -21,7 +21,19 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
 </style></head><body>
 <header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Profil Owner</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
 <main class="container">
-<section class="card"><h2>Profil Owner</h2><label>Nama</label><input placeholder="Nama Owner"><label>Nama Usaha</label><input placeholder="Nama Usaha"><label>WhatsApp</label><input placeholder="08xxxxxxxxxx"><label>Email</label><input placeholder="email"><button class="btn yellow">Simpan Profil</button></section>
+<section class="card">
+<h2>Profil Owner</h2>
+<div id="msg" class="note" style="margin-bottom:10px">Memuat profil...</div>
+<label>Nama</label>
+<input id="nama" placeholder="Nama Owner">
+<label>Nama Usaha</label>
+<input id="namaUsaha" placeholder="Nama Usaha">
+<label>WhatsApp</label>
+<input id="whatsapp" placeholder="08xxxxxxxxxx" inputmode="tel">
+<label>Email</label>
+<input id="email" placeholder="email" type="email" readonly>
+<button id="saveBtn" class="btn yellow" type="button">Simpan Profil</button>
+</section>
 <section class="card"><a class="btn red" href="index.html">Keluar</a></section>
 </main>
 <nav class="bottom">
@@ -38,4 +50,83 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
   messagingSenderId: "835618012205",
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const msg=document.getElementById("msg");
+const nama=document.getElementById("nama");
+const namaUsaha=document.getElementById("namaUsaha");
+const whatsapp=document.getElementById("whatsapp");
+const email=document.getElementById("email");
+const saveBtn=document.getElementById("saveBtn");
+
+function show(text,type=""){
+  msg.textContent=text;
+  msg.className="note"+(type?" "+type:"");
+}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){
+    location.href="login.html";
+    return;
+  }
+
+  email.value=user.email||"";
+
+  try{
+    const ref=doc(db,"users",user.uid);
+    const snap=await getDoc(ref);
+    const data=snap.exists()?snap.data():{};
+
+    nama.value=data.nama||data.name||data.displayName||"";
+    namaUsaha.value=data.namaUsaha||data.businessName||data.namaBisnis||"";
+    whatsapp.value=data.whatsapp||data.phone||data.noWhatsApp||"";
+
+    show("Profil berhasil dimuat.");
+  }catch(err){
+    console.error(err);
+    show("Profil gagal dimuat: "+(err.message||err));
+  }
+});
+
+saveBtn.addEventListener("click",async()=>{
+  const user=auth.currentUser;
+  if(!user)return;
+
+  const n=nama.value.trim();
+  const usaha=namaUsaha.value.trim();
+  const wa=whatsapp.value.trim();
+
+  if(!n){
+    show("Nama Owner wajib diisi.");
+    nama.focus();
+    return;
+  }
+
+  saveBtn.disabled=true;
+  saveBtn.textContent="Menyimpan...";
+
+  try{
+    const ref=doc(db,"users",user.uid);
+    await setDoc(ref,{
+      nama:n,
+      namaUsaha:usaha,
+      whatsapp:wa,
+      updatedAt:serverTimestamp()
+    },{merge:true});
+
+    show("Profil berhasil disimpan.","ok");
+  }catch(err){
+    console.error(err);
+    show("Gagal menyimpan profil: "+(err.message||err));
+  }finally{
+    saveBtn.disabled=false;
+    saveBtn.textContent="Simpan Profil";
+  }
+});
 </script></body></html>
