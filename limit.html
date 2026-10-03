@@ -464,6 +464,7 @@ const rupiah=n=>new Intl.NumberFormat("id-ID",{
 
 let currentUser=null;
 let hasPendingApplication=false;
+let identityReady=false;
 
 function message(text,type="success"){
   $("message").textContent=text;
@@ -610,6 +611,10 @@ async function loadHistory(){
 }
 
 $("submitBtn").onclick=async()=>{
+  if(!identityReady){
+    location.href="data-identitas.html?from=limit";
+    return;
+  }
   if(hasPendingApplication){
     message(
       "Masih ada pengajuan Limit yang sedang menunggu persetujuan.",
@@ -735,6 +740,20 @@ onAuthStateChanged(auth,async user=>{
     }
 
     currentUser=user;
+
+    identityReady=!!(
+      profile.dataKtp &&
+      profile.dataKtp.nik &&
+      profile.dataKtp.nama &&
+      profile.dataKtp.alamat &&
+      profile.dataKtp.rt &&
+      profile.dataKtp.rw &&
+      profile.dataKtp.desa &&
+      profile.dataKtp.kecamatan &&
+      profile.dataKtp.kabupaten &&
+      profile.dataKtp.provinsi &&
+      profile.dataKtp.whatsapp
+    );
 
     // Sama seperti Index: tampilkan nama usaha,
     // lalu fallback ke nama Owner.
