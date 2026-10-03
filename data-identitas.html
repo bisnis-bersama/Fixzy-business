@@ -28,9 +28,7 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
 .bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:2px solid var(--gold);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}
 .nav{border:0;background:transparent;color:var(--gold);font-size:10px;font-weight:800;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
-
-.ktp-photo{margin-top:16px;padding:14px;border:1px solid #e7eaf0;border-radius:16px;background:#fafafa}.ktp-photo-title{font-weight:900;margin-bottom:5px}.ktp-photo-note{font-size:11px;color:#667085;line-height:1.45;margin-bottom:10px}.photo-preview{width:100%;max-height:210px;object-fit:contain;background:#eee;border-radius:12px;display:none;margin-top:10px}.photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.photo-btn{border:1px solid #d0d5dd;border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer}.photo-btn.primary-photo{background:#111;color:#FFC107;border-color:#111}.photo-status{font-size:11px;margin-top:8px;color:#667085}
-.save-result{display:none;margin:12px 0;padding:14px 16px;border-radius:14px;font-weight:800;text-align:center;line-height:1.4}.save-result.success{display:block;background:#e8f7ee;color:#087443;border:1px solid #9ed9b7}.save-result.error{display:block;background:#fff0f0;color:#b42318;border:1px solid #f0aaaa}</style>
+</style>
 </head>
 <body>
 <div class="app">
@@ -64,27 +62,12 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
       <div class="field full"><label>Nomor WhatsApp aktif</label><input id="whatsapp" inputmode="tel" autocomplete="tel"></div>
     </div>
 
-    
-<div class="ktp-photo">
-  <div class="ktp-photo-title">Foto KTP</div>
-  <div class="ktp-photo-note">Ambil foto KTP dengan kamera atau pilih dari galeri. Foto akan diperkecil dan dikompres sebelum disimpan agar penggunaan penyimpanan Firebase lebih hemat.</div>
-  <div class="photo-actions">
-    <button type="button" class="photo-btn primary-photo" id="cameraBtn">📷 Buka Kamera</button>
-    <button type="button" class="photo-btn" id="galleryBtn">🖼️ Pilih Foto</button>
-  </div>
-  <input id="ktpCamera" type="file" accept="image/*" capture="environment" hidden>
-  <input id="ktpGallery" type="file" accept="image/*" hidden>
-  <img id="ktpPreview" class="photo-preview" alt="Preview Foto KTP">
-  <div id="photoStatus" class="photo-status">Belum ada foto KTP.</div>
-</div>
-
     <label class="check">
       <input type="checkbox" id="confirm">
       <span>Saya menyatakan data yang saya isi sesuai dengan KTP dan dapat digunakan FIXZY BUSINESS sebagai data identitas/alamat penagihan.</span>
     </label>
 
-    <div id="saveResult" class="save-result" role="alert"></div>
-<button class="primary" id="saveBtn">Simpan Data Identitas</button>
+    <button class="primary" id="saveBtn">Simpan Data Identitas</button>
   </section>
 </main>
 
@@ -101,7 +84,6 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,setPersistence,browserLocalPersistence} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
@@ -111,46 +93,10 @@ const firebaseConfig={
  messagingSenderId:"835618012205",
  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 await setPersistence(auth,browserLocalPersistence);
 const $=id=>document.getElementById(id);
-let selectedKtpFile=null;
-let existingKtpPath="";
 
-function showPhoto(file){
-  selectedKtpFile=file;
-  const url=URL.createObjectURL(file);
-  $("ktpPreview").src=url;
-  $("ktpPreview").style.display="block";
-  $("photoStatus").textContent=`Foto dipilih: ${(file.size/1024/1024).toFixed(2)} MB. Akan dikompres saat disimpan.`;
-}
-function compressKtp(file){
-  return new Promise((resolve,reject)=>{
-    const img=new Image(),url=URL.createObjectURL(file);
-    img.onload=()=>{
-      URL.revokeObjectURL(url);
-      const maxW=900,maxH=600,scale=Math.min(1,maxW/img.width,maxH/img.height);
-      const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
-      const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
-      const ctx=canvas.getContext("2d",{alpha:false});ctx.drawImage(img,0,0,w,h);
-      canvas.toBlob(blob=>blob?resolve(blob):reject(new Error("Gagal mengompres foto.")),"image/jpeg",0.55);
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Foto tidak dapat dibaca."));};
-    img.src=url;
-  });
-}
-$("cameraBtn").onclick=()=>$("ktpCamera").click();
-$("galleryBtn").onclick=()=>$("ktpGallery").click();
-$("ktpCamera").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
-$("ktpGallery").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
-
-function showSaveResult(ok,text){
- const el=$("saveResult");
- el.className="save-result "+(ok?"success":"error");
- el.textContent=(ok?"✓ ":"✕ ")+text;
- el.style.display="block";
- el.scrollIntoView({behavior:"smooth",block:"center"});
-}
 function message(t,type="success"){ $("message").textContent=t; $("message").className="msg show "+type; }
 function fill(x){
  const k=x?.dataKtp||{};
@@ -164,12 +110,6 @@ function fill(x){
  $("kabupaten").value=k.kabupaten||"";
  $("provinsi").value=k.provinsi||"";
  $("whatsapp").value=k.whatsapp||x?.whatsapp||"";
- existingKtpPath=k.fotoKtpPath||"";
- if(existingKtpPath){
-  getDownloadURL(ref(storage,existingKtpPath)).then(url=>{$("ktpPreview").src=url;}).catch(()=>{});
-  $("ktpPreview").style.display="block";
-  $("photoStatus").textContent="Foto KTP sudah tersimpan. Pilih foto baru jika ingin mengganti.";
- }
 }
 function read(){
  return {
@@ -189,10 +129,9 @@ function validate(k){
  if(!k.nama||!k.nik||!k.alamat||!k.rt||!k.rw||!k.desa||!k.kecamatan||!k.kabupaten||!k.provinsi||!k.whatsapp)
   return "Lengkapi seluruh data sesuai KTP.";
  if(!/^\d{16}$/.test(k.nik)) return "NIK harus 16 digit.";
- if(!/^\d{1,3}$/.test(k.rt) || !/^\d{1,3}$/.test(k.rw)) return "RT/RW harus diisi 1–3 angka.";
+ if(!/^\d{2,3}$/.test(k.rt)||!/^\d{2,3}$/.test(k.rw)) return "RT/RW belum benar.";
  if(k.whatsapp.replace(/\D/g,"").length<10) return "Nomor WhatsApp belum valid.";
  if(!$("confirm").checked) return "Centang pernyataan bahwa data sesuai KTP.";
- if(!selectedKtpFile && !existingKtpPath) return "Foto KTP wajib diunggah atau diambil dengan kamera.";
  return "";
 }
 
@@ -212,49 +151,13 @@ $("saveBtn").onclick=async()=>{
  const k=read(),err=validate(k);
  if(err){message(err,"error");return;}
  const b=$("saveBtn");b.disabled=true;b.textContent="Menyimpan...";
-try{
- const user=auth.currentUser;
- if(!user) throw new Error("Sesi login tidak ditemukan. Silakan login kembali.");
-
- let fotoKtpPath=existingKtpPath;
-
- if(selectedKtpFile){
-  $("photoStatus").textContent="1/3 Memproses dan mengompres foto KTP...";
-  const compressed=await compressKtp(selectedKtpFile);
-  $("photoStatus").textContent=`2/3 Mengunggah foto KTP (${Math.round(compressed.size/1024)} KB)...`;
-
-  const storagePath=`ktp/${user.uid}/ktp.jpg`;
-  const storageRef=ref(storage,storagePath);
-
-  await Promise.race([
-   uploadBytes(storageRef,compressed,{contentType:"image/jpeg",cacheControl:"private,max-age=3600"}),
-   new Promise((_,reject)=>setTimeout(()=>reject(new Error("Upload foto KTP timeout. Periksa Firebase Storage Rules dan koneksi internet.")),30000))
-  ]);
-
-  fotoKtpPath=storagePath;
- }
-
- $("photoStatus").textContent="3/3 Menyimpan data identitas...";
- await Promise.race([
-  setDoc(doc(db,"users",user.uid),{dataKtp:{...k,fotoKtpPath},updatedAt:serverTimestamp()},{merge:true}),
-  new Promise((_,reject)=>setTimeout(()=>reject(new Error("Penyimpanan data timeout. Periksa Firestore Rules dan koneksi internet.")),20000))
- ]);
-
- $("photoStatus").textContent="Berhasil disimpan.";
- showSaveResult(true,"Data identitas dan foto KTP berhasil disimpan.");
- message("Data identitas dan foto KTP berhasil disimpan.");
- setTimeout(()=>location.replace("limit.html"),1500);
-
-}catch(e){
- console.error(e);
- const errText="Gagal menyimpan: "+(e.message||e);
- $("photoStatus").textContent="Penyimpanan gagal.";
- showSaveResult(false,errText);
- message(errText,"error");
-}finally{
- b.disabled=false;
- b.textContent="Simpan Data Identitas";
-}
+ try{
+  const user=auth.currentUser;
+  await setDoc(doc(db,"users",user.uid),{dataKtp:k,updatedAt:serverTimestamp()},{merge:true});
+  message("Data identitas berhasil disimpan.");
+  setTimeout(()=>location.href="limit.html",500);
+ }catch(e){console.error(e);message("Data gagal disimpan. Periksa Firestore Rules.","error");}
+ finally{b.disabled=false;b.textContent="Simpan Data Identitas";}
 };
 
 $("backBtn").onclick=()=>location.href="limit.html";
