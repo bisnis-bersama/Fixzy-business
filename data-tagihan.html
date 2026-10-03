@@ -49,13 +49,61 @@ async function approvePayment(id){
  const p=pSnap.data();if(p.status!=="MENUNGGU")throw Error("Pembayaran sudah diproses.");
  await runTransaction(db,async tx=>{
   const invRef=doc(db,"invoices",p.invoiceId),walRef=doc(db,"wallets",p.ownerUid),payRef=doc(db,"payments",id);
-  const [is,ws]=await Promise.all([tx.get(invRef),tx.get(walRef)]);if(!is.exists()||!ws.exists())throw Error("Invoice atau saldo Owner tidak ditemukan.");
-  const inv=is.data(),wal=ws.data(),total=Number(inv.total??inv.totalTagihan??0),paid=Number(inv.totalTerbayar??0),remain=Number(inv.sisaTagihan??Math.max(0,total-paid)),nom=Number(p.nominal||0),saldo=Number(wal.saldoPribadi||0);
-  if(nom<=0||nom>remain)throw Error("Nominal pembayaran tidak valid.");if(nom>saldo)throw Error("Saldo Owner tidak mencukupi.");
-  const newPaid=paid+nom,newRemain=Math.max(0,total-newPaid);
+  const invSnap=await tx.get(invRef),walSnap=await tx.get(walRef);
+  if(!invSnap.exists()||!walSnap.exists())throw Error("Invoice atau saldo Owner tidak ditemukan.");
+
+  const inv=invSnap.data(),wal=walSnap.data();
+  const total=Number(inv.total??inv.totalTagihan??0);
+  const paid=Number(inv.totalTerbayar??0);
+  const remain=Number(inv.sisaTagihan??Math.max(0,total-paid));
+  const nom=Number(p.nominal||0);
+  const saldo=Number(wal.saldoPribadi||0);
+
+  if(nom<=0||nom>remain)throw Error("Nominal pembayaran tidak valid.");
+  if(nom>saldo)throw Error("Saldo Owner tidak mencukupi.");
+
+  const newPaid=paid+nom;
+  const newRemain=Math.max(0,total-newPaid);
+  const method=String(inv.metodePembayaran||inv.metode||"").toUpperCase();
+  const isLimitInvoice=["LIMIT","TEMPO","LIMIT / TEMPO","LIMIT/TEMPO"].includes(method);
+
+  // Pembayaran invoice Limit/Tempo mengembalikan nominal yang dibayar
+  // ke Limit Tersedia dengan mengurangi Limit Terpakai.
+  let limitUpdate=null;
+  if(isLimitInvoice){
+   const limRef=doc(db,"limits",p.ownerUid);
+   const limSnap=await tx.get(limRef);
+   if(!limSnap.exists())throw Error("Data limit Owner tidak ditemukan.");
+   const lim=limSnap.data();
+   const used=Math.max(0,Number(lim.limitTerpakai||0));
+   const available=Math.max(0,Number(lim.limitTersedia||0));
+   if(nom>used)throw Error("Nominal pembayaran melebihi limit terpakai.");
+   const newUsed=used-nom;
+   const newAvailable=available+nom;
+   limitUpdate={ref:limRef,used:newUsed,available:newAvailable,oldUsed:used,oldAvailable:available};
+  }
+
   tx.update(walRef,{saldoPribadi:saldo-nom,updatedAt:serverTimestamp()});
   tx.update(invRef,{totalTerbayar:newPaid,sisaTagihan:newRemain,status:newRemain===0?"LUNAS":(inv.status||"BELUM_LUNAS"),lastPaymentAt:serverTimestamp()});
-  tx.update(payRef,{status:"DISETUJUI",verifiedBy:auth.currentUser.uid,verifiedAt:serverTimestamp(),saldoSebelum:saldo,saldoSesudah:saldo-nom});
+  if(limitUpdate){
+   tx.update(limitUpdate.ref,{
+    limitTerpakai:limitUpdate.used,
+    limitTersedia:limitUpdate.available,
+    updatedAt:serverTimestamp()
+   });
+  }
+  tx.update(payRef,{
+   status:"DISETUJUI",
+   verifiedBy:auth.currentUser.uid,
+   verifiedAt:serverTimestamp(),
+   saldoSebelum:saldo,
+   saldoSesudah:saldo-nom,
+   limitDikembalikan:isLimitInvoice?nom:0,
+   limitTerpakaiSebelum:isLimitInvoice?limitUpdate.oldUsed:null,
+   limitTerpakaiSesudah:isLimitInvoice?limitUpdate.used:null,
+   limitTersediaSebelum:isLimitInvoice?limitUpdate.oldAvailable:null,
+   limitTersediaSesudah:isLimitInvoice?limitUpdate.available:null
+  });
  });
 }
 async function load(){
@@ -71,7 +119,7 @@ async function load(){
  }).join(""):'<div class="empty">Belum ada tagihan.</div>';
  document.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>sendWA(invs.find(x=>x.id===b.dataset.wa)));
  document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{const x=invs.find(x=>x.id===b.dataset.copy),s=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));await navigator.clipboard?.writeText(`Tagihan FIXZY BUSINESS\nPesanan: ${x.nomorPesanan||"-"}\nSisa: ${money(s)}\nJatuh Tempo: ${date(x.jatuhTempo)}`);show("Info tagihan disalin.",true)});
- document.querySelectorAll("[data-approve]").forEach(b=>b.onclick=async()=>{if(!confirm("Setujui pembayaran dan potong saldo Owner?"))return;try{await approvePayment(b.dataset.approve);show("Pembayaran disetujui. Saldo Owner dan tagihan sudah diperbarui.",true);await load()}catch(e){show(e.message||"Gagal memproses pembayaran.")}});
+ document.querySelectorAll("[data-approve]").forEach(b=>b.onclick=async()=>{if(!confirm("Setujui pembayaran? Saldo pribadi dipotong dan pembayaran tagihan Limit/Tempo akan mengembalikan limit yang terpakai."))return;try{await approvePayment(b.dataset.approve);show("Pembayaran disetujui. Saldo Owner dan tagihan diperbarui; jika invoice Limit/Tempo, limit terpakai dikembalikan ke limit tersedia.",true);await load()}catch(e){show(e.message||"Gagal memproses pembayaran.")}});
 }
 onAuthStateChanged(auth,async u=>{if(!u){location.href="index-superadmin.html";return}const me=await getDoc(doc(db,"users",u.uid));if(!me.exists()||me.data().role!=="superadmin"){alert("Akses hanya Superadmin.");location.href="index.html";return}try{await load()}catch(e){console.error(e);show("Gagal memuat data tagihan.")}});
 </script></body></html>
