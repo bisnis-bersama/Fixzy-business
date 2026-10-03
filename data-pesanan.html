@@ -633,8 +633,18 @@ function catalogNumber(v){
       : cleaned;
   }
 
-  const n = Number(normalized);
-  return Number.isFinite(n) ? n : 0;
+  let n = Number(normalized);
+  if(!Number.isFinite(n)) return 0;
+
+  // Nilai harga dari Spreadsheet FIXZY kadang terbaca sebagai desimal
+  // karena format angka Google Sheets, misalnya 347.4 yang sebenarnya
+  // mewakili Rp347.400. Untuk harga katalog, pecahan seperti ini
+  // dikonversi ke rupiah penuh.
+  if(Number.isInteger(n) === false && n > 0){
+    n = Math.round(n * 1000);
+  }
+
+  return n;
 }
 
 async function loadReplacementProducts(){
