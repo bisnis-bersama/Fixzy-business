@@ -30,6 +30,17 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
 .promo-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.promo-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:10px;align-items:flex-start}.promo-icon{width:38px;height:38px;border-radius:11px;background:#111;display:grid;place-items:center;flex:0 0 38px}.promo-item b{display:block;font-size:13px}.promo-item span{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}.promo-note{font-size:10px;color:var(--muted);margin:12px 2px}
 .auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}.auth-logged-in .landing{display:none}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;z-index:100}.overlay.show{display:flex}.login{width:min(520px,100%);background:#fff;border-radius:24px 24px 0 0;padding:24px 20px}.login h2{margin:0 0 6px}.login p{margin:0 0 16px;color:var(--muted);font-size:13px}.field{margin:10px 0}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}.primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900}.err{color:#b42318;font-size:12px;min-height:18px}
+
+.nearest-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+.nearest-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.nearest-label{color:var(--muted);font-size:10px;font-weight:800}
+.nearest-amount{font-size:20px;font-weight:900;margin-top:4px}
+.nearest-info{color:var(--muted);font-size:11px;margin-top:5px;line-height:1.5}
+.nearest-status{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.nearest-normal{background:#fef3c7;color:#92400e}
+.nearest-due{background:#fee2e2;color:#991b1b}
+.nearest-btn{width:100%;margin-top:12px}
+.nearest-empty{color:var(--muted);font-size:12px}
 @media(max-width:600px){.top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}.promo-list{grid-template-columns:1fr}.landing{padding-top:18px}.promo-main h2{font-size:27px}.brand h1{font-size:16px}.logout{padding:8px 10px}}
 </style>
 </head>
@@ -71,18 +82,19 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
    <button class="menu-btn" data-page="riwayat.html"><div class="icon">↔️</div><span>Riwayat</span></button>
    <button class="menu-btn" data-page="profil.html"><div class="icon">👤</div><span>Profil</span></button>
   </div>
- </section>
-<section class="section">
-  <div class="section-title">
-    <h2>Tagihan Terdekat</h2>
-    <span id="invoiceCount">0 tagihan</span>
-  </div>
+ 
+</section>
 
-  <div class="card" id="nearestInvoiceBox" style="padding:14px">
-    <div style="color:var(--muted);font-size:12px">
-      Belum ada tagihan yang belum lunas.
-    </div>
+<section class="section">
+ <div class="section-title">
+  <h2>Tagihan Terdekat</h2>
+  <span id="invoiceCount">0 tagihan</span>
+ </div>
+ <div id="nearestInvoiceBox">
+  <div class="nearest-card">
+   <div class="nearest-empty">Memuat tagihan...</div>
   </div>
+ </div>
 </section>
 </main>
 </div>
@@ -111,162 +123,107 @@ onAuthStateChanged(auth,async user=>{
   const w=await getDoc(doc(db,"wallets",user.uid));personalBalance.textContent=rupiah(w.exists()?w.data().saldoPribadi||0:0);
   const l=await getDoc(doc(db,"limits",user.uid));availableLimit.textContent=rupiah(l.exists()?l.data().limitTersedia||0:0);
   let total=0;
-let invoices=[];
+  let invoices=[];
 
-try{
- const q=await getDocs(
-  query(
-   collection(db,"invoices"),
-   where("ownerUid","==",user.uid)
-  )
- );
-
- q.forEach(s=>{
-  const x={id:s.id,...s.data()};
-  const status=String(x.status||"").toUpperCase();
-
-  if(["BELUM_LUNAS","JATUH_TEMPO"].includes(status)){
-   const sisa=Number(
-    x.sisaTagihan ??
-    x.totalTagihan ??
-    x.total ??
-    0
+  try{
+   const q=await getDocs(
+    query(collection(db,"invoices"),where("ownerUid","==",user.uid))
    );
 
-   if(sisa>0){
-    total+=sisa;
-    invoices.push(x);
+   q.forEach(s=>{
+    const x=s.data();
+    const status=String(x.status||"").toUpperCase();
+
+    if(["BELUM_LUNAS","JATUH_TEMPO"].includes(status)){
+     const sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);
+
+     if(sisa>0){
+      total+=sisa;
+      invoices.push({id:s.id,...x,sisaTagihan:sisa});
+     }
+    }
+   });
+  }catch(e){
+   console.error("Gagal membaca tagihan:",e);
+  }
+
+  totalInvoice.textContent=rupiah(total);
+
+  const invoiceCount=document.getElementById("invoiceCount");
+  const nearestBox=document.getElementById("nearestInvoiceBox");
+
+  invoiceCount.textContent=invoices.length+" tagihan";
+
+  if(!invoices.length){
+
+   nearestBox.innerHTML=`
+    <div class="nearest-card">
+     <div class="nearest-empty">Belum ada tagihan yang belum lunas.</div>
+    </div>
+   `;
+
+  }else{
+
+   const toDate=v=>{
+    if(v && typeof v.toDate==="function") return v.toDate();
+    if(!v) return null;
+    const d=new Date(v);
+    return isNaN(d.getTime())?null:d;
+   };
+
+   invoices.sort((a,b)=>{
+    const da=toDate(a.jatuhTempo);
+    const db=toDate(b.jatuhTempo);
+    return (da?da.getTime():Number.MAX_SAFE_INTEGER)-
+           (db?db.getTime():Number.MAX_SAFE_INTEGER);
+   });
+
+   const x=invoices[0];
+   const due=toDate(x.jatuhTempo);
+   const today=new Date();
+   today.setHours(0,0,0,0);
+
+   let jatuhTempo=false;
+   if(due){
+    const d=new Date(due);
+    d.setHours(0,0,0,0);
+    jatuhTempo=d<=today;
    }
+
+   const tanggal=due
+    ?due.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"})
+    :"-";
+
+   const nomor=x.nomorPesanan||x.nomorInvoice||x.invoiceNo||x.id||"-";
+
+   nearestBox.innerHTML=`
+    <div class="nearest-card">
+     <div class="nearest-head">
+      <div>
+       <div class="nearest-label">SISA TAGIHAN</div>
+       <div class="nearest-amount">${rupiah(x.sisaTagihan)}</div>
+       <div class="nearest-info">
+        ${nomor}<br>
+        Jatuh tempo: ${tanggal}
+       </div>
+      </div>
+
+      <div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">
+       ${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}
+      </div>
+     </div>
+
+     <button class="topup nearest-btn" id="nearestInvoiceBtn">
+      Lihat & Bayar Tagihan
+     </button>
+    </div>
+   `;
+
+   document.getElementById("nearestInvoiceBtn").onclick=()=>{
+    location.href="tagihan.html";
+   };
   }
- });
-
-}catch(e){
- console.error("Gagal memuat tagihan:",e);
-}
-
-totalInvoice.textContent=rupiah(total);
-
-/* ================================
-   TAGIHAN TERDEKAT
-================================ */
-
-const invoiceCount=document.getElementById("invoiceCount");
-const nearestBox=document.getElementById("nearestInvoiceBox");
-
-invoiceCount.textContent=`${invoices.length} tagihan`;
-
-if(!invoices.length){
-
- nearestBox.innerHTML=`
-  <div style="color:var(--muted);font-size:12px">
-   Belum ada tagihan yang belum lunas.
-  </div>
- `;
-
-}else{
-
- function getDate(v){
-  try{
-   const d=v?.toDate ? v.toDate() : new Date(v);
-   return isNaN(d.getTime()) ? null : d;
-  }catch{
-   return null;
-  }
- }
-
- invoices.sort((a,b)=>{
-  const da=getDate(a.jatuhTempo);
-  const db=getDate(b.jatuhTempo);
-
-  return (da?.getTime()||Infinity)-
-         (db?.getTime()||Infinity);
- });
-
- const inv=invoices[0];
-
- const due=getDate(inv.jatuhTempo);
-
- const dueText=due
-  ? due.toLocaleDateString("id-ID",{
-      day:"2-digit",
-      month:"short",
-      year:"numeric"
-    })
-  : "-";
-
- const sisa=Number(
-  inv.sisaTagihan ??
-  inv.totalTagihan ??
-  inv.total ??
-  0
- );
-
- const today=new Date();
- today.setHours(0,0,0,0);
-
- const isDue=due && due<=today;
-
- nearestBox.innerHTML=`
-
-  <div style="
-   display:flex;
-   justify-content:space-between;
-   align-items:center;
-   gap:12px;
-  ">
-
-   <div>
-
-    <div style="
-     font-size:10px;
-     color:var(--muted);
-     font-weight:800;
-    ">
-     SISA TAGIHAN
-    </div>
-
-    <div style="
-     font-size:20px;
-     font-weight:900;
-     margin-top:4px;
-    ">
-     ${rupiah(sisa)}
-    </div>
-
-    <div style="
-     font-size:11px;
-     color:var(--muted);
-     margin-top:5px;
-    ">
-     ${inv.nomorPesanan||inv.invoiceNo||inv.id}
-     · Jatuh tempo ${dueText}
-    </div>
-
-   </div>
-
-   <div style="
-    padding:6px 9px;
-    border-radius:999px;
-    font-size:10px;
-    font-weight:900;
-    background:${isDue?"#fee2e2":"#fef3c7"};
-    color:${isDue?"#991b1b":"#92400e"};
-    white-space:nowrap;
-   ">
-    ${isDue?"JATUH TEMPO":"BELUM LUNAS"}
-   </div>
-
-  </div>
-
-  <button
-   class="topup"
-   style="width:100%;margin-top:12px"
-   onclick="location.href='tagihan.html'"
-  >
-   Lihat & Bayar Tagihan
-  </button>
- `;
-}catch{document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Owner tidak tersedia."}
+ }catch{document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Owner tidak tersedia."}
 });
 </script>
 </body></html>
