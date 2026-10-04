@@ -31,6 +31,12 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
 .auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}.auth-logged-in .landing{display:none}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;z-index:100}.overlay.show{display:flex}.login{width:min(520px,100%);background:#fff;border-radius:24px 24px 0 0;padding:24px 20px}.login h2{margin:0 0 6px}.login p{margin:0 0 16px;color:var(--muted);font-size:13px}.field{margin:10px 0}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}.primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900}.err{color:#b42318;font-size:12px;min-height:18px}
 @media(max-width:600px){.top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}.promo-list{grid-template-columns:1fr}.landing{padding-top:18px}.promo-main h2{font-size:27px}.brand h1{font-size:16px}.logout{padding:8px 10px}}
+
+.pending-dot{position:absolute;top:5px;right:5px;width:11px;height:11px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px #dcfce7;animation:pendingBlink 1s infinite}
+@keyframes pendingBlink{0%,100%{opacity:1;box-shadow:0 0 0 3px #dcfce7,0 0 8px #22c55e}50%{opacity:.25;box-shadow:0 0 0 3px #dcfce7,0 0 2px #22c55e}}
+.menu-btn{position:relative}
+.pending-badge{display:none;position:absolute;top:0;right:0;background:#16a34a;color:#fff;border-radius:99px;padding:2px 6px;font-size:9px;font-weight:900;animation:pendingBlink 1s infinite}
+.pending-badge.show{display:block}
 </style>
 </head>
 <body class="auth-logged-out">
@@ -64,10 +70,10 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
  </section>
  <section class="section"><div class="section-title"><h2>Menu Superadmin</h2><span>ADMIN SISTEM</span></div>
   <div class="menu">
-   <button class="menu-btn" data-page="admin-topup-fixzy-business.html"><div class="icon">💰</div><span>Approval Top Up</span></button>
+   <button class="menu-btn pending-menu" id="menuTopup" data-page="admin-topup-fixzy-business.html"><div class="icon">💰</div><span>Approval Top Up</span><i class="pending-dot" id="dotTopup" style="display:none"></i><b class="pending-badge" id="badgeTopup"></b></button>
    <button class="menu-btn" data-page="data-owner.html"><div class="icon">👥</div><span>Data Owner</span></button>
-   <button class="menu-btn" data-page="approval-limit-fixzy-business-superadmin.html"><div class="icon">💳</div><span>Kelola Limit</span></button>
-   <button class="menu-btn" data-page="data-pesanan.html"><div class="icon">📦</div><span>Data Pesanan</span></button>
+   <button class="menu-btn pending-menu" id="menuLimit" data-page="approval-limit-fixzy-business-superadmin.html"><div class="icon">💳</div><span>Kelola Limit</span><i class="pending-dot" id="dotLimit" style="display:none"></i><b class="pending-badge" id="badgeLimit"></b></button>
+   <button class="menu-btn pending-menu" id="menuOrders" data-page="data-pesanan.html"><div class="icon">📦</div><span>Data Pesanan</span><i class="pending-dot" id="dotOrders" style="display:none"></i><b class="pending-badge" id="badgeOrders"></b></button>
     <button class="menu-btn" data-page="produk.html"><div class="icon">🛒</div><span>Produk</span></button>
    <button class="menu-btn" data-page="data-tagihan.html"><div class="icon">🧾</div><span>Tagihan</span></button>
    <button class="menu-btn" data-page="laporan.html"><div class="icon">📊</div><span>Laporan Sistem</span></button>
@@ -96,7 +102,29 @@ onAuthStateChanged(auth,async user=>{
   const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()||s.data().role!=="superadmin"){location.replace("index.html");return}
   document.body.className="auth-logged-in";
   const owners=await getDocs(query(collection(db,"users"),where("role","==","owner")));ownerCount.textContent=owners.size;
-  const topups=await getDocs(query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU")));topupCount.textContent=topups.size;
+  const topups=await getDocs(query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU")));
+  topupCount.textContent=topups.size;
+
+  // Tanda hijau berkedip untuk approval yang masih pending.
+  const isPendingStatus = v => {
+    const x=String(v||"").trim().toUpperCase();
+    return ["MENUNGGU","PENDING","MENUNGGU_APPROVAL","MENUNGGU APPROVAL","DIAJUKAN","BELUM_DIPROSES","BELUM DISETUJUI"].includes(x);
+  };
+  const countPending = async (name) => {
+    const snap=await getDocs(collection(db,name));
+    return snap.docs.filter(d=>isPendingStatus(d.data().status)).length;
+  };
+  const limitPending=await countPending("limitApplications");
+  const orderPending=await countPending("orders");
+
+  const setPending=(dotId,badgeId,n)=>{
+    const dot=document.getElementById(dotId),badge=document.getElementById(badgeId);
+    if(n>0){dot.style.display="block";badge.textContent=n;badge.classList.add("show")}
+    else{dot.style.display="none";badge.classList.remove("show")}
+  };
+  setPending("dotTopup","badgeTopup",topups.size);
+  setPending("dotLimit","badgeLimit",limitPending);
+  setPending("dotOrders","badgeOrders",orderPending);
  }catch(e){console.error(e);document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Superadmin tidak tersedia."}
 });
 </script>
