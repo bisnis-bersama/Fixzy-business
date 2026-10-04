@@ -164,11 +164,10 @@ function fill(x){
  $("kabupaten").value=k.kabupaten||"";
  $("provinsi").value=k.provinsi||"";
  $("whatsapp").value=k.whatsapp||x?.whatsapp||"";
- existingKtpPath=k.fotoKtpPath||"";
- if(existingKtpPath){
-  getDownloadURL(ref(storage,existingKtpPath)).then(url=>{$("ktpPreview").src=url;}).catch(()=>{});
-  $("ktpPreview").style.display="block";
-  $("photoStatus").textContent="Foto KTP sudah tersimpan. Pilih foto baru jika ingin mengganti.";
+ existingKtpUrl=k.fotoKtpUrl||"";
+ existingKtpFileId=k.fotoKtpFileId||"";
+ if(existingKtpUrl){
+  $("photoStatus").textContent="Foto KTP sudah tersimpan di penyimpanan admin. Pilih foto baru jika ingin mengganti.";
  }
 }
 function read(){
