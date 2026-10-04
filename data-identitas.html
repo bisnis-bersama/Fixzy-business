@@ -29,7 +29,7 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
 .nav{border:0;background:transparent;color:var(--gold);font-size:10px;font-weight:800;cursor:pointer}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
 @media(max-width:520px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 
-.ktp-photo{margin-top:16px;padding:14px;border:1px solid #e7eaf0;border-radius:16px;background:#fafafa}.ktp-photo-title{font-weight:900;margin-bottom:5px}.ktp-photo-note{font-size:11px;color:#667085;line-height:1.45;margin-bottom:10px}.photo-preview{width:100%;max-height:210px;object-fit:contain;background:#eee;border-radius:12px;display:none;margin-top:10px}.photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.photo-btn{border:1px solid #d0d5dd;border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer}.photo-btn.primary-photo{background:#111;color:#FFC107;border-color:#111}.photo-status{font-size:11px;margin-top:8px;color:#667085}
+.ktp-photo{margin-top:16px;padding:14px;border:1px solid #e7eaf0;border-radius:16px;background:#fafafa}.ktp-photo-title{font-weight:900;margin-bottom:5px}.ktp-photo-note{font-size:11px;color:#667085;line-height:1.45;margin-bottom:10px}.photo-preview{width:100%;max-height:210px;object-fit:contain;background:#eee;border-radius:12px;display:none;margin-top:10px}.photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.photo-btn{border:1px solid #d0d5dd;border-radius:12px;background:#fff;padding:12px;font-weight:800;cursor:pointer;display:grid;place-items:center;text-align:center;min-height:56px}.file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.photo-btn.primary-photo{background:#111;color:#FFC107;border-color:#111}.photo-status{font-size:11px;margin-top:8px;color:#667085}
 .save-result{display:none;margin:12px 0;padding:14px 16px;border-radius:14px;font-weight:800;text-align:center;line-height:1.4}.save-result.success{display:block;background:#e8f7ee;color:#087443;border:1px solid #9ed9b7}.save-result.error{display:block;background:#fff0f0;color:#b42318;border:1px solid #f0aaaa}</style>
 </head>
 <body>
@@ -69,11 +69,11 @@ input:focus,textarea:focus{border-color:#c79b00}textarea{min-height:90px;resize:
   <div class="ktp-photo-title">Foto KTP</div>
   <div class="ktp-photo-note">Ambil foto KTP dengan kamera atau pilih dari galeri. Foto akan diperkecil dan dikompres sebelum dikirim ke penyimpanan admin FIXZY.</div>
   <div class="photo-actions">
-    <button type="button" class="photo-btn primary-photo" id="cameraBtn">📷 Buka Kamera</button>
-    <button type="button" class="photo-btn" id="galleryBtn">🖼️ Pilih Foto</button>
+    <label class="photo-btn primary-photo" for="ktpCamera">📷 Buka Kamera</label>
+    <label class="photo-btn" for="ktpGallery">🖼️ Pilih Foto</label>
   </div>
-  <input id="ktpCamera" type="file" accept="image/*" capture="environment" hidden>
-  <input id="ktpGallery" type="file" accept="image/*" hidden>
+  <input id="ktpCamera" class="file-input" type="file" accept="image/*" capture="environment">
+  <input id="ktpGallery" class="file-input" type="file" accept="image/*">
   <img id="ktpPreview" class="photo-preview" alt="Preview Foto KTP">
   <div id="photoStatus" class="photo-status">Belum ada foto KTP.</div>
 </div>
@@ -141,8 +141,6 @@ function compressKtp(file){
     img.src=url;
   });
 }
-$("cameraBtn").onclick=()=>$("ktpCamera").click();
-$("galleryBtn").onclick=()=>$("ktpGallery").click();
 $("ktpCamera").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
 $("ktpGallery").onchange=e=>{const f=e.target.files?.[0];if(f)showPhoto(f)};
 
@@ -207,10 +205,9 @@ onAuthStateChanged(auth,async user=>{
   }
   fill(s.data());
   // Jika data identitas sudah lengkap, halaman tetap dapat dibuka untuk koreksi.
-}catch(e){
- console.error(e);
- message("Gagal membaca data Owner: "+(e.code||"")+" "+(e.message||e),"error");
-}
+ }catch(e){console.error(e);message("Gagal membaca data Owner.","error");}
+});
+
 $("saveBtn").onclick=async()=>{
  const k=read(),err=validate(k);
  if(err){message(err,"error");return;}
