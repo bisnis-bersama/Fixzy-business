@@ -207,9 +207,10 @@ onAuthStateChanged(auth,async user=>{
   }
   fill(s.data());
   // Jika data identitas sudah lengkap, halaman tetap dapat dibuka untuk koreksi.
- }catch(e){console.error(e);message("Gagal membaca data Owner.","error");}
-});
-
+}catch(e){
+ console.error(e);
+ message("Gagal membaca data Owner: "+(e.code||"")+" "+(e.message||e),"error");
+}
 $("saveBtn").onclick=async()=>{
  const k=read(),err=validate(k);
  if(err){message(err,"error");return;}
