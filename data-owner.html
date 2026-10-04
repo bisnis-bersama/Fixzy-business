@@ -32,8 +32,9 @@ h2{font-size:19px;margin:0 0 6px}h3{font-size:16px;margin:0 0 8px}
 .field{background:#f8f8f8;border-radius:10px;padding:10px}.field small{display:block;color:var(--muted);font-size:10px}.field b{display:block;margin-top:4px;font-size:13px;word-break:break-word}
 .photo{max-width:180px;border-radius:10px;border:1px solid var(--border);display:block;margin-top:8px}
 .back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}
-.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--yellow);display:flex;justify-content:center;z-index:10}
+.bottom a{max-width:180px;flex:1;padding:11px 3px 10px;text-align:center;text-decoration:none;color:#bbb;font-size:11px;font-weight:700}.bottom a.active{color:var(--yellow);font-weight:800}
+.bottom .ico{display:block;font-size:19px;line-height:20px;margin-bottom:2px}
 @media(max-width:520px){.container{padding:12px 12px 88px}.detail-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -68,11 +69,11 @@ h2{font-size:19px;margin:0 0 6px}h3{font-size:16px;margin:0 0 8px}
 </main>
 
 <nav class="bottom">
-  <a href="index-superadmin.html">Beranda</a>
-  <a href="produk.html">Belanja</a>
-  <a href="tagihan.html">Tagihan</a>
-  <a href="riwayat.html">Riwayat</a>
-  <a class="active" href="data-owner.html">Owner</a>
+  <a href="index-superadmin.html"><span class="ico">⌂</span>Beranda</a>
+  <a href="admin-topup-fixzy-business.html"><span class="ico">💰</span>Top Up</a>
+  <a class="active" href="data-owner.html"><span class="ico">👥</span>Owner</a>
+  <a href="approval-limit-fixzy-business-superadmin.html"><span class="ico">💳</span>Limit</a>
+  <a href="pengaturan.html"><span class="ico">⚙</span>Profil</a>
 </nav>
 
 <script type="module">
@@ -162,7 +163,7 @@ function renderOwner(id,d){
         <div class="field"><small>Kabupaten/Kota</small><b>${esc(ktp.kabupaten||"-")}</b></div>
         <div class="field"><small>Provinsi</small><b>${esc(ktp.provinsi||"-")}</b></div>
       </div>
-      ${ktp.fotoKtpUrl ? `<div style="margin-top:12px"><small style="color:#6b7280">Foto KTP</small><a href="${esc(ktp.fotoKtpUrl)}" target="_blank" rel="noopener"><img class="photo" src="${esc(ktp.fotoKtpUrl)}" alt="Foto KTP"></a></div>` : ""}
+      ${ktp.fotoKtpUrl ? `<div style="margin-top:12px"><small style="color:#6b7280;display:block;margin-bottom:6px">Foto KTP</small><a class="btn light" href="${esc(ktp.fotoKtpUrl)}" target="_blank" rel="noopener">📷 Lihat Foto KTP</a></div>` : ""}
     </div>`;
   listEl.appendChild(el);
 
