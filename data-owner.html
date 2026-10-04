@@ -1,37 +1,90 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Data Owner | FIXZY BUSINESS</title><style>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data Owner | FIXZY BUSINESS</title>
+<style>
 :root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
 .header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
 .header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
 .brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
 .container{max-width:900px;margin:auto;padding:16px 16px 90px}
 .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Data Owner</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
+h2{font-size:19px;margin:0 0 6px}h3{font-size:16px;margin:0 0 8px}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{padding:14px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.name{font-size:16px;font-weight:800}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}
+.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
+.btn{display:inline-block;padding:9px 12px;border:0;border-radius:10px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer;font-size:12px}
+.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}
+.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #d1d5db;border-radius:12px}
+.loading{padding:20px;text-align:center;color:var(--muted)}
+.detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.detail.show{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field{background:#f8f8f8;border-radius:10px;padding:10px}.field small{display:block;color:var(--muted);font-size:10px}.field b{display:block;margin-top:4px;font-size:13px;word-break:break-word}
+.photo{max-width:180px;border-radius:10px;border:1px solid var(--border);display:block;margin-top:8px}
+.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}
+.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
+@media(max-width:520px){.container{padding:12px 12px 88px}.detail-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img class="logo" src="logofixzy.png" onerror="this.style.display='none'">
+      <div><h1>FIXZY BUSINESS</h1><small>Data Owner</small></div>
+    </div>
+    <a href="index-superadmin.html" style="color:#fff;text-decoration:none;font-size:22px">⌂</a>
+  </div>
+</header>
+
 <main class="container">
-<section class="card"><h2>Data Owner</h2><p class="note">Halaman sudah disiapkan sebagai bagian dari arsitektur FIXZY BUSINESS. Data dan aksi Firebase akan disambungkan setelah seluruh halaman selesai.</p></section>
-<section class="card"><h3>Data</h3><div class="item">Belum ada data untuk ditampilkan.</div></section>
-<a class="back" href="index-superadmin.html">← Kembali ke Dashboard Superadmin</a>
+  <section class="card">
+    <h2>Data Owner</h2>
+    <p class="note">Daftar Owner yang terdaftar di sistem FIXZY BUSINESS. Data dibaca langsung dari Firebase.</p>
+  </section>
+
+  <section class="card">
+    <div class="row" style="margin-bottom:12px">
+      <h3 style="margin:0">Owner Terdaftar</h3>
+      <span id="jumlah" class="badge">0 Owner</span>
+    </div>
+    <div id="status" class="loading">Memuat data Owner...</div>
+    <div id="list" class="list"></div>
+  </section>
+
+  <a class="back" href="index-superadmin.html">← Kembali ke Dashboard Superadmin</a>
 </main>
+
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
+  <a href="index-superadmin.html">Beranda</a>
+  <a href="produk.html">Belanja</a>
+  <a href="tagihan.html">Tagihan</a>
+  <a href="riwayat.html">Riwayat</a>
+  <a class="active" href="data-owner.html">Owner</a>
+</nav>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore, collection, getDocs, query, where
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
   apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
   authDomain: "teknisi-ponsel-maja.firebaseapp.com",
   projectId: "teknisi-ponsel-maja",
@@ -39,4 +92,115 @@ label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}t
   messagingSenderId: "835618012205",
   appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
 };
-</script></body></html>
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const statusEl = document.getElementById("status");
+const listEl = document.getElementById("list");
+const jumlahEl = document.getElementById("jumlah");
+
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function formatDate(v){
+  if(!v) return "-";
+  try{
+    if(v.toDate) return v.toDate().toLocaleString("id-ID");
+    if(v.seconds) return new Date(v.seconds*1000).toLocaleString("id-ID");
+    return new Date(v).toLocaleString("id-ID");
+  }catch{return "-"}
+}
+
+function statusBadge(v){
+  const s=String(v||"").toLowerCase();
+  if(s.includes("aktif") || s==="active") return '<span class="badge ok">AKTIF</span>';
+  if(s.includes("tolak") || s.includes("blok")) return '<span class="badge bad">'+esc(v)+'</span>';
+  return '<span class="badge wait">'+esc(v||"MENUNGGU")+'</span>';
+}
+
+function renderOwner(id,d){
+  const ktp=d.dataKtp||{};
+  const nama=d.namaLengkap||d.nama||ktp.nama||d.name||"Tanpa Nama";
+  const usaha=d.namaUsaha||d.business||d.usaha||"-";
+  const wa=d.whatsapp||d.phone||ktp.whatsapp||"-";
+  const email=d.email||"-";
+  const status=d.status||"AKTIF";
+
+  const el=document.createElement("div");
+  el.className="item";
+  el.innerHTML=`
+    <div class="row">
+      <div>
+        <div class="name">${esc(nama)}</div>
+        <div class="sub">${esc(usaha)} · ${esc(wa)}</div>
+      </div>
+      <div>${statusBadge(status)}</div>
+    </div>
+    <div style="margin-top:10px">
+      <button class="btn yellow" data-detail="${esc(id)}">Lihat Detail</button>
+    </div>
+    <div class="detail" id="detail-${esc(id)}">
+      <div class="detail-grid">
+        <div class="field"><small>Owner UID</small><b>${esc(d.ownerUid||id)}</b></div>
+        <div class="field"><small>Email</small><b>${esc(email)}</b></div>
+        <div class="field"><small>Nama Usaha</small><b>${esc(usaha)}</b></div>
+        <div class="field"><small>WhatsApp</small><b>${esc(wa)}</b></div>
+        <div class="field"><small>Tanggal Daftar</small><b>${esc(formatDate(d.createdAt||d.tanggalDaftar))}</b></div>
+        <div class="field"><small>Status</small><b>${esc(status)}</b></div>
+      </div>
+      <h3 style="margin-top:14px">Data KTP</h3>
+      <div class="detail-grid">
+        <div class="field"><small>Nama Lengkap</small><b>${esc(ktp.nama||"-")}</b></div>
+        <div class="field"><small>NIK</small><b>${esc(ktp.nik||"-")}</b></div>
+        <div class="field"><small>Alamat</small><b>${esc(ktp.alamat||"-")}</b></div>
+        <div class="field"><small>RT / RW</small><b>${esc(ktp.rt||"-")} / ${esc(ktp.rw||"-")}</b></div>
+        <div class="field"><small>Kelurahan/Desa</small><b>${esc(ktp.desa||ktp.kelurahan||"-")}</b></div>
+        <div class="field"><small>Kecamatan</small><b>${esc(ktp.kecamatan||"-")}</b></div>
+        <div class="field"><small>Kabupaten/Kota</small><b>${esc(ktp.kabupaten||"-")}</b></div>
+        <div class="field"><small>Provinsi</small><b>${esc(ktp.provinsi||"-")}</b></div>
+      </div>
+      ${ktp.fotoKtpUrl ? `<div style="margin-top:12px"><small style="color:#6b7280">Foto KTP</small><a href="${esc(ktp.fotoKtpUrl)}" target="_blank" rel="noopener"><img class="photo" src="${esc(ktp.fotoKtpUrl)}" alt="Foto KTP"></a></div>` : ""}
+    </div>`;
+  listEl.appendChild(el);
+
+  el.querySelector("[data-detail]").addEventListener("click",()=>{
+    const detail=el.querySelector(".detail");
+    const btn=el.querySelector("[data-detail]");
+    detail.classList.toggle("show");
+    btn.textContent=detail.classList.contains("show")?"Tutup Detail":"Lihat Detail";
+  });
+}
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    statusEl.textContent="Silakan login sebagai Superadmin.";
+    return;
+  }
+
+  try{
+    const q=query(collection(db,"users"),where("role","==","owner"));
+    const snap=await getDocs(q);
+
+    listEl.innerHTML="";
+    jumlahEl.textContent=`${snap.size} Owner`;
+
+    if(snap.empty){
+      statusEl.className="empty";
+      statusEl.textContent="Belum ada Owner terdaftar.";
+      return;
+    }
+
+    statusEl.style.display="none";
+    snap.forEach(doc=>renderOwner(doc.id,doc.data()));
+  }catch(err){
+    console.error(err);
+    statusEl.className="empty";
+    statusEl.innerHTML="Gagal membaca data Owner.<br><small>"+esc(err.message||err)+"</small>";
+  }
+});
+</script>
+</body>
+</html>
