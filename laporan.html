@@ -1,42 +1,81 @@
 <!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Laporan Sistem | FIXZY BUSINESS</title><style>
-:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}
+:root{--yellow:#ffc107;--black:#111;--bg:#f3f4f6;--muted:#6b7280;--border:#e5e7eb}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
-.header{background:#111;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:5}
-.header-inner{max-width:900px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#222}
-.brand h1{font-size:18px;margin:0}.brand small{color:#bbb}
-.container{max-width:900px;margin:auto;padding:16px 16px 90px}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
-.hero{background:#111;color:#fff;border-radius:18px;padding:20px;margin-bottom:14px}.hero small{color:#ccc}.hero strong{display:block;font-size:28px;margin-top:8px;color:var(--yellow)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:14px}.stat small{color:var(--muted);display:block;font-size:11px}.stat b{display:block;margin-top:7px;font-size:18px}
-h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
-.menu{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer}.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.red{background:var(--red)}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:6px 0 12px;font-size:15px}
-label{font-size:13px;font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:left;font-size:13px}
-.badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}.ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:10}.bottom a{max-width:180px;flex:1;padding:12px 4px;text-align:center;text-decoration:none;color:#555;font-size:11px}.bottom a.active{color:#111;font-weight:800}
-.note{font-size:12px;color:var(--muted);line-height:1.5}.back{display:block;text-align:center;color:#555;text-decoration:none;margin-top:15px}
-.list{display:flex;flex-direction:column;gap:10px}.item{padding:13px;border:1px solid var(--border);border-radius:12px;background:#fff}.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.menu{grid-template-columns:1fr 1fr}.container{padding:12px 12px 88px}}
-</style></head><body>
-<header class="header"><div class="header-inner"><div class="brand"><img class="logo" src="logofixzy.png" onerror="this.style.display='none'"><div><h1>FIXZY BUSINESS</h1><small>Laporan Sistem</small></div></div><a href="index.html" style="color:#fff;text-decoration:none">⌂</a></div></header>
-<main class="container">
-<section class="card"><h2>Laporan Sistem</h2><p class="note">Halaman sudah disiapkan sebagai bagian dari arsitektur FIXZY BUSINESS. Data dan aksi Firebase akan disambungkan setelah seluruh halaman selesai.</p></section>
-<section class="card"><h3>Data</h3><div class="item">Belum ada data untuk ditampilkan.</div></section>
-<a class="back" href="index-superadmin.html">← Kembali ke Dashboard Superadmin</a>
+.top{background:#111;color:#fff;padding:16px 15px 66px;border-radius:0 0 30px 30px}
+.top-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px}
+.logo{width:48px;height:48px;border-radius:12px;object-fit:contain}.brand h1{font-size:18px;margin:0;color:var(--yellow)}.brand small{display:block;color:#ccc;margin-top:3px}
+.logout{border:1px solid #333;background:#171717;color:#fff;padding:10px 16px;border-radius:20px;font-weight:700;text-decoration:none}
+.content{max-width:900px;margin:-42px auto 0;padding:0 16px 100px;position:relative}.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #00000008}
+.hero h2{margin:0;font-size:25px}.hero small{display:block;color:var(--muted);margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#f8f8f8;border-radius:13px;padding:13px}.stat small{display:block;color:var(--muted);font-size:11px}.stat b{display:block;margin-top:6px;font-size:18px}
+h3{font-size:17px;margin:0 0 12px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:520px}th,td{padding:9px 7px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}th{color:var(--muted);font-size:11px}
+.loading{text-align:center;padding:20px;color:var(--muted)}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--yellow);display:flex;z-index:10}.bottom a{flex:1;padding:10px 3px;text-align:center;text-decoration:none;color:#bbb;font-size:11px;font-weight:700}.bottom a.active{color:var(--yellow)}.bottom span{display:block;font-size:19px;line-height:20px}
+@media(max-width:520px){.content{padding:0 12px 90px}.grid{grid-template-columns:1fr 1fr}}
+</style></head><body><header class="top"><div class="top-inner"><div class="brand"><img class="logo" src="logofixzy.png"><div><h1>FIXZY BUSINESS</h1><small>Superadmin</small></div></div><a class="logout" href="index-superadmin.html">Keluar</a></div></header>
+<main class="content">
+<section class="card hero"><h2>Laporan Sistem</h2><small>Ringkasan kondisi seluruh sistem FIXZY BUSINESS.</small></section>
+<section class="card"><h3>Ringkasan Owner</h3><div class="grid">
+<div class="stat"><small>Total Owner</small><b id="totalOwner">-</b></div>
+<div class="stat"><small>Owner Aktif</small><b id="ownerAktif">-</b></div>
+<div class="stat"><small>Total Saldo Owner</small><b id="totalSaldo">-</b></div>
+<div class="stat"><small>Total Limit Tersedia</small><b id="limitTersedia">-</b></div>
+</div></section>
+<section class="card"><h3>Top Up & Limit</h3><div class="grid">
+<div class="stat"><small>Top Up Menunggu</small><b id="topupMenunggu">-</b></div>
+<div class="stat"><small>Total Top Up Disetujui</small><b id="topupDisetujui">-</b></div>
+<div class="stat"><small>Limit Disetujui</small><b id="limitDisetujui">-</b></div>
+<div class="stat"><small>Limit Terpakai</small><b id="limitTerpakai">-</b></div>
+</div></section>
+<section class="card"><h3>Transaksi Sistem</h3><div class="grid">
+<div class="stat"><small>Total Pesanan</small><b id="totalPesanan">-</b></div>
+<div class="stat"><small>Total Tagihan</small><b id="totalTagihan">-</b></div>
+<div class="stat"><small>Nominal Tagihan</small><b id="nominalTagihan">-</b></div>
+<div class="stat"><small>Total Pembayaran</small><b id="totalPembayaran">-</b></div>
+</div></section>
+<section class="card"><h3>Owner Terdaftar</h3><div id="ownerStatus" class="loading">Memuat laporan...</div>
+<div class="table-wrap"><table id="ownerTable" style="display:none"><thead><tr><th>Owner</th><th>Usaha</th><th>Status</th><th>Saldo</th><th>Limit</th></tr></thead><tbody id="ownerRows"></tbody></table></div></section>
 </main>
 <nav class="bottom">
-<a class="" href="index.html">Beranda</a>
-<a class="" href="produk.html">Belanja</a>
-<a class="" href="tagihan.html">Tagihan</a>
-<a class="" href="riwayat.html">Riwayat</a>
-<a class="" href="profil.html">Profil</a>
-</nav><script type="module">const firebaseConfig = {
-  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
-  projectId: "teknisi-ponsel-maja",
-  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId: "835618012205",
-  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
-};
+<a href="index-superadmin.html"><span>⌂</span>Beranda</a>
+<a href="admin-topup-fixzy-business.html"><span>💰</span>Top Up</a>
+<a href="data-owner.html"><span>👥</span>Owner</a>
+<a href="approval-limit-fixzy-business-superadmin.html"><span>💳</span>Limit</a>
+<a class="active" href="laporan.html"><span>📊</span>Laporan</a>
+</nav><script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,collection,getDocs,query,where}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const n=v=>Number(v)||0, rp=v=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n(v));
+const read=async c=>{try{return await getDocs(collection(db,c))}catch(e){return{docs:[],size:0}}};
+onAuthStateChanged(auth,async u=>{
+if(!u){document.getElementById("ownerStatus").textContent="Silakan login sebagai Superadmin.";return}
+try{
+const [owners,wallets,limits,tx,orders,invoices,payments]=await Promise.all([
+getDocs(query(collection(db,"users"),where("role","==","owner"))),read("wallets"),read("limits"),read("walletTransactions"),read("orders"),read("invoices"),read("payments")]);
+let saldo=0,la=0,lu=0,lav=0,pending=0,topup=0,inv=0;
+const wm=new Map(),lm=new Map();
+wallets.docs.forEach(d=>{let x=d.data(),v=n(x.saldoPribadi??x.saldo);saldo+=v;wm.set(d.id,v)});
+limits.docs.forEach(d=>{let x=d.data(),a=n(x.limitDisetujui),u=n(x.limitTerpakai),v=n(x.limitTersedia);la+=a;lu+=u;lav+=v;lm.set(d.id,v)});
+tx.docs.forEach(d=>{let x=d.data(),s=String(x.status||"").toUpperCase();if(s==="MENUNGGU")pending++;if(s==="DISETUJUI")topup+=n(x.nominal)});
+invoices.docs.forEach(d=>{let x=d.data();inv+=n(x.total??x.totalTagihan??x.grandTotal??x.nominal)});
+document.getElementById("totalOwner").textContent=owners.size;
+document.getElementById("ownerAktif").textContent=owners.docs.filter(d=>String(d.data().status||"aktif").toLowerCase()==="aktif").length;
+document.getElementById("totalSaldo").textContent=rp(saldo);
+document.getElementById("limitTersedia").textContent=rp(lav);
+document.getElementById("topupMenunggu").textContent=pending;
+document.getElementById("topupDisetujui").textContent=rp(topup);
+document.getElementById("limitDisetujui").textContent=rp(la);
+document.getElementById("limitTerpakai").textContent=rp(lu);
+document.getElementById("totalPesanan").textContent=orders.size;
+document.getElementById("totalTagihan").textContent=invoices.size;
+document.getElementById("nominalTagihan").textContent=rp(inv);
+document.getElementById("totalPembayaran").textContent=payments.size;
+const rows=document.getElementById("ownerRows");
+owners.docs.forEach(d=>{let x=d.data(),k=x.dataKtp||{},nama=x.namaLengkap||x.nama||k.nama||x.name||"Tanpa Nama",usaha=x.namaUsaha||x.business||x.usaha||"-";rows.insertAdjacentHTML("beforeend",`<tr><td><b>${nama}</b></td><td>${usaha}</td><td>${x.status||"AKTIF"}</td><td>${rp(wm.get(d.id)||0)}</td><td>${rp(lm.get(d.id)||0)}</td></tr>`)});
+document.getElementById("ownerTable").style.display=owners.size?"table":"none";document.getElementById("ownerStatus").style.display=owners.size?"none":"block";
+}catch(e){document.getElementById("ownerStatus").textContent="Gagal membaca laporan: "+e.message}
+});
 </script></body></html>
