@@ -1413,11 +1413,9 @@ function bindProductActions(){
   document.querySelectorAll("[data-buy]").forEach(btn=>{
   btn.onclick=(e)=>{
     e.stopPropagation();
-    addToCart(btn.dataset.buy,false);
-    location.href = "checkout.html";
+    addToCart(btn.dataset.buy,true);
   };
-});
-  document.querySelectorAll("[data-product-preview]").forEach(card=>{
+}); document.querySelectorAll("[data-product-preview]").forEach(card=>{
     card.onclick=()=>openProductPreview(card.dataset.productPreview);
   });
 }
