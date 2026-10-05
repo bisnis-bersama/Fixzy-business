@@ -511,9 +511,9 @@ body.is-superadmin .owner-only-hide{display:none!important}
     padding-right:8px;
   }
 
-  /* HP: selalu 2 kartu per baris */
+  /* HP: selalu 3 kartu per baris */
   .products{
-    grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     gap:7px;
   }
 
@@ -750,7 +750,7 @@ body.is-superadmin .owner-only-hide{display:none!important}
   border-radius:8px!important;
 }
 
-/* HP: 2 grid */
+/* HP: 3 grid */
 @media(max-width:759px){
   .container{
     padding-left:8px!important;
@@ -758,7 +758,7 @@ body.is-superadmin .owner-only-hide{display:none!important}
   }
 
   .products{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:6px!important;
   }
 
@@ -773,7 +773,7 @@ body.is-superadmin .owner-only-hide{display:none!important}
 
 @media(max-width:360px){
   .products{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
     gap:5px!important;
   }
 
@@ -1401,9 +1401,10 @@ function addToCart(id, buyNow=false){
   }
   saveCart();
   if(buyNow){
-  alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
-}else{
-  alert("Produk ditambahkan ke keranjang.");
+    alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
+  }else{
+    alert("Produk ditambahkan ke keranjang.");
+  }
 }
 
 function bindProductActions(){
@@ -1411,11 +1412,9 @@ function bindProductActions(){
     btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.cart,false); };
   });
   document.querySelectorAll("[data-buy]").forEach(btn=>{
-  btn.onclick=(e)=>{
-    e.stopPropagation();
-    addToCart(btn.dataset.buy,true);
-  };
-}); document.querySelectorAll("[data-product-preview]").forEach(card=>{
+    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.buy,true); };
+  });
+  document.querySelectorAll("[data-product-preview]").forEach(card=>{
     card.onclick=()=>openProductPreview(card.dataset.productPreview);
   });
 }
@@ -1440,10 +1439,7 @@ function openProductPreview(id){
       <button class="product-preview-buy" type="button" id="previewBuyBtn">Beli Sekarang</button>
     </div>`;
   $("previewCartBtn").onclick=()=>{ addToCart(id,false); closeProductPreview(); };
-  $("previewBuyBtn").onclick=()=>{
-  addToCart(id,false);
-  location.href = "checkout.html";
-};
+  $("previewBuyBtn").onclick=()=>{ addToCart(id,true); closeProductPreview(); };
   $("productPreviewModal").classList.remove("hidden");
 }
 
