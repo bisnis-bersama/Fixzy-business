@@ -766,6 +766,63 @@ body.is-superadmin .owner-only-hide{display:none!important}
   }
 }
 
+
+/* ===== CART ICON BESIDE BUY — NO FLOATING PANEL ===== */
+.cart-bar{
+  display:none!important;
+}
+
+.product-actions{
+  display:grid!important;
+  grid-template-columns:38px minmax(0,1fr)!important;
+  gap:6px!important;
+  margin-top:6px!important;
+}
+
+.product-actions .btn-cart{
+  display:flex!important;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  min-width:38px;
+  min-height:32px;
+  padding:0!important;
+  border:0;
+  border-radius:8px;
+  background:#111;
+  color:#fff;
+  font-size:17px!important;
+  line-height:1;
+  cursor:pointer;
+}
+
+.product-actions .btn-buy{
+  width:100%;
+  min-height:32px;
+  padding:6px 3px!important;
+  border:0;
+  border-radius:8px;
+  font-size:9px!important;
+  font-weight:800;
+}
+
+@media(max-width:360px){
+  .product-actions{
+    grid-template-columns:34px minmax(0,1fr)!important;
+    gap:5px!important;
+  }
+  .product-actions .btn-cart{
+    width:34px;
+    min-width:34px;
+    min-height:29px;
+    font-size:15px!important;
+  }
+  .product-actions .btn-buy{
+    min-height:29px;
+    font-size:8px!important;
+  }
+}
+
 </style>
 </head>
 <body>
