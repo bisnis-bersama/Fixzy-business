@@ -26,33 +26,27 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
 .stat{background:#f8f8f8;border-radius:14px;padding:13px}
 .stat small{display:block;color:var(--muted);font-size:11px}
 .stat b{display:block;margin-top:6px;font-size:18px}
-.list{display:flex;flex-direction:column;gap:12px}
-.invoice{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff}
-.invoice-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.invoice-no{font-size:15px;font-weight:900}
-.meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
-.badge{display:inline-block;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.list{overflow-x:auto;border:1px solid #d1d5db;border-radius:10px;background:#fff}
+.recap-table{width:100%;min-width:920px;border-collapse:collapse;font-size:11px}
+.recap-table th{background:#111;color:#fff;padding:9px 7px;text-align:left;font-size:10px;white-space:nowrap;border-right:1px solid #374151}
+.recap-table td{padding:8px 7px;border-bottom:1px solid #d1d5db;vertical-align:middle;white-space:nowrap}
+.recap-table tbody tr:nth-child(even){background:#fafafa}
+.recap-table tbody tr:hover{background:#fff8d6}
+.recap-table .member{font-weight:700;max-width:150px;white-space:normal}
+.invoice-no{font-weight:800}
+.badge{display:inline-block;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:900;white-space:nowrap}
 .wait{background:#fef3c7;color:#92400e}
 .due{background:#fee2e2;color:#991b1b}
 .paid{background:#dcfce7;color:#166534}
-.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
-.info{background:#f8f8f8;border-radius:11px;padding:10px}
-.info small{display:block;color:var(--muted);font-size:10px}
-.info b{display:block;margin-top:4px;font-size:13px}
-.products{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:9px 0;margin:10px 0}
-.product-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;font-size:12px}
-.product-row span:first-child{max-width:72%}
-.note{font-size:12px;color:var(--muted);line-height:1.5}
+.pay-cell{text-align:center}
+.btn{border:0;border-radius:8px;padding:7px 11px;font-weight:900;font-size:11px;cursor:pointer;background:#111;color:#fff;white-space:nowrap}
+.btn.yellow{background:var(--yellow);color:#111}
+.note{font-size:11px;color:var(--muted);line-height:1.4}
 .empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:13px}
 .loading{text-align:center;padding:25px;color:var(--muted)}
 .message{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}
 .message.show{display:block}
 .message.errmsg{background:#fee2e2;color:#991b1b}
-.btn{border:0;border-radius:11px;padding:11px 13px;font-weight:900;font-size:12px;cursor:pointer;background:#111;color:#fff}
-.btn.yellow{background:var(--yellow);color:#111}
-.pay-area{margin-top:12px}
-.pay-btn{width:100%;font-size:13px}
-.pay-pending{margin-top:10px;padding:10px 12px;border-radius:11px;background:#fff7d6;color:#92400e;font-size:12px;font-weight:700}
 .bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}
 .nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}
 .nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px;color:var(--yellow)}
@@ -102,9 +96,26 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
   </section>
 
   <section class="card">
-    <h2 style="font-size:19px;margin:0 0 12px">Daftar Tagihan</h2>
+    <h2 style="font-size:19px;margin:0 0 12px">DAFTAR TAGIHAN</h2>
     <div id="loading" class="loading">Memuat tagihan...</div>
-    <div id="invoices" class="list"></div>
+    <div id="invoices" class="list" style="display:none">
+      <table class="recap-table">
+        <thead>
+          <tr>
+            <th>NOTA</th>
+            <th>OWNER</th>
+            <th>JENIS</th>
+            <th>STATUS</th>
+            <th>JATUH TEMPO</th>
+            <th>NILAI BARANG</th>
+            <th>SUDAH DIBAYAR</th>
+            <th>SISA TAGIHAN</th>
+            <th>BAYAR</th>
+          </tr>
+        </thead>
+        <tbody id="invoiceRows"></tbody>
+      </table>
+    </div>
   </section>
 </main>
 
@@ -149,6 +160,7 @@ const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const $=id=>document.getElementById(id);
+let currentOwnerName="";
 
 function money(v){
   return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v)||0);
@@ -195,61 +207,26 @@ function renderInvoice(inv){
   const total=Number(inv.total ?? inv.totalTagihan ?? 0);
   const paid=Number(inv.totalTerbayar ?? inv.terbayar ?? 0);
   const remaining=Number(inv.sisaTagihan ?? Math.max(0,total-paid));
-  const items=getItems(inv);
-
-  const products=items.length
-    ? `<div class="products">${items.map(it=>{
-        const qty=Number(it.qty ?? it.jumlah ?? 1);
-        const price=Number(it.harga ?? it.price ?? it.tunai ?? it.hargaTunai ?? it.tempo ?? it.hargaTempo ?? 0);
-        return `<div class="product-row">
-          <span>${esc(it.nama ?? it.name ?? it.produk ?? "Produk")} × ${qty}</span>
-          <b>${money(price*qty)}</b>
-        </div>`;
-      }).join("")}</div>`
-    : "";
-
+  const method=String(inv.metodePembayaran||"LIMIT").toUpperCase();
+  const jenis=(method==="LIMIT"||method==="TEMPO"||method.includes("LIMIT"))
+    ? "LIMIT" : "SALDO";
   const dueNow=isDueTodayOrPast(inv.jatuhTempo);
-  const payHint = dueNow
-    ? `<div class="note" style="margin-top:10px;color:#991b1b;font-weight:700">⚠️ Jatuh tempo. Pembayaran wajib penuh. Jika saldo kurang, wajib Top Up.</div>`
-    : `<div class="note" style="margin-top:10px;color:#166534;font-weight:700">✓ Belum jatuh tempo. Boleh membayar sebagian.</div>`;
 
-  const payArea = remaining > 0
-    ? `<div class="pay-area">
-         <button class="btn yellow pay-btn" data-pay="${esc(inv.id)}">💳 Bayar Tagihan</button>
-         ${payHint}
-       </div>`
-    : "";
+  const payCell = remaining > 0
+    ? `<button class="btn yellow" data-pay="${esc(inv.id)}">💳 Bayar</button>`
+    : `<span class="badge paid">LUNAS</span>`;
 
-  return `<article class="invoice">
-    <div class="invoice-head">
-      <div>
-        <div class="invoice-no">${esc(inv.invoiceNo || inv.nomorInvoice || inv.id)}</div>
-        <div class="meta">
-          Pesanan: ${esc(inv.nomorPesanan || inv.orderId || "-")}<br>
-          Dibuat: ${esc(dateText(inv.createdAt))}
-        </div>
-      </div>
-      <span class="badge ${s.cls}">${s.text}</span>
-    </div>
-
-    <div class="info-grid">
-      <div class="info"><small>Total Tagihan</small><b>${money(total)}</b></div>
-      <div class="info"><small>Sudah Dibayar</small><b>${money(paid)}</b></div>
-      <div class="info"><small>Sisa Tagihan</small><b>${money(remaining)}</b></div>
-      <div class="info"><small>Jatuh Tempo</small><b>${dateText(inv.jatuhTempo)}</b></div>
-    </div>
-
-    ${products}
-
-    <div class="note">
-      Metode pembayaran: <b>${esc(
-        String(inv.metodePembayaran||"LIMIT").toUpperCase()==="LIMIT"
-        ? "LIMIT / TEMPO"
-        : inv.metodePembayaran
-      )}</b>
-    </div>
-    ${payArea}
-  </article>`;
+  return `<tr>
+    <td class="invoice-no">${esc(inv.invoiceNo || inv.nomorInvoice || inv.id)}</td>
+    <td class="member">${esc(currentOwnerName || inv.ownerName || inv.namaOwner || "-")}</td>
+    <td>${jenis}</td>
+    <td><span class="badge ${s.cls}">${s.text}</span></td>
+    <td>${dateText(inv.jatuhTempo)}</td>
+    <td>${money(total)}</td>
+    <td>${money(paid)}</td>
+    <td><b>${money(remaining)}</b></td>
+    <td class="pay-cell">${payCell}</td>
+  </tr>`;
 }
 
 function dateKey(v){
@@ -490,7 +467,8 @@ async function requestPayment(invoiceId){
 
 async function loadInvoices(user){
   $("loading").style.display="block";
-  $("invoices").innerHTML="";
+  $("invoices").style.display="none";
+  $("invoiceRows").innerHTML="";
 
   try{
     const q=query(
@@ -538,7 +516,8 @@ async function loadInvoices(user){
     $("loading").style.display="none";
 
     if(!invoices.length){
-      $("invoices").innerHTML='<div class="empty">Belum ada tagihan.</div>';
+      $("invoices").style.display="block";
+      $("invoiceRows").innerHTML='<tr><td colspan="9" class="empty">Belum ada tagihan.</td></tr>';
       return;
     }
 
@@ -547,9 +526,10 @@ async function loadInvoices(user){
       return !["LUNAS","SUDAH_DIBAYAR","DIBAYAR"].includes(s);
     });
 
-    $("invoices").innerHTML=openInvoices.length
+    $("invoices").style.display="block";
+    $("invoiceRows").innerHTML=openInvoices.length
       ? openInvoices.map(renderInvoice).join("")
-      : '<div class="empty">Semua tagihan sudah lunas.</div>';
+      : '<tr><td colspan="9" class="empty">Semua tagihan sudah lunas.</td></tr>';
 
     document.querySelectorAll("[data-pay]").forEach(btn=>{
       btn.addEventListener("click",()=>requestPayment(btn.dataset.pay));
@@ -560,7 +540,8 @@ async function loadInvoices(user){
     $("loading").style.display="none";
     $("message").textContent="Gagal memuat tagihan: "+(err.message||"Terjadi kesalahan.");
     $("message").className="message show errmsg";
-    $("invoices").innerHTML="";
+    $("invoices").style.display="none";
+    $("invoiceRows").innerHTML="";
   }
 }
 
@@ -579,6 +560,15 @@ onAuthStateChanged(auth,async user=>{
     }
 
     const profile=userSnap.data();
+    currentOwnerName =
+      profile.nama ||
+      profile.namaLengkap ||
+      profile.name ||
+      profile.displayName ||
+      user.displayName ||
+      profile.email ||
+      user.email ||
+      "-";
     if(profile.role!=="owner"){
       alert("Halaman ini khusus Owner.");
       location.href="index.html";
