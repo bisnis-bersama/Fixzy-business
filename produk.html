@@ -880,6 +880,53 @@ body.is-superadmin .owner-only-hide{display:none!important}
   line-height:1.15;
   pointer-events:none;
 }
+/* ===== TOMBOL PESANAN MELAYANG ===== */
+.floating-order{
+  position:fixed;
+  right:12px;
+  bottom:82px;
+  z-index:9999;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#111;
+  color:#FFC107;
+  text-decoration:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  box-shadow:0 5px 18px rgba(0,0,0,.30);
+  border:2px solid #FFC107;
+  font-size:21px;
+  line-height:1;
+}
+
+.floating-order span{
+  font-size:8px;
+  font-weight:900;
+  color:#fff;
+  line-height:1;
+}
+
+.floating-order:active{
+  transform:scale(.94);
+}
+
+@media(max-width:759px){
+  .floating-order{
+    right:10px;
+    bottom:82px;
+    width:52px;
+    height:52px;
+    font-size:20px;
+  }
+
+  .floating-order span{
+    font-size:7px;
+  }
+}
 
 </style>
 </head>
@@ -939,7 +986,11 @@ body.is-superadmin .owner-only-hide{display:none!important}
 
 </main>
 
-<button class="cart-bar" id="cartBar" type="button">🛒 Keranjang <b id="cartCount">0</b></button>
+<!-- TOMBOL PESANAN MELAYANG -->
+<a href="pesanan.html" class="floating-order" aria-label="Buka Pesanan">
+  🛒
+  <span>Pesanan</span>
+</a>
 
 <nav class="bottom">
   <a href="index.html"><span class="nav-icon">⌂</span><span>Beranda</span></a>
