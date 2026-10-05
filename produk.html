@@ -753,29 +753,46 @@ function cleanCell(value){
 function mapRows(rows, catalogName){
   if(!rows.length) return [];
 
-  const headers = rows[0];
-  const idx = {
-    nama: findHeaderIndex(headers,"nama"),
-    tunai: findHeaderIndex(headers,"tunai"),
-    tempo: findHeaderIndex(headers,"tempo"),
-    stok: findHeaderIndex(headers,"stok"),
-    supplier: findHeaderIndex(headers,"supplier"),
-    kategori: findHeaderIndex(headers,"kategori")
-  };
+  /*
+    FORMAT SPREADSHEET FIXZY YANG DIPAKAI:
+    A = produk
+    B = gambar
+    C = tunai
+    D = tempo
+    E = supplier
+    F = stock
 
-  // Nama produk adalah field wajib.
-  if(idx.nama < 0){
-    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
-  }
+    Pembacaan memakai POSISI KOLOM A-F.
+    Jadi tidak tergantung nama/header kolom.
+    Contoh header pada Spreadsheet:
+    produk | gambar | tunai | tempo | supplier | stock
+  */
 
-  return rows.slice(1)
+  const firstRow = rows[0] || [];
+  const firstCells = firstRow.slice(0,6).map(v => normalizeHeader(v));
+
+  const headerWords = [
+    "produk","barang","namaproduk","namabarang",
+    "gambar","image","foto",
+    "tunai","hargatunai","cash",
+    "tempo","hargatempo","kredit",
+    "supplier","suplier",
+    "stok","stock","persediaan"
+  ];
+
+  const hasHeader = firstCells.some(v => headerWords.includes(v));
+
+  const startIndex = hasHeader ? 1 : 0;
+
+  return rows.slice(startIndex)
     .map(row => ({
-      nama: cleanCell(row[idx.nama]),
-      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
-      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
-      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
-      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
-      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      nama: cleanCell(row[0]),
+      gambar: cleanCell(row[1]),
+      tunai: cleanCell(row[2]),
+      tempo: cleanCell(row[3]),
+      supplier: cleanCell(row[4]),
+      stok: cleanCell(row[5]),
+      kategori: cleanCell(row[6] || ""),
       katalog: catalogName
     }))
     .filter(p => p.nama);
@@ -992,6 +1009,7 @@ function addToCart(id, buyNow=false){
   }
 
   const found = cart.find(x => x.id === id);
+
   if(found){
     if(Number.isFinite(stock) && found.qty >= stock){
       alert("Jumlah melebihi stok tersedia.");
@@ -1002,6 +1020,7 @@ function addToCart(id, buyNow=false){
     cart.push({
       id:p._id,
       nama:p.nama,
+      gambar:p.gambar || "",
       tunai:p.tunai,
       tempo:p.tempo,
       supplier:p.supplier,
@@ -1009,12 +1028,12 @@ function addToCart(id, buyNow=false){
       qty:1
     });
   }
+
   saveCart();
-  if(buyNow){
-    alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
-  }else{
-    alert("Produk ditambahkan ke keranjang.");
-  }
+
+  // Semua proses pesanan dilanjutkan di pesanan.html.
+  // Beli Sekarang dan tombol keranjang sama-sama membawa user ke sana.
+  location.href = "pesanan.html";
 }
 
 function bindProductActions(){
