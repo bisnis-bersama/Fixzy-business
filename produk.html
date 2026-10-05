@@ -617,13 +617,7 @@ body.is-superadmin .owner-only-hide{display:none!important}
 
 /* ===== SAFE UI ONLY: DATA/FIREBASE/SPREADSHEET CODE UNTOUCHED ===== */
 
-/* ===== KERANJANG AKTIF ===== */
-.btn-cart{
-  display:block!important;
-}
-.cart-bar{
-  display:block!important;
-}
+/* Keranjang ditampilkan kembali */
 
 /* Kartu bersih */
 .product{
@@ -1285,7 +1279,7 @@ function renderProducts(){
         </div>
       </div>
       <div class="product-actions">
-        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒 Tambah ke Keranjang</button>
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}" aria-label="Tambah ke Keranjang" title="Tambah ke Keranjang">🛒</button>
         <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
       </div>
     </article>
