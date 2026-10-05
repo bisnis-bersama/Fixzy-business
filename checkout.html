@@ -356,7 +356,7 @@ async function useMyLocation(){
         `<b>📍 Lokasi ditemukan</b>
         ${esc(alamatOtomatis)}
         <br><span style="color:#667085">Akurasi GPS ±${accuracy} meter</span>
-        <br><span style="color:#667085">Koordinat: ${lat.toFixed(6)}, ${lon.toFixed(6)}</span>
+        <br><a href="https://www.google.com/maps?q=${lat.toFixed(6)},${lon.toFixed(6)}" target="_blank" rel="noopener noreferrer" style="color:#1677ff;text-decoration:underline;font-weight:700">📍 Buka Koordinat di Google Maps</a>
         <br><small style="color:#667085">Untuk pengiriman ke rumah/toko, pastikan nomor rumah dan RT/RW sudah benar melalui tombol Ubah Alamat.</small>`;
 
       message("ok","Lokasi GPS berhasil digunakan. Lengkapi nomor rumah/RT/RW bila belum terdeteksi.");
