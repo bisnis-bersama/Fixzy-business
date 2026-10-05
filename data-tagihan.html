@@ -108,14 +108,33 @@ async function sendWA(inv){
  const u=await getDoc(doc(db,"users",inv.ownerUid));const p=u.exists()?u.data():{};
  const no=p.noWhatsApp||p.whatsapp||p.telepon||p.noHp||p.nomorHp||p.phone||"";
  if(!no)return show("Nomor WhatsApp Owner belum tersimpan.");
- const remain=Number(inv.sisaTagihan??(Number(inv.total||0)-Number(inv.totalTerbayar||0)));
- const text=`Halo ${p.nama||p.namaLengkap||p.namaUsaha||"Owner FIXZY"},
+ const ownerName=p.nama||p.namaLengkap||p.namaUsaha||p.displayName||inv.ownerName||inv.namaOwner||inv.memberName||inv.namaMember||"Owner FIXZY";
+ const total=Number(inv.total||inv.totalTagihan||0);
+ const paid=Number(inv.totalTerbayar||0);
+ const remain=Number(inv.sisaTagihan??Math.max(0,total-paid));
+ const status=String(inv.status||"").toUpperCase();
+ let text;
+ if(status==="LUNAS" || remain<=0){
+   text=`Halo ${ownerName},
+
+Kami informasikan bahwa tagihan FIXZY BUSINESS berikut sudah LUNAS.
+
+No. Pesanan: ${inv.nomorPesanan||inv.invoiceNo||"-"}
+Total Tagihan: ${money(total)}
+Sudah Dibayar: ${money(paid)}
+Sisa Tagihan: Rp 0
+
+Terima kasih atas pembayaran dan kepercayaannya kepada FIXZY BUSINESS. 🙏
+
+FIXZY BUSINESS`;
+ }else{
+   text=`Halo ${ownerName},
 
 Ini pengingat tagihan FIXZY BUSINESS.
 
-No. Pesanan: ${inv.nomorPesanan||"-"}
-Total Tagihan: ${money(inv.total)}
-Sudah Dibayar: ${money(inv.totalTerbayar||0)}
+No. Pesanan: ${inv.nomorPesanan||inv.invoiceNo||"-"}
+Total Tagihan: ${money(total)}
+Sudah Dibayar: ${money(paid)}
 Sisa Tagihan: ${money(remain)}
 Jatuh Tempo: ${date(inv.jatuhTempo)}
 
@@ -123,6 +142,7 @@ Mohon melakukan pembayaran sebelum atau pada jatuh tempo.
 
 Terima kasih.
 FIXZY BUSINESS`;
+ }
  window.open("https://wa.me/"+phone(no)+"?text="+encodeURIComponent(text),"_blank");
 }
 async function approvePayment(id){
@@ -191,6 +211,26 @@ async function load(){
   const isnap=await getDocs(collection(db,"invoices"));
   const invs=isnap.docs.map(d=>({id:d.id,...d.data()}));
 
+  // Ambil nama Owner dari users/{ownerUid}, supaya UID Firebase tidak tampil di tabel.
+  const ownerCache={};
+  const ownerUids=[...new Set(invs.map(x=>x.ownerUid).filter(Boolean))];
+  await Promise.all(ownerUids.map(async uid=>{
+    try{
+      const snap=await getDoc(doc(db,"users",uid));
+      if(snap.exists()){
+        const p=snap.data();
+        ownerCache[uid]=p.nama||p.namaLengkap||p.namaUsaha||p.displayName||uid;
+      }else{
+        ownerCache[uid]=uid;
+      }
+    }catch(e){
+      ownerCache[uid]=uid;
+    }
+  }));
+  invs.forEach(x=>{
+    x._ownerDisplayName=ownerCache[x.ownerUid]||x.ownerName||x.namaOwner||x.memberName||x.namaMember||"-";
+  });
+
   const totalCount=invs.length;
   let unpaid=0, nilai=0, dibayar=0, pengelola=0;
   const groups={};
@@ -258,7 +298,7 @@ async function load(){
       const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
       const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
       const status=String(x.status||"BELUM_LUNAS").toUpperCase();
-      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      const member=x._ownerDisplayName||"-";
       const statusClass=status==="LUNAS"?"green":(remain>0?"red":"");
       return `<tr>
         <td><b>${esc(x.nomorPesanan||x.invoiceNo||x.id)}</b></td>
@@ -281,7 +321,7 @@ async function load(){
       const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
       const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
       const status=String(x.status||"BELUM_LUNAS").toUpperCase();
-      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      const member=x._ownerDisplayName||"-";
       return `<article class="item">
         <div class="item-head"><div><div class="item-no">${esc(x.nomorPesanan||x.invoiceNo||x.id)}</div><div class="item-owner">${esc(member)}</div></div><span class="badge">${esc(status)}</span></div>
         <div class="item-grid">
