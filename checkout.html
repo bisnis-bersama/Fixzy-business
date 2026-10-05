@@ -34,8 +34,14 @@ h2{font-size:16px;margin:0 0 13px}
 .yellow{background:#FFC107;color:#111}
 .light{background:#eef0f3}
 .full{width:100%;margin-top:10px}
-.pay{display:flex;gap:10px;align-items:center;border:1px solid #e5e7eb;border-radius:14px;padding:12px;margin:8px 0}
-.pay input{accent-color:#111}.pay.disabled{opacity:.55;background:#f3f4f6}.pay.disabled input{cursor:not-allowed}
+.pay{display:flex;gap:12px;align-items:center;border:0;border-bottom:1px solid #e5e7eb;border-radius:0;padding:12px 2px;margin:0;cursor:pointer}
+.pay:last-child{border-bottom:0}
+.pay input{width:20px;height:20px;margin:0;accent-color:#111;flex:none}
+.pay.disabled{opacity:.5;background:transparent}.pay.disabled input{cursor:not-allowed}
+.location-box{margin-top:10px}
+.location-result{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:12px;font-size:12px;line-height:1.5}
+.location-result b{display:block;font-size:13px;color:#111;margin-bottom:3px}
+.gps-btn{margin-top:10px}
 .pay small{display:block;color:#667085;margin-top:3px}
 .row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px}
 .total{border-top:1px solid #eee;margin-top:7px;padding-top:12px;font-size:17px;font-weight:900}
@@ -76,11 +82,16 @@ textarea{min-height:90px}
 <section class="panel">
 <h2>Alamat Pengiriman</h2>
 <div id="addr"></div>
-<button class="btn yellow full" id="addrBtn">+ Tambah Alamat</button>
+<div class="location-box">
+<button class="btn yellow full gps-btn" id="gpsBtn" type="button">📍 Gunakan Lokasi Saya</button>
+<div id="gpsResult" class="location-result" style="display:none"></div>
+</div>
+<button class="btn light full" id="addrBtn">✎ Ubah Alamat Manual</button>
 </section>
 
 <section class="panel">
 <h2>Metode Pembayaran</h2>
+<div class="pay-list">
 <label class="pay">
 <input type="radio" name="pay" value="SALDO_PRIBADI" checked>
 <div><b>Saldo Pribadi</b><small id="saldo">Memuat...</small></div>
@@ -89,6 +100,7 @@ textarea{min-height:90px}
 <input type="radio" name="pay" value="LIMIT">
 <div><b>Limit / Tempo</b><small id="limit">Memuat...</small><small id="limitRule">Minimal 3 pcs untuk Limit / Tempo.</small></div>
 </label>
+</div>
 <small id="tempoInfo" style="display:block;color:#667085;margin-top:8px">Saldo atau limit baru dipotong setelah pesanan disetujui Superadmin.</small>
 </section>
 
@@ -169,7 +181,7 @@ function parseMoney(value){
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
 
-let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0,tempoHari=0;
+let user=null,cart=[],saldo=0,limit=0,address=null,total=0,totalQty=0,tempoHari=0;\nlet gpsAddress=null;
 
 function cartKey(){return"fixzy_cart_"+user.uid}
 function saveCart(){localStorage.setItem(cartKey(),JSON.stringify(cart))}
@@ -282,6 +294,39 @@ $("aa").value=address?.alamat||"";
 $("modal").classList.add("show");
 }
 
+
+async function useMyLocation(){
+  const btn=$("gpsBtn"), result=$("gpsResult");
+  if(!navigator.geolocation){message("warn","GPS tidak didukung browser ini.");return;}
+  btn.disabled=true; btn.textContent="📍 Mencari lokasi...";
+  result.style.display="block"; result.textContent="Mencari lokasi Anda...";
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    try{
+      const {latitude,longitude}=pos.coords;
+      const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=id`;
+      const r=await fetch(url);
+      if(!r.ok) throw new Error("Gagal mengambil alamat.");
+      const d=await r.json();
+      if(!d.display_name) throw new Error("Alamat tidak ditemukan.");
+      gpsAddress=d.display_name;
+      address={nama:address?.nama||"",telepon:address?.telepon||"",alamat:d.display_name,latitude,longitude,sumber:"GPS"};
+      await setDoc(doc(db,"users",user.uid),{alamatPengiriman:address},{merge:true});
+      renderAddress();
+      result.innerHTML=`<b>Lokasi ditemukan</b>${esc(d.display_name)}`;
+      message("ok","Alamat dari lokasi GPS berhasil digunakan.");
+    }catch(e){
+      console.error(e); result.textContent="Alamat otomatis gagal diambil. Coba lagi.";
+      message("err","Gagal mengambil alamat otomatis.");
+    }finally{
+      btn.disabled=false; btn.textContent="📍 Gunakan Lokasi Saya";
+    }
+  },()=>{
+    btn.disabled=false; btn.textContent="📍 Gunakan Lokasi Saya";
+    result.style.display="block"; result.textContent="Izin lokasi ditolak atau GPS tidak tersedia.";
+    message("warn","Aktifkan izin lokasi lalu coba lagi.");
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
+$("gpsBtn").onclick=useMyLocation;
 document.querySelectorAll("[name=pay]").forEach(r=>r.onchange=render);
 $("addrBtn").onclick=openAddress;
 $("cancel").onclick=()=>$("modal").classList.remove("show");
