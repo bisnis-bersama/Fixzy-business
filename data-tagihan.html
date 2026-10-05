@@ -1,10 +1,91 @@
 <!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111"><title>Data Tagihan | FIXZY BUSINESS</title>
 <style>
-*{box-sizing:border-box}:root{--y:#FFC107;--b:#111;--bg:#f3f4f6;--m:#6b7280;--bd:#e5e7eb;--g:#16a34a}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}.brand{display:flex;align-items:center;justify-content:space-between}.left{display:flex;align-items:center;gap:11px}.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--y)}.logo img{width:100%;height:100%;object-fit:contain}.brand h1{font-size:17px;margin:0;color:var(--y);font-weight:900}.small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}.home{color:#fff;text-decoration:none;font-size:23px}.content{padding:0 15px;margin-top:-60px}.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px}.title{font-size:20px;font-weight:900;margin:0}.note{font-size:12px;color:var(--m);line-height:1.5}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.stat{background:#f8f8f8;border-radius:14px;padding:13px}.stat small{display:block;color:var(--m);font-size:11px}.stat b{display:block;margin-top:6px;font-size:18px}.list{display:flex;flex-direction:column;gap:12px}.item{border:1px solid var(--bd);border-radius:16px;padding:14px}.head{display:flex;justify-content:space-between;gap:10px}.no{font-weight:900}.owner{font-size:11px;color:var(--m);margin-top:4px}.badge{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;background:#fef3c7;color:#92400e}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.info{background:#f8f8f8;border-radius:11px;padding:10px}.info small{display:block;color:var(--m);font-size:10px}.info b{display:block;margin-top:4px;font-size:13px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.btn{border:0;border-radius:11px;padding:12px;font-weight:900;cursor:pointer;background:#111;color:#fff}.btn.yellow{background:var(--y);color:#111}.btn.green{background:var(--g);color:#fff}.btn:disabled{opacity:.5}.pending{margin-top:10px;padding:10px;background:#fff7d6;border-radius:11px;font-size:12px}.empty{text-align:center;color:var(--m);padding:25px}.msg{display:none;padding:11px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}.msg.show{display:block}.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}.nav{color:var(--y);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}@media(max-width:600px){.top{padding:16px 15px 66px}.content{margin-top:-42px}.stats{grid-template-columns:1fr 1fr}.actions{grid-template-columns:1fr}}
+*{box-sizing:border-box}
+:root{--y:#FFC107;--b:#111;--bg:#eef1f6;--m:#6b7280;--bd:#d7dce3;--g:#16a34a;--r:#dc2626}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between}.left{display:flex;align-items:center;gap:11px}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--y)}
+.logo img{width:100%;height:100%;object-fit:contain}.brand h1{font-size:17px;margin:0;color:var(--y);font-weight:900}
+.small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}.home{color:#fff;text-decoration:none;font-size:23px}
+.content{padding:0 15px;margin-top:-60px}.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:10px}
+.title{font-size:18px;font-weight:900;margin:0}.note{font-size:11px;color:var(--m);line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.stat{background:#f8f8f8;border:1px solid #d5d9df;border-radius:9px;padding:8px}.stat small{display:block;color:var(--m);font-size:9px}
+.stat b{display:block;margin-top:4px;font-size:13px}.stat.warn{background:#fff7d6}.stat.warn b{color:#b45309}
+.filter{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px}
+select,input{width:100%;border:1px solid #cfd5dd;border-radius:8px;padding:10px;background:#fff;font-size:12px}
+.btn{border:1px solid #cfd5dd;border-radius:8px;padding:9px 12px;font-weight:800;cursor:pointer;background:#fff;color:#111;font-size:11px}
+.btn.yellow{background:var(--y);border-color:var(--y)}.btn.green{background:var(--g);border-color:var(--g);color:#fff}
+.btn.dark{background:#111;border-color:#111;color:#fff}.btn:disabled{opacity:.5}
+.section-head{font-size:13px;font-weight:900;border-bottom:1px solid #222;padding-bottom:6px;margin-bottom:8px}
+.due-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.due-card{border:1px solid #aeb5bf;border-radius:9px;background:#fffdf0;padding:9px}
+.due-date{font-size:10px;font-weight:900;color:#b45309}.due-mode{font-size:9px;color:var(--m);margin:2px 0 6px}
+.due-row{display:flex;justify-content:space-between;font-size:9px;padding:2px 0}.due-row b{font-size:10px}.due-total{border-top:1px solid #555;margin-top:5px;padding-top:5px;font-weight:900}
+.table-wrap{overflow:auto;border:1px solid #c4cad2;border-radius:9px}
+table{width:100%;border-collapse:collapse;min-width:850px;font-size:9px}
+th{background:#111;color:#fff;padding:7px 5px;text-align:left;font-size:8px}td{border-bottom:1px solid #d9dde3;padding:7px 5px;vertical-align:middle}
+tr:last-child td{border-bottom:0}.member{font-weight:800}.muted{color:var(--m)}
+.badge{display:inline-block;padding:4px 6px;border-radius:999px;font-size:8px;font-weight:900;background:#fef3c7;color:#92400e}
+.badge.green{background:#dcfce7;color:#166534}.badge.red{background:#fee2e2;color:#991b1b}
+.wa-btn{background:#16a34a;color:#fff;border:0;border-radius:6px;padding:6px 7px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap}
+.mobile-list{display:none}.item{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#fff}
+.item-head{display:flex;justify-content:space-between;gap:8px}.item-no{font-weight:900;font-size:11px}.item-owner{font-size:10px;color:var(--m);margin-top:3px}
+.item-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.mini{background:#f8f8f8;border-radius:7px;padding:6px}.mini small{display:block;color:var(--m);font-size:8px}.mini b{display:block;margin-top:2px;font-size:10px}
+.item-actions{margin-top:8px}.item-actions .wa-btn{width:100%;padding:9px}
+.msg{display:none;padding:10px;border-radius:8px;margin-bottom:10px;font-size:11px;font-weight:700}.msg.show{display:block}.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}
+.empty{text-align:center;color:var(--m);padding:25px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.nav{color:var(--y);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
+@media(max-width:760px){
+ .top{padding:16px 12px 66px}.content{padding:0 8px;margin-top:-42px}
+ .stats{grid-template-columns:repeat(2,1fr)}.stat b{font-size:12px}
+ .filter{grid-template-columns:1fr}.filter .btn{width:100%}
+ .due-list{grid-template-columns:1fr 1fr}
+ .table-wrap{display:none}.mobile-list{display:block}
+}
+@media(max-width:430px){.due-list{grid-template-columns:1fr}.card{padding:10px}.title{font-size:17px}}
 </style></head><body><div class="app">
 <header class="top"><div class="brand"><div class="left"><div class="logo"><img src="logofixzy.png" alt="FIXZY"></div><div><h1>FIXZY BUSINESS</h1><span class="small">Superadmin · Data Tagihan</span></div></div><a class="home" href="index-superadmin.html">⌂</a></div></header>
-<main class="content"><section class="card"><h2 class="title">Data Tagihan</h2><p class="note">Invoice Owner dan permintaan pembayaran yang menunggu verifikasi.</p><div class="stats"><div class="stat"><small>Total Tagihan</small><b id="count">0</b></div><div class="stat"><small>Belum Lunas</small><b id="unpaid">Rp 0</b></div><div class="stat"><small>Jatuh Tempo</small><b id="due">0</b></div></div></section><div id="msg" class="msg"></div><section class="card"><div id="list" class="list"><div class="empty">Memuat...</div></div></section></main>
+<main class="content">
+<section class="card">
+  <h2 class="title">Rekap Data Tagihan</h2>
+  <p class="note">Daftar tagihan Owner berdasarkan jatuh tempo. Sediakan tombol WhatsApp untuk menagih.</p>
+  <div class="stats">
+    <div class="stat"><small>Total Tagihan</small><b id="count">0</b></div>
+    <div class="stat"><small>Nilai Barang</small><b id="nilai">Rp 0</b></div>
+    <div class="stat"><small>Pengelola</small><b id="pengelola">Rp 0</b></div>
+    <div class="stat"><small>Sudah Dibayar</small><b id="dibayar">Rp 0</b></div>
+    <div class="stat warn"><small>Sisa Tagihan</small><b id="unpaid">Rp 0</b></div>
+  </div>
+  <div class="filter">
+    <select id="dueFilter"><option value="">Semua Jatuh Tempo</option></select>
+    <input id="searchInput" placeholder="Nama member / nomor nota...">
+    <button class="btn dark" id="reloadBtn">↻ Muat Ulang</button>
+  </div>
+</section>
+
+<div id="msg" class="msg"></div>
+
+<section class="card">
+  <div class="section-head">📅 TAGIHAN BERDASARKAN TANGGAL JATUH TEMPO</div>
+  <div id="dueList" class="due-list"><div class="empty">Memuat...</div></div>
+</section>
+
+<section class="card">
+  <div class="section-head">📋 DAFTAR TAGIHAN</div>
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>NOTA</th><th>MEMBER</th><th>JENIS</th><th>STATUS</th><th>JATUH TEMPO</th>
+      <th>NILAI BARANG</th><th>SUDAH DIBAYAR</th><th>SISA TAGIHAN</th><th>WA</th>
+    </tr></thead>
+    <tbody id="tableBody"><tr><td colspan="9" class="empty">Memuat...</td></tr></tbody>
+  </table></div>
+  <div id="mobileList" class="mobile-list"><div class="empty">Memuat...</div></div>
+</section>
+</main>
 <nav class="bottom"><a class="nav" href="index-superadmin.html"><i>⌂</i>Beranda</a><a class="nav" href="data-produk.html"><i>▦</i>Produk</a><a class="nav" href="data-pesanan.html"><i>📦</i>Pesanan</a><a class="nav" href="data-tagihan.html"><i>🧾</i>Tagihan</a><a class="nav" href="pengaturan.html"><i>⚙</i>Profil</a></nav></div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -107,19 +188,427 @@ async function approvePayment(id){
  });
 }
 async function load(){
- const [isnap,psnap]=await Promise.all([getDocs(collection(db,"invoices")),getDocs(query(collection(db,"payments"),where("status","==","MENUNGGU")))]);
- const invs=isnap.docs.map(d=>({id:d.id,...d.data()})), pays=psnap.docs.map(d=>({id:d.id,...d.data()}));
- let unpaid=0,due=0;invs.forEach(x=>{const s=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));if(s>0){unpaid+=s;const d=x.jatuhTempo?.toDate?x.jatuhTempo.toDate():new Date(x.jatuhTempo);if(!isNaN(d)&&d.getTime()<Date.now())due++}});
- $("count").textContent=invs.length;$("unpaid").textContent=money(unpaid);$("due").textContent=due;
- invs.sort((a,b)=>(b.createdAt?.toDate?.()?.getTime()||0)-(a.createdAt?.toDate?.()?.getTime()||0));
- $("list").innerHTML=invs.length?invs.map(x=>{
-  const s=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0))), pp=pays.filter(p=>p.invoiceId===x.id);
-  const pending=pp.map(p=>`<div class="pending"><b>Permintaan bayar ${money(p.nominal)}</b><button class="btn green" style="width:100%;margin-top:8px" data-approve="${p.id}">Setujui Pembayaran</button></div>`).join("");
-  return `<article class="item"><div class="head"><div><div class="no">${esc(x.nomorPesanan||x.invoiceNo||x.id)}</div><div class="owner">Owner UID: ${esc(x.ownerUid||"-")}</div></div><span class="badge">${esc(x.status||"BELUM_LUNAS")}</span></div><div class="grid"><div class="info"><small>Total</small><b>${money(x.total)}</b></div><div class="info"><small>Sisa</small><b>${money(s)}</b></div><div class="info"><small>Sudah Dibayar</small><b>${money(x.totalTerbayar||0)}</b></div><div class="info"><small>Jatuh Tempo</small><b>${date(x.jatuhTempo)}</b></div></div><div class="actions"><button class="btn yellow" data-wa="${x.id}">📱 Kirim WA Tagihan</button><button class="btn" data-copy="${x.id}">Salin Info</button></div>${pending}</article>`;
- }).join(""):'<div class="empty">Belum ada tagihan.</div>';
- document.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>sendWA(invs.find(x=>x.id===b.dataset.wa)));
- document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{const x=invs.find(x=>x.id===b.dataset.copy),s=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));await navigator.clipboard?.writeText(`Tagihan FIXZY BUSINESS\nPesanan: ${x.nomorPesanan||"-"}\nSisa: ${money(s)}\nJatuh Tempo: ${date(x.jatuhTempo)}`);show("Info tagihan disalin.",true)});
- document.querySelectorAll("[data-approve]").forEach(b=>b.onclick=async()=>{if(!confirm("Setujui pembayaran? Saldo pribadi dipotong dan pembayaran tagihan Limit/Tempo akan mengembalikan limit yang terpakai."))return;try{await approvePayment(b.dataset.approve);show("Pembayaran disetujui. Saldo Owner dan tagihan diperbarui; jika invoice Limit/Tempo, limit terpakai dikembalikan ke limit tersedia.",true);await load()}catch(e){show(e.message||"Gagal memproses pembayaran.")}});
+  const isnap=await getDocs(collection(db,"invoices"));
+  const invs=isnap.docs.map(d=>({id:d.id,...d.data()}));
+
+  const totalCount=invs.length;
+  let unpaid=0, nilai=0, dibayar=0, pengelola=0;
+  const groups={};
+
+  invs.forEach(x=>{
+    const total=Number(x.total||x.totalTagihan||0);
+    const paid=Number(x.totalTerbayar||0);
+    const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+    const fee=Number(x.upahPengelola||x.pengelola||x.upPengelola||0);
+
+    nilai+=total; dibayar+=paid; unpaid+=remain; pengelola+=fee;
+
+    const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+    if(!groups[key])groups[key]={date:x.jatuhTempo,count:0,total:0,items:[]};
+    groups[key].count++;
+    groups[key].total+=remain;
+    groups[key].items.push(x);
+  });
+
+  $("count").textContent=totalCount;
+  $("nilai").textContent=money(nilai);
+  $("pengelola").textContent=money(pengelola);
+  $("dibayar").textContent=money(dibayar);
+  $("unpaid").textContent=money(unpaid);
+
+  const keys=Object.keys(groups).sort();
+  $("dueFilter").innerHTML='<option value="">Semua Jatuh Tempo</option>'+
+    keys.map(k=>`<option value="${esc(k)}">${date(groups[k].date)}</option>`).join("");
+
+  function renderDue(){
+    const selected=$("dueFilter").value;
+    const search=$("searchInput").value.trim().toLowerCase();
+
+    let filtered=invs.filter(x=>{
+      const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+      const text=`${x.nomorPesanan||x.invoiceNo||x.id} ${x.ownerName||x.namaOwner||x.memberName||x.namaMember||""}`.toLowerCase();
+      return (!selected||key===selected)&&(!search||text.includes(search));
+    });
+
+    const fg={};
+    filtered.forEach(x=>{
+      const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+      if(!fg[key])fg[key]={date:x.jatuhTempo,count:0,total:0,items:[]};
+      const remain=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));
+      fg[key].count++;fg[key].total+=remain;fg[key].items.push(x);
+    });
+
+    const gkeys=Object.keys(fg).sort();
+    $("dueList").innerHTML=gkeys.length?gkeys.map(k=>{
+      const g=fg[k];
+      const days=g.date?.toDate?Math.ceil((g.date.toDate()-Date.now())/86400000):null;
+      const label=days===null?"":(days<0?`${Math.abs(days)} HARI TERLAMBAT`:days===0?"JATUH TEMPO HARI INI":`TEMPO ${days} HARI`);
+      return `<div class="due-card">
+        <div class="due-date">📅 ${date(g.date)}</div>
+        <div class="due-mode">${label}</div>
+        <div class="due-row"><span>Jumlah Nota</span><b>${g.count}</b></div>
+        <div class="due-row"><span>Sisa Tagihan</span><b>${money(g.total)}</b></div>
+        <div class="due-total">Total ${money(g.total)}</div>
+      </div>`;
+    }).join(""):'<div class="empty">Tidak ada tagihan.</div>';
+
+    const rows=filtered.map(x=>{
+      const total=Number(x.total||x.totalTagihan||0);
+      const paid=Number(x.totalTerbayar||0);
+      const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+      const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
+      const status=String(x.status||"BELUM_LUNAS").toUpperCase();
+      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      const statusClass=status==="LUNAS"?"green":(remain>0?"red":"");
+      return `<tr>
+        <td><b>${esc(x.nomorPesanan||x.invoiceNo||x.id)}</b></td>
+        <td class="member">${esc(member)}</td>
+        <td><span class="badge">${esc(method)}</span></td>
+        <td><span class="badge ${statusClass}">${esc(status)}</span></td>
+        <td>${date(x.jatuhTempo)}</td>
+        <td>${money(total)}</td>
+        <td>${money(paid)}</td>
+        <td><b>${money(remain)}</b></td>
+        <td><button class="wa-btn" data-wa="${esc(x.id)}">WA</button></td>
+      </tr>`;
+    }).join("");
+
+    $("tableBody").innerHTML=rows||'<tr><td colspan="9" class="empty">Belum ada tagihan.</td></tr>';
+
+    $("mobileList").innerHTML=filtered.length?filtered.map(x=>{
+      const total=Number(x.total||x.totalTagihan||0);
+      const paid=Number(x.totalTerbayar||0);
+      const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+      const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
+      const status=String(x.status||"BELUM_LUNAS").toUpperCase();
+      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      return `<article class="item">
+        <div class="item-head"><div><div class="item-no">${esc(x.nomorPesanan||x.invoiceNo||x.id)}</div><div class="item-owner">${esc(member)}</div></div><span class="badge">${esc(status)}</span></div>
+        <div class="item-grid">
+          <div class="mini"><small>Jenis</small><b>${esc(method)}</b></div>
+          <div class="mini"><small>Jatuh Tempo</small><b>${date(x.jatuhTempo)}</b></div>
+          <div class="mini"><small>Nilai Barang</small><b>${money(total)}</b></div>
+          <div class="mini"><small>Sisa Tagihan</small><b>${money(remain)}</b></div>
+        </div>
+        <div class="item-actions"><button class="wa-btn" data-wa="${esc(x.id)}">📱 Kirim WA Tagihan</button></div>
+      </article>`;
+    }).join(""):'<div class="empty">Belum ada tagihan.</div>';
+
+    document.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>sendWA(filtered.find(x=>x.id===b.dataset.wa)));
+  }
+
+  $("dueFilter").onchange=renderDue;
+  $("searchInput").oninput=renderDue;
+  renderDue();
 }
+
+$("reloadBtn").onclick=async()=>{try{await load()}catch(e){console.error(e);show("Gagal memuat data tagihan.")}};
+
 onAuthStateChanged(auth,async u=>{if(!u){location.href="index-superadmin.html";return}const me=await getDoc(doc(db,"users",u.uid));if(!me.exists()||me.data().role!=="superadmin"){alert("Akses hanya Superadmin.");location.href="index.html";return}try{await load()}catch(e){console.error(e);show("Gagal memuat data tagihan.")}});
-</script></body></html>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111"><title>Data Tagihan | FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+:root{--y:#FFC107;--b:#111;--bg:#eef1f6;--m:#6b7280;--bd:#d7dce3;--g:#16a34a;--r:#dc2626}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
+.app{max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between}.left{display:flex;align-items:center;gap:11px}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--y)}
+.logo img{width:100%;height:100%;object-fit:contain}.brand h1{font-size:17px;margin:0;color:var(--y);font-weight:900}
+.small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}.home{color:#fff;text-decoration:none;font-size:23px}
+.content{padding:0 15px;margin-top:-60px}.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:10px}
+.title{font-size:18px;font-weight:900;margin:0}.note{font-size:11px;color:var(--m);line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.stat{background:#f8f8f8;border:1px solid #d5d9df;border-radius:9px;padding:8px}.stat small{display:block;color:var(--m);font-size:9px}
+.stat b{display:block;margin-top:4px;font-size:13px}.stat.warn{background:#fff7d6}.stat.warn b{color:#b45309}
+.filter{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:10px}
+select,input{width:100%;border:1px solid #cfd5dd;border-radius:8px;padding:10px;background:#fff;font-size:12px}
+.btn{border:1px solid #cfd5dd;border-radius:8px;padding:9px 12px;font-weight:800;cursor:pointer;background:#fff;color:#111;font-size:11px}
+.btn.yellow{background:var(--y);border-color:var(--y)}.btn.green{background:var(--g);border-color:var(--g);color:#fff}
+.btn.dark{background:#111;border-color:#111;color:#fff}.btn:disabled{opacity:.5}
+.section-head{font-size:13px;font-weight:900;border-bottom:1px solid #222;padding-bottom:6px;margin-bottom:8px}
+.due-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.due-card{border:1px solid #aeb5bf;border-radius:9px;background:#fffdf0;padding:9px}
+.due-date{font-size:10px;font-weight:900;color:#b45309}.due-mode{font-size:9px;color:var(--m);margin:2px 0 6px}
+.due-row{display:flex;justify-content:space-between;font-size:9px;padding:2px 0}.due-row b{font-size:10px}.due-total{border-top:1px solid #555;margin-top:5px;padding-top:5px;font-weight:900}
+.table-wrap{overflow:auto;border:1px solid #c4cad2;border-radius:9px}
+table{width:100%;border-collapse:collapse;min-width:850px;font-size:9px}
+th{background:#111;color:#fff;padding:7px 5px;text-align:left;font-size:8px}td{border-bottom:1px solid #d9dde3;padding:7px 5px;vertical-align:middle}
+tr:last-child td{border-bottom:0}.member{font-weight:800}.muted{color:var(--m)}
+.badge{display:inline-block;padding:4px 6px;border-radius:999px;font-size:8px;font-weight:900;background:#fef3c7;color:#92400e}
+.badge.green{background:#dcfce7;color:#166534}.badge.red{background:#fee2e2;color:#991b1b}
+.wa-btn{background:#16a34a;color:#fff;border:0;border-radius:6px;padding:6px 7px;font-size:9px;font-weight:900;cursor:pointer;white-space:nowrap}
+.mobile-list{display:none}.item{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:#fff}
+.item-head{display:flex;justify-content:space-between;gap:8px}.item-no{font-weight:900;font-size:11px}.item-owner{font-size:10px;color:var(--m);margin-top:3px}
+.item-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.mini{background:#f8f8f8;border-radius:7px;padding:6px}.mini small{display:block;color:var(--m);font-size:8px}.mini b{display:block;margin-top:2px;font-size:10px}
+.item-actions{margin-top:8px}.item-actions .wa-btn{width:100%;padding:9px}
+.msg{display:none;padding:10px;border-radius:8px;margin-bottom:10px;font-size:11px;font-weight:700}.msg.show{display:block}.ok{background:#dcfce7;color:#166534}.err{background:#fee2e2;color:#991b1b}
+.empty{text-align:center;color:var(--m);padding:25px}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10}
+.nav{color:var(--y);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px}
+@media(max-width:760px){
+ .top{padding:16px 12px 66px}.content{padding:0 8px;margin-top:-42px}
+ .stats{grid-template-columns:repeat(2,1fr)}.stat b{font-size:12px}
+ .filter{grid-template-columns:1fr}.filter .btn{width:100%}
+ .due-list{grid-template-columns:1fr 1fr}
+ .table-wrap{display:none}.mobile-list{display:block}
+}
+@media(max-width:430px){.due-list{grid-template-columns:1fr}.card{padding:10px}.title{font-size:17px}}
+</style></head><body><div class="app">
+<header class="top"><div class="brand"><div class="left"><div class="logo"><img src="logofixzy.png" alt="FIXZY"></div><div><h1>FIXZY BUSINESS</h1><span class="small">Superadmin · Data Tagihan</span></div></div><a class="home" href="index-superadmin.html">⌂</a></div></header>
+<main class="content">
+<section class="card">
+  <h2 class="title">Rekap Data Tagihan</h2>
+  <p class="note">Daftar tagihan Owner berdasarkan jatuh tempo. Sediakan tombol WhatsApp untuk menagih.</p>
+  <div class="stats">
+    <div class="stat"><small>Total Tagihan</small><b id="count">0</b></div>
+    <div class="stat"><small>Nilai Barang</small><b id="nilai">Rp 0</b></div>
+    <div class="stat"><small>Pengelola</small><b id="pengelola">Rp 0</b></div>
+    <div class="stat"><small>Sudah Dibayar</small><b id="dibayar">Rp 0</b></div>
+    <div class="stat warn"><small>Sisa Tagihan</small><b id="unpaid">Rp 0</b></div>
+  </div>
+  <div class="filter">
+    <select id="dueFilter"><option value="">Semua Jatuh Tempo</option></select>
+    <input id="searchInput" placeholder="Nama member / nomor nota...">
+    <button class="btn dark" id="reloadBtn">↻ Muat Ulang</button>
+  </div>
+</section>
+
+<div id="msg" class="msg"></div>
+
+<section class="card">
+  <div class="section-head">📅 TAGIHAN BERDASARKAN TANGGAL JATUH TEMPO</div>
+  <div id="dueList" class="due-list"><div class="empty">Memuat...</div></div>
+</section>
+
+<section class="card">
+  <div class="section-head">📋 DAFTAR TAGIHAN</div>
+  <div class="table-wrap"><table>
+    <thead><tr>
+      <th>NOTA</th><th>MEMBER</th><th>JENIS</th><th>STATUS</th><th>JATUH TEMPO</th>
+      <th>NILAI BARANG</th><th>SUDAH DIBAYAR</th><th>SISA TAGIHAN</th><th>WA</th>
+    </tr></thead>
+    <tbody id="tableBody"><tr><td colspan="9" class="empty">Memuat...</td></tr></tbody>
+  </table></div>
+  <div id="mobileList" class="mobile-list"><div class="empty">Memuat...</div></div>
+</section>
+</main>
+<nav class="bottom"><a class="nav" href="index-superadmin.html"><i>⌂</i>Beranda</a><a class="nav" href="data-produk.html"><i>▦</i>Produk</a><a class="nav" href="data-pesanan.html"><i>📦</i>Pesanan</a><a class="nav" href="data-tagihan.html"><i>🧾</i>Tagihan</a><a class="nav" href="pengaturan.html"><i>⚙</i>Profil</a></nav></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,collection,getDocs,doc,getDoc,query,where,runTransaction,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={
+apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+authDomain:"teknisi-ponsel-maja.firebaseapp.com",
+projectId:"teknisi-ponsel-maja",
+storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
+messagingSenderId:"835618012205",
+appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function date(v){try{const d=v?.toDate?v.toDate():new Date(v);return isNaN(d)?"-":d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"})}catch{return "-"}}
+function phone(v){let s=String(v||"").replace(/\D/g,"");return s.startsWith("0")?"62"+s.slice(1):s}
+function show(t,ok=false){$("msg").textContent=t;$("msg").className="msg show "+(ok?"ok":"err")}
+async function sendWA(inv){
+ const u=await getDoc(doc(db,"users",inv.ownerUid));const p=u.exists()?u.data():{};
+ const no=p.noWhatsApp||p.whatsapp||p.telepon||p.noHp||p.nomorHp||p.phone||"";
+ if(!no)return show("Nomor WhatsApp Owner belum tersimpan.");
+ const remain=Number(inv.sisaTagihan??(Number(inv.total||0)-Number(inv.totalTerbayar||0)));
+ const text=`Halo ${p.nama||p.namaLengkap||p.namaUsaha||"Owner FIXZY"},
+
+Ini pengingat tagihan FIXZY BUSINESS.
+
+No. Pesanan: ${inv.nomorPesanan||"-"}
+Total Tagihan: ${money(inv.total)}
+Sudah Dibayar: ${money(inv.totalTerbayar||0)}
+Sisa Tagihan: ${money(remain)}
+Jatuh Tempo: ${date(inv.jatuhTempo)}
+
+Mohon melakukan pembayaran sebelum atau pada jatuh tempo.
+
+Terima kasih.
+FIXZY BUSINESS`;
+ window.open("https://wa.me/"+phone(no)+"?text="+encodeURIComponent(text),"_blank");
+}
+async function approvePayment(id){
+ const pSnap=await getDoc(doc(db,"payments",id));if(!pSnap.exists())throw Error("Pembayaran tidak ditemukan.");
+ const p=pSnap.data();if(p.status!=="MENUNGGU")throw Error("Pembayaran sudah diproses.");
+ await runTransaction(db,async tx=>{
+  const invRef=doc(db,"invoices",p.invoiceId),walRef=doc(db,"wallets",p.ownerUid),payRef=doc(db,"payments",id);
+  const invSnap=await tx.get(invRef),walSnap=await tx.get(walRef);
+  if(!invSnap.exists()||!walSnap.exists())throw Error("Invoice atau saldo Owner tidak ditemukan.");
+
+  const inv=invSnap.data(),wal=walSnap.data();
+  const total=Number(inv.total??inv.totalTagihan??0);
+  const paid=Number(inv.totalTerbayar??0);
+  const remain=Number(inv.sisaTagihan??Math.max(0,total-paid));
+  const nom=Number(p.nominal||0);
+  const saldo=Number(wal.saldoPribadi||0);
+
+  if(nom<=0||nom>remain)throw Error("Nominal pembayaran tidak valid.");
+  if(nom>saldo)throw Error("Saldo Owner tidak mencukupi.");
+
+  const newPaid=paid+nom;
+  const newRemain=Math.max(0,total-newPaid);
+  const method=String(inv.metodePembayaran||inv.metode||"").toUpperCase();
+  const isLimitInvoice=["LIMIT","TEMPO","LIMIT / TEMPO","LIMIT/TEMPO"].includes(method);
+
+  // Pembayaran invoice Limit/Tempo mengembalikan nominal yang dibayar
+  // ke Limit Tersedia dengan mengurangi Limit Terpakai.
+  let limitUpdate=null;
+  if(isLimitInvoice){
+   const limRef=doc(db,"limits",p.ownerUid);
+   const limSnap=await tx.get(limRef);
+   if(!limSnap.exists())throw Error("Data limit Owner tidak ditemukan.");
+   const lim=limSnap.data();
+   const used=Math.max(0,Number(lim.limitTerpakai||0));
+   const available=Math.max(0,Number(lim.limitTersedia||0));
+   if(nom>used)throw Error("Nominal pembayaran melebihi limit terpakai.");
+   const newUsed=used-nom;
+   const newAvailable=available+nom;
+   limitUpdate={ref:limRef,used:newUsed,available:newAvailable,oldUsed:used,oldAvailable:available};
+  }
+
+  tx.update(walRef,{saldoPribadi:saldo-nom,updatedAt:serverTimestamp()});
+  tx.update(invRef,{totalTerbayar:newPaid,sisaTagihan:newRemain,status:newRemain===0?"LUNAS":(inv.status||"BELUM_LUNAS"),lastPaymentAt:serverTimestamp()});
+  if(limitUpdate){
+   tx.update(limitUpdate.ref,{
+    limitTerpakai:limitUpdate.used,
+    limitTersedia:limitUpdate.available,
+    updatedAt:serverTimestamp()
+   });
+  }
+  tx.update(payRef,{
+   status:"DISETUJUI",
+   verifiedBy:auth.currentUser.uid,
+   verifiedAt:serverTimestamp(),
+   saldoSebelum:saldo,
+   saldoSesudah:saldo-nom,
+   limitDikembalikan:isLimitInvoice?nom:0,
+   limitTerpakaiSebelum:isLimitInvoice?limitUpdate.oldUsed:null,
+   limitTerpakaiSesudah:isLimitInvoice?limitUpdate.used:null,
+   limitTersediaSebelum:isLimitInvoice?limitUpdate.oldAvailable:null,
+   limitTersediaSesudah:isLimitInvoice?limitUpdate.available:null
+  });
+ });
+}
+async function load(){
+  const isnap=await getDocs(collection(db,"invoices"));
+  const invs=isnap.docs.map(d=>({id:d.id,...d.data()}));
+
+  const totalCount=invs.length;
+  let unpaid=0, nilai=0, dibayar=0, pengelola=0;
+  const groups={};
+
+  invs.forEach(x=>{
+    const total=Number(x.total||x.totalTagihan||0);
+    const paid=Number(x.totalTerbayar||0);
+    const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+    const fee=Number(x.upahPengelola||x.pengelola||x.upPengelola||0);
+
+    nilai+=total; dibayar+=paid; unpaid+=remain; pengelola+=fee;
+
+    const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+    if(!groups[key])groups[key]={date:x.jatuhTempo,count:0,total:0,items:[]};
+    groups[key].count++;
+    groups[key].total+=remain;
+    groups[key].items.push(x);
+  });
+
+  $("count").textContent=totalCount;
+  $("nilai").textContent=money(nilai);
+  $("pengelola").textContent=money(pengelola);
+  $("dibayar").textContent=money(dibayar);
+  $("unpaid").textContent=money(unpaid);
+
+  const keys=Object.keys(groups).sort();
+  $("dueFilter").innerHTML='<option value="">Semua Jatuh Tempo</option>'+
+    keys.map(k=>`<option value="${esc(k)}">${date(groups[k].date)}</option>`).join("");
+
+  function renderDue(){
+    const selected=$("dueFilter").value;
+    const search=$("searchInput").value.trim().toLowerCase();
+
+    let filtered=invs.filter(x=>{
+      const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+      const text=`${x.nomorPesanan||x.invoiceNo||x.id} ${x.ownerName||x.namaOwner||x.memberName||x.namaMember||""}`.toLowerCase();
+      return (!selected||key===selected)&&(!search||text.includes(search));
+    });
+
+    const fg={};
+    filtered.forEach(x=>{
+      const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
+      if(!fg[key])fg[key]={date:x.jatuhTempo,count:0,total:0,items:[]};
+      const remain=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));
+      fg[key].count++;fg[key].total+=remain;fg[key].items.push(x);
+    });
+
+    const gkeys=Object.keys(fg).sort();
+    $("dueList").innerHTML=gkeys.length?gkeys.map(k=>{
+      const g=fg[k];
+      const days=g.date?.toDate?Math.ceil((g.date.toDate()-Date.now())/86400000):null;
+      const label=days===null?"":(days<0?`${Math.abs(days)} HARI TERLAMBAT`:days===0?"JATUH TEMPO HARI INI":`TEMPO ${days} HARI`);
+      return `<div class="due-card">
+        <div class="due-date">📅 ${date(g.date)}</div>
+        <div class="due-mode">${label}</div>
+        <div class="due-row"><span>Jumlah Nota</span><b>${g.count}</b></div>
+        <div class="due-row"><span>Sisa Tagihan</span><b>${money(g.total)}</b></div>
+        <div class="due-total">Total ${money(g.total)}</div>
+      </div>`;
+    }).join(""):'<div class="empty">Tidak ada tagihan.</div>';
+
+    const rows=filtered.map(x=>{
+      const total=Number(x.total||x.totalTagihan||0);
+      const paid=Number(x.totalTerbayar||0);
+      const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+      const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
+      const status=String(x.status||"BELUM_LUNAS").toUpperCase();
+      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      const statusClass=status==="LUNAS"?"green":(remain>0?"red":"");
+      return `<tr>
+        <td><b>${esc(x.nomorPesanan||x.invoiceNo||x.id)}</b></td>
+        <td class="member">${esc(member)}</td>
+        <td><span class="badge">${esc(method)}</span></td>
+        <td><span class="badge ${statusClass}">${esc(status)}</span></td>
+        <td>${date(x.jatuhTempo)}</td>
+        <td>${money(total)}</td>
+        <td>${money(paid)}</td>
+        <td><b>${money(remain)}</b></td>
+        <td><button class="wa-btn" data-wa="${esc(x.id)}">WA</button></td>
+      </tr>`;
+    }).join("");
+
+    $("tableBody").innerHTML=rows||'<tr><td colspan="9" class="empty">Belum ada tagihan.</td></tr>';
+
+    $("mobileList").innerHTML=filtered.length?filtered.map(x=>{
+      const total=Number(x.total||x.totalTagihan||0);
+      const paid=Number(x.totalTerbayar||0);
+      const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
+      const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
+      const status=String(x.status||"BELUM_LUNAS").toUpperCase();
+      const member=x.ownerName||x.namaOwner||x.memberName||x.namaMember||x.ownerUid||"-";
+      return `<article class="item">
+        <div class="item-head"><div><div class="item-no">${esc(x.nomorPesanan||x.invoiceNo||x.id)}</div><div class="item-owner">${esc(member)}</div></div><span class="badge">${esc(status)}</span></div>
+        <div class="item-grid">
+          <div class="mini"><small>Jenis</small><b>${esc(method)}</b></div>
+          <div class="mini"><small>Jatuh Tempo</small><b>${date(x.jatuhTempo)}</b></div>
+          <div class="mini"><small>Nilai Barang</small><b>${money(total)}</b></div>
+          <div class="mini"><small>Sisa Tagihan</small><b>${money(remain)}</b></div>
+        </div>
+        <div class="item-actions"><button class="wa-btn" data-wa="${esc(x.id)}">📱 Kirim WA Tagihan</button></div>
+      </article>`;
+    }).join(""):'<div class="empty">Belum ada tagihan.</div>';
+
+    document.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>sendWA(filtered.find(x=>x.id===b.dataset.wa)));
+  }
+
+  $("dueFilter").onchange=renderDue;
+  $("searchInput").oninput=renderDue;
+  renderDue();
+}
+
+$("reloadBtn").onclick=async()=>{try{await load()}catch(e){console.error(e);show("Gagal memuat data tagihan.")}};
+
+onAuthStateChanged(auth,async u=>{if(!u){location.href="index-superadmin.html";return}const me=await getDoc(doc(db,"users",u.uid));if(!me.exists()||me.data().role!=="superadmin"){alert("Akses hanya Superadmin.");location.href="index.html";return}try{await load()}catch(e){console.error(e);show("Gagal memuat data tagihan.")}});
