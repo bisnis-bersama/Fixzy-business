@@ -588,6 +588,7 @@ function escapeHtml(value){
 
 function normalizeHeader(value){
   return String(value ?? "")
+    .replace(/^\uFEFF/,"")
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"")
