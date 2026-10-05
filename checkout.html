@@ -80,7 +80,7 @@ textarea{min-height:90px}
 <div id="addr"></div>
 <button class="btn yellow full" id="gpsBtn" type="button">📍 Gunakan Lokasi Saya</button>
 <div id="gpsResult" style="display:none;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin-top:10px;font-size:12px;line-height:1.5"></div>
-<button class="btn light full" id="addrBtn">+ Tambah Alamat</button>
+<button class="btn light full" id="addrBtn">Ubah Alamat</button>
 </section>
 
 <section class="panel">
@@ -118,7 +118,9 @@ textarea{min-height:90px}
 <h2>Alamat Pengiriman</h2>
 <label>Nama Penerima</label><input id="an" placeholder="Nama penerima">
 <label>No. HP</label><input id="ap" placeholder="08xxxxxxxxxx">
-<label>Alamat Lengkap</label><textarea id="aa" placeholder="Alamat lengkap"></textarea>
+<label>Alamat Lengkap</label><textarea id="aa" placeholder="Nama jalan, nomor rumah/toko, blok, RT/RW, desa/kelurahan, kecamatan, kabupaten/kota, provinsi, kode pos"></textarea>
+<label>Petunjuk Lokasi (opsional)</label>
+<input id="apetunjuk" placeholder="Contoh: depan pasar, samping masjid, dekat toko...">
 <div class="actions">
 <button class="btn light" id="cancel">Batal</button>
 <button class="btn yellow" id="save">Simpan</button>
@@ -283,6 +285,7 @@ function openAddress(){
 $("an").value=address?.nama||"";
 $("ap").value=address?.telepon||"";
 $("aa").value=address?.alamat||"";
+$("apetunjuk").value=address?.petunjuk||"";
 $("modal").classList.add("show");
 }
 
@@ -298,37 +301,68 @@ async function useMyLocation(){
   btn.disabled=true;
   btn.textContent="📍 Mencari lokasi...";
   result.style.display="block";
-  result.textContent="Mencari lokasi Anda...";
+  result.innerHTML="Mengambil titik lokasi dan alamat lengkap...";
 
   navigator.geolocation.getCurrentPosition(async pos=>{
     try{
       const lat=pos.coords.latitude;
       const lon=pos.coords.longitude;
-      const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&accept-language=id`;
+      const accuracy=Math.round(pos.coords.accuracy||0);
+
+      const url=`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1&accept-language=id`;
       const response=await fetch(url);
       if(!response.ok) throw new Error("Gagal mengambil alamat.");
 
       const data=await response.json();
-      const alamat=data.display_name||"";
-      if(!alamat) throw new Error("Alamat tidak ditemukan.");
+      const a=data.address||{};
+
+      const jalan=a.road||a.pedestrian||a.residential||a.path||"";
+      const nomor=a.house_number||"";
+      const desa=a.village||a.suburb||a.neighbourhood||a.hamlet||"";
+      const kecamatan=a.suburb||a.town||a.municipality||a.city_district||"";
+      const kota=a.city||a.town||a.municipality||a.county||"";
+      const provinsi=a.state||"";
+      const kodepos=a.postcode||"";
+      const negara=a.country||"Indonesia";
+
+      // Bentuk alamat yang lebih layak untuk pengiriman.
+      const parts=[
+        jalan && (nomor ? `${jalan} No. ${nomor}` : jalan),
+        desa && `Desa/Kel. ${desa}`,
+        kecamatan && `Kec. ${kecamatan}`,
+        kota,
+        provinsi,
+        kodepos
+      ].filter(Boolean);
+
+      const alamatOtomatis=parts.join(", ") || data.display_name || "";
+      if(!alamatOtomatis) throw new Error("Alamat tidak ditemukan.");
 
       address={
         nama:address?.nama||"",
         telepon:address?.telepon||"",
-        alamat,
+        alamat:alamatOtomatis,
+        petunjuk:address?.petunjuk||"",
         latitude:lat,
         longitude:lon,
+        akurasiGPS:accuracy,
         sumber:"GPS"
       };
 
       await setDoc(doc(db,"users",user.uid),{alamatPengiriman:address},{merge:true});
-
       renderAddress();
-      result.innerHTML="<b>Lokasi ditemukan</b><br>"+esc(alamat);
-      message("ok","Alamat dari lokasi GPS berhasil digunakan.");
+
+      result.innerHTML=
+        `<b>📍 Lokasi ditemukan</b>
+        ${esc(alamatOtomatis)}
+        <br><span style="color:#667085">Akurasi GPS ±${accuracy} meter</span>
+        <br><span style="color:#667085">Koordinat: ${lat.toFixed(6)}, ${lon.toFixed(6)}</span>
+        <br><small style="color:#667085">Untuk pengiriman ke rumah/toko, pastikan nomor rumah dan RT/RW sudah benar melalui tombol Ubah Alamat.</small>`;
+
+      message("ok","Lokasi GPS berhasil digunakan. Lengkapi nomor rumah/RT/RW bila belum terdeteksi.");
     }catch(e){
       console.error(e);
-      result.textContent="Alamat otomatis tidak berhasil diambil. Silakan coba lagi.";
+      result.innerHTML="Alamat otomatis belum lengkap. Silakan gunakan tombol Ubah Alamat untuk melengkapinya.";
       message("err","Gagal mengambil alamat otomatis.");
     }finally{
       btn.disabled=false;
@@ -340,10 +374,9 @@ async function useMyLocation(){
     result.style.display="block";
     result.textContent=err.code===1
       ?"Izin lokasi ditolak. Aktifkan izin lokasi di browser."
-      :"GPS tidak dapat menentukan lokasi. Pastikan lokasi aktif lalu coba lagi.";
-  },{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+      :"GPS tidak dapat menentukan lokasi. Pastikan GPS aktif lalu coba lagi.";
+  },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 }
-
 $("gpsBtn").onclick=useMyLocation;
 document.querySelectorAll("[name=pay]").forEach(r=>r.onchange=render);
 $("addrBtn").onclick=openAddress;
@@ -353,7 +386,8 @@ $("save").onclick=async()=>{
 const a={
 nama:$("an").value.trim(),
 telepon:$("ap").value.trim(),
-alamat:$("aa").value.trim()
+alamat:$("aa").value.trim(),
+petunjuk:$("apetunjuk").value.trim()
 };
 if(!a.nama||!a.telepon||!a.alamat){
 message("warn","Nama, nomor HP, dan alamat wajib diisi.");
