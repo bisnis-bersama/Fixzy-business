@@ -384,6 +384,29 @@ label{
 body.is-superadmin .superadmin-only{display:block}
 body.is-superadmin .owner-only-hide{display:none!important}
 @media(max-width:420px){.product-actions{grid-template-columns:1fr 1fr}.cart-bar{right:10px;bottom:82px}}
+
+/* POPUP DETAIL PRODUK */
+.product-preview-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:70;
+  display:flex;align-items:center;justify-content:center;padding:14px;
+}
+.product-preview-card{
+  width:min(520px,100%);max-height:92vh;overflow:auto;background:#fff;
+  border-radius:20px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.3);
+}
+.product-preview-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.product-preview-head h2{margin:0;font-size:18px;line-height:1.3}
+.product-preview-close{border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px;cursor:pointer;flex:none}
+.product-preview-image{width:100%;height:min(52vh,420px);object-fit:contain;background:#f3f4f6;border-radius:14px;display:block;margin-bottom:12px}
+.product-preview-name{font-size:17px;font-weight:900;line-height:1.35;margin-bottom:12px}
+.product-preview-info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.product-preview-info .info{background:#f8f8f8}
+.product-preview-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.product-preview-actions button{border:0;border-radius:11px;min-height:46px;font-weight:900;cursor:pointer}
+.product-preview-cart{background:#111;color:#fff}
+.product-preview-buy{background:#FFC107;color:#111}
+.product-preview-card .product-preview-stock{margin-top:10px;padding:9px;border-radius:10px;background:#eaf9f0;color:#16804a;text-align:center;font-size:13px;font-weight:800}
+@media(max-width:430px){.product-preview-modal{padding:8px}.product-preview-card{border-radius:18px;padding:13px}.product-preview-image{height:48vh}.product-preview-actions{grid-template-columns:1fr 1fr}}
 .modal{
   position:fixed;
   inset:0;
@@ -839,6 +862,17 @@ body.is-superadmin .owner-only-hide{display:none!important}
   <a href="profil.html"><span class="nav-icon">👤</span><span>Profil</span></a>
 </nav>
 
+
+<div class="product-preview-modal hidden" id="productPreviewModal">
+  <div class="product-preview-card" id="productPreviewCard">
+    <div class="product-preview-head">
+      <h2>Detail Produk</h2>
+      <button class="product-preview-close" id="productPreviewClose" type="button" aria-label="Tutup">×</button>
+    </div>
+    <div id="productPreviewContent"></div>
+  </div>
+</div>
+
 <div class="modal hidden" id="modal">
   <div class="modal-card">
     <div class="modal-head">
@@ -1254,7 +1288,7 @@ function renderProducts(){
   $("products").innerHTML = filtered.map(p => {
     const img = imageUrl(p.gambar);
     return `
-    <article class="product">
+    <article class="product" data-product-preview="${escapeHtml(p._id)}">
       ${img ? `
         <div class="product-image-wrap">
           <img class="product-image"
@@ -1360,12 +1394,44 @@ function addToCart(id, buyNow=false){
 
 function bindProductActions(){
   document.querySelectorAll("[data-cart]").forEach(btn=>{
-    btn.onclick=()=>addToCart(btn.dataset.cart,false);
+    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.cart,false); };
   });
   document.querySelectorAll("[data-buy]").forEach(btn=>{
-    btn.onclick=()=>addToCart(btn.dataset.buy,true);
+    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.buy,true); };
+  });
+  document.querySelectorAll("[data-product-preview]").forEach(card=>{
+    card.onclick=()=>openProductPreview(card.dataset.productPreview);
   });
 }
+
+function openProductPreview(id){
+  const p = products.find(x => x._id === id);
+  if(!p) return;
+  const img = imageUrl(p.gambar);
+  $("productPreviewContent").innerHTML = `
+    ${img ? `<img class="product-preview-image" src="${escapeHtml(img)}" alt="${escapeHtml(p.nama)}" onerror="this.style.display='none';">` : ""}
+    <div class="product-preview-name">${escapeHtml(p.nama)}</div>
+    <div class="product-preview-info">
+      <div class="info"><small>Harga Tunai</small><b>${escapeHtml(money(p.tunai))}</b></div>
+      <div class="info"><small>Harga Tempo</small><b>${escapeHtml(money(p.tempo))}</b></div>
+      <div class="info"><small>Stok</small><b>${escapeHtml(p.stok || "-")}</b></div>
+      <div class="info"><small>Supplier</small><b>${escapeHtml(p.supplier || "-")}</b></div>
+      <div class="info" style="grid-column:1/-1"><small>Kategori</small><b>${escapeHtml(p.kategori || "-")}</b></div>
+    </div>
+    <div class="product-preview-stock">Tersedia</div>
+    <div class="product-preview-actions">
+      <button class="product-preview-cart" type="button" id="previewCartBtn" aria-label="Tambah ke Keranjang" title="Tambah ke Keranjang">🛒</button>
+      <button class="product-preview-buy" type="button" id="previewBuyBtn">Beli Sekarang</button>
+    </div>`;
+  $("previewCartBtn").onclick=()=>{ addToCart(id,false); closeProductPreview(); };
+  $("previewBuyBtn").onclick=()=>{ addToCart(id,true); closeProductPreview(); };
+  $("productPreviewModal").classList.remove("hidden");
+}
+
+function closeProductPreview(){
+  $("productPreviewModal").classList.add("hidden");
+}
+
 
 function openAdd(){
   if(currentRole !== "superadmin") return;
@@ -1494,6 +1560,9 @@ $("logoutBtn").onclick = async () => {
     alert("Gagal keluar: " + (err.message || err));
   }
 };
+$("productPreviewClose").onclick = closeProductPreview;
+$("productPreviewModal").onclick = (e)=>{ if(e.target === $("productPreviewModal")) closeProductPreview(); };
+document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeProductPreview(); });
 $("btnSave").onclick = saveCatalog;
 $("searchInput").oninput = renderProducts;
 $("categoryFilter").onchange = renderProducts;
