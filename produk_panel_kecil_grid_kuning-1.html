@@ -1,0 +1,1623 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Belanja Produk | FIXZY BUSINESS</title>
+<style>
+:root{
+  --yellow:#FFC107;
+  --black:#111;
+  --bg:#f3f4f6;
+  --white:#fff;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --green:#16a34a;
+  --red:#dc2626;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:#111;
+  overflow-x:hidden;
+}
+.header{
+  background:#111111;
+  color:#fff;
+  padding:18px 18px 82px;
+  position:relative;
+  z-index:20;
+  border-radius:0 0 30px 30px;
+}
+.header-inner{
+  width:100%;
+  max-width:1180px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  overflow:hidden;
+  background:#111;
+  border:1px solid #FFC107;
+  display:grid;
+  place-items:center;
+  flex:0 0 48px;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.brand-text{
+  min-width:0;
+}
+.brand h1{
+  font-size:17px;
+  margin:0;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#FFC107;
+  white-space:nowrap;
+  line-height:1.15;
+}
+.brand small{
+  display:block;
+  color:#d1d5db;
+  margin-top:3px;
+  font-size:12px;
+}
+.logout{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  border-radius:11px;
+  padding:9px 11px;
+  font-size:12px;
+  cursor:pointer;
+  flex:none;
+}
+.logout:active{
+  transform:scale(.98);
+}
+
+.container{
+  width:100%;
+  max-width:1180px;
+  margin:-60px auto 0;
+  padding:0 clamp(14px,3vw,28px) 100px;
+  position:relative;
+  z-index:21;
+}
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:15px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px #00000008;
+}
+.add-box{
+  background:#fff;
+  color:#101828;
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 10px 26px rgba(15,23,42,.10);
+  position:relative;
+  z-index:25;
+}
+.add-box h2{
+  margin:0 0 6px;
+  font-size:18px;
+  color:#101828;
+  font-weight:900;
+}
+.add-box .note{
+  color:#667085;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:14px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:11px 14px;
+  border:0;
+  border-radius:11px;
+  background:#111;
+  color:#fff;
+  text-decoration:none;
+  text-align:center;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn.yellow{
+  background:var(--yellow);
+  color:#111;
+}
+.btn.light{
+  background:#eee;
+  color:#111;
+}
+.btn.red{
+  background:#fee2e2;
+  color:#991b1b;
+}
+.btn.full{width:100%}
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:10px;
+  margin:6px 0 10px;
+  font-size:15px;
+  background:#fff;
+}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-top:4px;
+}
+.hidden{display:none!important}
+.source-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.source{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid #ddd;
+  border-radius:11px;
+  background:#fafafa;
+}
+.source-info{min-width:0;max-width:100%;overflow:hidden}
+.source-name{
+  font-weight:800;
+  font-size:14px;
+}
+.source-url{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  white-space:normal;
+  line-height:1.4;
+}
+.source-actions{
+  display:flex;
+  gap:6px;
+  flex:none;
+}
+.source-actions button{
+  border:0;
+  border-radius:9px;
+  padding:8px 10px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+}
+.edit{background:#eee;color:#111}
+.delete{background:#fee2e2;color:#991b1b}
+.search-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 180px;
+  gap:10px;
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.section-title h2{
+  margin:0;
+  font-size:19px;
+}
+.count{
+  font-size:12px;
+  color:var(--muted);
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.product{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:13px;
+  min-width:0;
+}
+.product-image-wrap{
+  width:100%;
+  height:clamp(180px,24vw,300px);
+  border-radius:12px;
+  overflow:hidden;
+  background:#f3f4f6;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.product-image{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.product-image-wrap.image-error::after{
+  content:"Gambar tidak tersedia";
+  color:#9ca3af;
+  font-size:11px;
+  font-weight:700;
+}
+.product-name{
+  font-weight:800;
+  font-size:15px;
+  line-height:1.35;
+  margin-bottom:10px;
+  overflow-wrap:anywhere;
+}
+.product-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.info{
+  background:#f8f8f8;
+  border-radius:9px;
+  padding:8px;
+  min-width:0;
+}
+.info small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:3px;
+}
+.info b{
+  display:block;
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+.empty{
+  text-align:center;
+  padding:28px 15px;
+  color:var(--muted);
+  background:#fff;
+  border:1px dashed #d1d5db;
+  border-radius:14px;
+}
+.loading{text-align:center;color:var(--muted);padding:20px}
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border-radius:11px;
+  padding:11px;
+  font-size:12px;
+  line-height:1.5;
+}
+.success{
+  background:#dcfce7;
+  color:#166534;
+  border-radius:11px;
+  padding:11px;
+  font-size:12px;
+}
+.bottom{
+  position:fixed;
+  left:50%;
+  bottom:0;
+  transform:translateX(-50%);
+  width:min(1180px,100%);
+  height:auto;
+  background:#111;
+  border-top:1px solid #2b2b2b;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  z-index:30;
+  box-shadow:0 -5px 18px rgba(0,0,0,.14);
+}
+.bottom a{
+  max-width:none;
+  flex:none;
+  min-width:0;
+  padding:0;
+  text-align:center;
+  text-decoration:none;
+  color:#FFC107;
+  font-size:10px;
+  font-weight:800;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+.bottom a.active{
+  color:#FFC107;
+  font-weight:900;
+}
+.nav-icon{
+  display:block;
+  font-size:21px;
+  line-height:1;
+  min-height:21px;
+}
+
+
+.product-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.product-actions button{border:0;border-radius:10px;padding:10px 8px;font-weight:800;cursor:pointer;font-size:12px}
+.btn-cart{background:#111;color:#fff}
+.btn-buy{background:#FFC107;color:#111}
+.cart-bar{position:fixed;right:14px;bottom:86px;z-index:25;background:#111;color:#fff;border:1px solid #333;border-radius:14px;padding:10px 14px;box-shadow:0 8px 22px rgba(0,0,0,.22);font-weight:800;cursor:pointer}
+.cart-bar b{color:#FFC107}
+.superadmin-only{display:none}
+body.is-superadmin .superadmin-only{display:block}
+body.is-superadmin .owner-only-hide{display:none!important}
+@media(max-width:420px){.product-actions{grid-template-columns:1fr 1fr}.cart-bar{right:10px;bottom:82px}}
+
+/* POPUP DETAIL PRODUK */
+.product-preview-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:70;
+  display:flex;align-items:center;justify-content:center;padding:14px;
+}
+.product-preview-card{
+  width:min(520px,100%);max-height:92vh;overflow:auto;background:#fff;
+  border-radius:20px;padding:16px;box-shadow:0 18px 50px rgba(0,0,0,.3);
+}
+.product-preview-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.product-preview-head h2{margin:0;font-size:18px;line-height:1.3}
+.product-preview-close{border:0;background:#eee;border-radius:50%;width:38px;height:38px;font-size:22px;cursor:pointer;flex:none}
+.product-preview-image{width:100%;height:min(52vh,420px);object-fit:contain;background:#f3f4f6;border-radius:14px;display:block;margin-bottom:12px}
+.product-preview-name{font-size:17px;font-weight:900;line-height:1.35;margin-bottom:12px}
+.product-preview-info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.product-preview-info .info{background:#f8f8f8}
+.product-preview-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.product-preview-actions button{border:0;border-radius:11px;min-height:46px;font-weight:900;cursor:pointer}
+.product-preview-cart{background:#111;color:#fff}
+.product-preview-buy{background:#FFC107;color:#111}
+.product-preview-card .product-preview-stock{margin-top:10px;padding:9px;border-radius:10px;background:#eaf9f0;color:#16804a;text-align:center;font-size:13px;font-weight:800}
+@media(max-width:430px){.product-preview-modal{padding:8px}.product-preview-card{border-radius:18px;padding:13px}.product-preview-image{height:48vh}.product-preview-actions{grid-template-columns:1fr 1fr}}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:50;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.modal-card{
+  width:min(600px,100%);
+  background:#fff;
+  border-radius:18px 18px 0 0;
+  padding:17px;
+}
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.modal-head h2{margin:0;font-size:18px}
+.close{
+  border:0;
+  background:#eee;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  cursor:pointer;
+  font-size:18px;
+}
+@media(min-width:760px){
+  .modal{align-items:center}
+  .modal-card{border-radius:18px}
+}
+@media(max-width:650px){
+  .products{grid-template-columns:1fr}
+  .search-row{grid-template-columns:1fr}
+  .source{align-items:flex-start}
+}
+@media(max-width:430px){
+  .container{padding:0 12px 100px}
+  .source{flex-direction:column}
+  .source-actions{width:100%}
+  .source-actions button{flex:1}
+}
+
+@media(max-width:420px){
+  .header{padding-left:16px;padding-right:16px}
+  .brand h1{font-size:17px}
+  .brand small{font-size:12px}
+  .logout{font-size:12px;padding:9px 11px}
+  .bottom a{font-size:10px}
+  .nav-icon{font-size:21px}
+}
+@media(min-width:769px){
+  .header{padding-left:24px;padding-right:24px}
+  .container{
+    margin-top:-60px;
+    padding-left:28px;
+    padding-right:28px;
+  }
+}
+
+/* ===== RESPONSIVE PRODUCT GRID ===== */
+.product{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+.product-name{
+  min-height:3.9em;
+}
+
+.product-grid{
+  flex:1;
+}
+
+.product-actions{
+  margin-top:auto;
+}
+
+@media (min-width:1100px){
+  .products{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+  }
+}
+
+@media (min-width:760px) and (max-width:1099px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+  }
+}
+
+@media (max-width:759px){
+  .container{
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  /* HP: selalu 3 kartu per baris */
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px;
+  }
+
+  .product{
+    padding:7px;
+    border-radius:11px;
+  }
+
+  .product-image-wrap{
+    height:clamp(105px,31vw,155px);
+    min-height:105px;
+    margin-bottom:7px;
+    border-radius:9px;
+  }
+
+  .product-name{
+    min-height:4.2em;
+    font-size:11px;
+    line-height:1.3;
+    margin-bottom:7px;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+
+  .info{
+    padding:6px;
+    border-radius:7px;
+  }
+
+  .info small{
+    font-size:8px;
+    margin-bottom:2px;
+  }
+
+  .info b{
+    font-size:9px;
+    line-height:1.2;
+  }
+
+  .product-actions{
+    grid-template-columns:1fr;
+    gap:5px;
+    margin-top:7px;
+  }
+
+  .product-actions button{
+    min-width:0;
+    padding:8px 4px;
+    border-radius:8px;
+    font-size:9px;
+    line-height:1.15;
+  }
+
+  .cart-bar{
+    right:8px;
+    bottom:82px;
+    max-width:calc(100vw - 16px);
+    white-space:nowrap;
+    padding:8px 10px;
+    font-size:12px;
+  }
+}
+
+@media (max-width:430px){
+  .product-image-wrap{
+    height:230px;
+    min-height:230px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product-actions button{
+    font-size:12px;
+  }
+}
+
+@media (max-width:360px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:5px;
+  }
+
+  .product{
+    padding:6px;
+  }
+
+  .product-image-wrap{
+    height:100px;
+    min-height:100px;
+  }
+
+  .product-name{
+    font-size:10px;
+    min-height:3.9em;
+  }
+
+  .info{
+    padding:5px;
+  }
+
+  .info small{
+    font-size:7px;
+  }
+
+  .info b{
+    font-size:8px;
+  }
+
+  .product-actions button{
+    font-size:8px;
+    padding:7px 3px;
+  }
+}
+
+
+/* ===== SAFE UI ONLY: DATA/FIREBASE/SPREADSHEET CODE UNTOUCHED ===== */
+
+/* Keranjang ditampilkan kembali */
+
+/* Kartu bersih */
+.product{
+  padding:7px!important;
+  border-radius:11px!important;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.product-image-wrap{
+  width:100%!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:0!important;
+  margin:0 0 7px!important;
+  border-radius:9px!important;
+  overflow:hidden!important;
+}
+
+.product-image{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  display:block;
+}
+
+.product-name{
+  font-size:10px!important;
+  line-height:1.25!important;
+  min-height:2.5em!important;
+  margin:0 1px 6px!important;
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+
+/* Harga tetap terlihat */
+.product-grid{
+  grid-template-columns:1fr 1fr!important;
+  gap:5px!important;
+}
+
+.info{
+  padding:5px!important;
+  border-radius:7px!important;
+}
+
+.info small{
+  font-size:7px!important;
+}
+
+.info b{
+  font-size:8.5px!important;
+}
+
+/* Sembunyikan supplier dan kategori tanpa menyentuh JS */
+.product-grid .info:nth-child(4),
+.product-grid .info:nth-child(5){
+  display:none!important;
+}
+
+/* Baris stok: angka tidak ditampilkan, diganti label sederhana */
+.product-grid .info:nth-child(3){
+  grid-column:1/-1!important;
+  text-align:center;
+  padding:5px!important;
+  background:#eaf8ef!important;
+}
+
+.product-grid .info:nth-child(3) small{
+  display:none!important;
+}
+
+.product-grid .info:nth-child(3) b{
+  font-size:0!important;
+  color:#16804a!important;
+}
+
+.product-grid .info:nth-child(3) b::after{
+  content:"Tersedia";
+  font-size:8px;
+}
+
+/* Keranjang di samping tombol Beli Sekarang */
+.product-actions{
+  grid-template-columns:42px 1fr!important;
+  gap:5px!important;
+  margin-top:6px!important;
+}
+
+.product-actions .btn-cart{
+  width:100%;
+  min-height:30px;
+  padding:7px 2px!important;
+  font-size:14px!important;
+  border-radius:8px!important;
+}
+
+.product-actions .btn-buy{
+  width:100%;
+  min-height:30px;
+  padding:7px 4px!important;
+  font-size:9px!important;
+  border-radius:8px!important;
+}
+
+/* HP: 3 grid */
+@media(max-width:759px){
+  .container{
+    padding-left:8px!important;
+    padding-right:8px!important;
+  }
+
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+
+  .product{
+    padding:6px!important;
+  }
+
+  .product-image-wrap{
+    aspect-ratio:1/1!important;
+  }
+}
+
+@media(max-width:360px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+
+  .product{
+    padding:5px!important;
+  }
+
+  .product-name{
+    font-size:9px!important;
+  }
+
+  .info small{
+    font-size:6px!important;
+  }
+
+  .info b::after{
+    font-size:7.5px!important;
+  }
+}
+
+
+/* ===== PERKECIL PANEL KERANJANG & BELI ===== */
+@media(max-width:759px){
+  .product-actions{grid-template-columns:36px 1fr!important;gap:4px!important;margin-top:5px!important;}
+  .product-actions button{min-height:28px!important;height:30px!important;padding:4px 3px!important;border-radius:7px!important;line-height:1.05!important;}
+  .product-actions .btn-cart{width:100%!important;font-size:12px!important;}
+  .product-actions .btn-buy{width:100%!important;font-size:8px!important;}
+}
+
+/* ===== PENEGAS BATAS SETIAP GRID PRODUK ===== */
+.product{
+  border:1px solid rgba(255,193,7,.45)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.16), 0 0 0 1px rgba(255,193,7,.08)!important;
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <img class="logo" src="logofixzy.png" alt="FIXZY BUSINESS">
+      <div class="brand-text">
+        <h1>FIXZY BUSINESS</h1>
+        <small id="ownerName">A yudi thea</small>
+      </div>
+    </div>
+    <button class="logout" id="logoutBtn" type="button">Keluar</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="add-box superadmin-only">
+    <h2>Katalog Produk</h2>
+    <div class="note">
+      Produk tetap berada di Google Spreadsheet. FIXZY hanya menyimpan link Spreadsheet di Firebase dan membaca data produknya.
+    </div>
+    <button class="btn yellow full" id="btnAdd">＋ Tambah Link Spreadsheet</button>
+  </section>
+
+  <section class="card superadmin-only">
+    <div class="section-title">
+      <h2>Link Spreadsheet</h2>
+      <span class="count" id="sourceCount">0 link</span>
+    </div>
+    <div id="sourceList" class="source-list">
+      <div class="loading">Memuat link katalog...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>Produk</h2>
+      <span class="count" id="productCount">0 produk</span>
+    </div>
+
+    <div class="search-row">
+      <input id="searchInput" placeholder="🔎 Cari nama produk...">
+      <select id="categoryFilter">
+        <option value="">Semua kategori</option>
+      </select>
+    </div>
+
+    <div id="message"></div>
+    <div id="products" class="products">
+      <div class="loading">Memuat produk...</div>
+    </div>
+  </section>
+
+</main>
+
+<button class="cart-bar" id="cartBar" type="button">🛒 Keranjang <b id="cartCount">0</b></button>
+
+<nav class="bottom">
+  <a href="index.html"><span class="nav-icon">⌂</span><span>Beranda</span></a>
+  <a class="active" href="produk.html"><span class="nav-icon">🛒</span><span>Belanja</span></a>
+  <a href="tagihan.html"><span class="nav-icon">🧾</span><span>Tagihan</span></a>
+  <a href="riwayat.html"><span class="nav-icon">↔</span><span>Riwayat</span></a>
+  <a href="profil.html"><span class="nav-icon">👤</span><span>Profil</span></a>
+</nav>
+
+
+<div class="product-preview-modal hidden" id="productPreviewModal">
+  <div class="product-preview-card" id="productPreviewCard">
+    <div class="product-preview-head">
+      <h2>Detail Produk</h2>
+      <button class="product-preview-close" id="productPreviewClose" type="button" aria-label="Tutup">×</button>
+    </div>
+    <div id="productPreviewContent"></div>
+  </div>
+</div>
+
+<div class="modal hidden" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="modalTitle">Tambah Link Spreadsheet</h2>
+      <button class="close" id="btnClose">×</button>
+    </div>
+
+    <label>Nama Katalog</label>
+    <input id="catalogName" placeholder="Contoh: Katalog LCD">
+
+    <label>Link Spreadsheet Published</label>
+    <input id="spreadsheetUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pubhtml?...">
+
+    <div id="modalMessage"></div>
+
+    <button class="btn yellow full" id="btnSave">Simpan Link</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  query,
+  where,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
+  authDomain: "teknisi-ponsel-maja.firebaseapp.com",
+  projectId: "teknisi-ponsel-maja",
+  storageBucket: "teknisi-ponsel-maja.firebasestorage.app",
+  messagingSenderId: "835618012205",
+  appId: "1:835618012205:web:95e41095d1a56c761d4ca4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let catalogs = [];
+let products = [];
+let editingId = null;
+let currentRole = "owner";
+let cart = [];
+
+const $ = id => document.getElementById(id);
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function normalizeHeader(value){
+  return String(value ?? "")
+    .replace(/^\uFEFF/,"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"")
+    .trim();
+}
+
+const aliases = {
+  nama: [
+    "namaproduk","namabarang","produk","barang","namaproduct",
+    "productname","itemname","description","deskripsi"
+  ],
+  gambar: [
+    "gambar","image","foto","photo","img","urlgambar","imageurl",
+    "fotoproduk","gambarproduk"
+  ],
+  tunai: [
+    "tunai","hargatunai","hargacash","cash","cashprice",
+    "hargacash","hargaoffline"
+  ],
+  tempo: [
+    "tempo","hargatempo","hargakredit","kredit","credit",
+    "creditprice","hargapiutang"
+  ],
+  stok: [
+    "stok","stock","persediaan","qty","quantity","jumlahstok",
+    "stocktersedia"
+  ],
+  supplier: [
+    "supplier","suplier","pemasok","distributor","vendor"
+  ],
+  kategori: [
+    "kategori","katagory","category","jenis","kelompok","type"
+  ]
+};
+
+function findHeaderIndex(headers, field){
+  const normalized = headers.map(normalizeHeader);
+  for(const alias of aliases[field]){
+    const i = normalized.indexOf(alias);
+    if(i >= 0) return i;
+  }
+  return -1;
+}
+
+function parseCSV(text){
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for(let i=0;i<text.length;i++){
+    const c = text[i];
+
+    if(c === '"'){
+      if(quoted && text[i+1] === '"'){
+        cell += '"';
+        i++;
+      }else{
+        quoted = !quoted;
+      }
+    }else if(c === "," && !quoted){
+      row.push(cell);
+      cell = "";
+    }else if((c === "\n" || c === "\r") && !quoted){
+      if(c === "\r" && text[i+1] === "\n") i++;
+      row.push(cell);
+      cell = "";
+      if(row.some(v => String(v).trim() !== "")) rows.push(row);
+      row = [];
+    }else{
+      cell += c;
+    }
+  }
+
+  if(cell !== "" || row.length){
+    row.push(cell);
+    if(row.some(v => String(v).trim() !== "")) rows.push(row);
+  }
+  return rows;
+}
+
+function makeCSVUrl(url){
+  const u = new URL(url);
+
+  // Google published Spreadsheet:
+  // /pubhtml?...  -> /pub?...&output=csv
+  if(u.hostname === "docs.google.com"){
+    if(u.pathname.includes("/pubhtml")){
+      u.pathname = u.pathname.replace("/pubhtml","/pub");
+    }
+    u.searchParams.set("output","csv");
+    return u.toString();
+  }
+
+  return url;
+}
+
+function imageUrl(value){
+  const raw = cleanCell(value);
+  if(!raw) return "";
+
+  try{
+    const u = new URL(raw);
+
+    // Google Drive: https://drive.google.com/file/d/FILE_ID/view...
+    const m = u.pathname.match(/\/file\/d\/([^/]+)/);
+    if(u.hostname === "drive.google.com" && m){
+      return `https://lh3.googleusercontent.com/d/${m[1]}`;
+    }
+
+    // Google Drive open?id=FILE_ID
+    const id = u.searchParams.get("id");
+    if(u.hostname === "drive.google.com" && id){
+      return `https://lh3.googleusercontent.com/d/${id}`;
+    }
+
+    return raw;
+  }catch(e){
+    return raw;
+  }
+}
+
+function money(value){
+  if(value === null || value === undefined || String(value).trim() === "") return "-";
+
+  const raw = String(value).trim();
+
+  // Keep already formatted non-numeric values readable.
+  const cleaned = raw.replace(/[^\d,.-]/g,"");
+  if(!cleaned) return raw;
+
+  let normalized = cleaned;
+
+  // Handle common Indonesian formats:
+  // 100.000 -> 100000
+  // 100000,50 -> 100000.50
+  if(cleaned.includes(".") && cleaned.includes(",")){
+    normalized = cleaned.replace(/\./g,"").replace(",",".");
+  }else if(cleaned.includes(",")){
+    const parts = cleaned.split(",");
+    normalized = parts.length === 2 && parts[1].length <= 2
+      ? cleaned.replace(",",".")
+      : cleaned.replace(/,/g,"");
+  }else if(cleaned.includes(".")){
+    const parts = cleaned.split(".");
+    normalized = parts.length > 2 || (parts.length === 2 && parts[1].length === 3)
+      ? cleaned.replace(/\./g,"")
+      : cleaned;
+  }
+
+  const number = Number(normalized);
+  if(!Number.isFinite(number)) return raw;
+
+  return "Rp " + Math.round(number).toLocaleString("id-ID");
+}
+
+function cleanCell(value){
+  return String(value ?? "").trim();
+}
+
+function mapRows(rows, catalogName){
+  if(!rows.length) return [];
+
+  /*
+    Struktur katalog FIXZY:
+    A = produk
+    B = gambar
+    C = tunai
+    D = tempo
+    E = supplier
+    F = stock
+
+    Data dibaca berdasarkan POSISI KOLOM, bukan nama header.
+    Jadi perubahan nama header tidak membuat katalog gagal dibaca.
+  */
+
+  const header = rows[0] || [];
+  const hasHeader = header.some(v =>
+    /produk|barang|gambar|image|foto|tunai|tempo|supplier|stok|stock/i.test(String(v || ""))
+  );
+
+  const startIndex = hasHeader ? 1 : 0;
+
+  return rows.slice(startIndex)
+    .map(row => ({
+      nama: cleanCell(row[0]),
+      gambar: cleanCell(row[1]),
+      tunai: cleanCell(row[2]),
+      tempo: cleanCell(row[3]),
+      supplier: cleanCell(row[4]),
+      stok: cleanCell(row[5]),
+      katalog: catalogName
+    }))
+    .filter(p => p.nama);
+}
+
+async function loadOwnerName(){
+  try{
+    const snap = await getDoc(doc(db,"users",currentUser.uid));
+    if(snap.exists()){
+      const data = snap.data();
+      const name = data.namaUsaha || data.nama || data.businessName || data.ownerName || data.displayName;
+      if(name && currentRole !== "superadmin") $("ownerName").textContent = name;
+    }
+  }catch(e){
+    // Keep the default display name if the profile cannot be read.
+  }
+}
+
+async function loadCatalogs(){
+  // Katalog bersifat GLOBAL. Superadmin yang mengelola link, Owner hanya membaca.
+  // Jangan membatasi query berdasarkan ownerUid karena katalog yang dibuat
+  // Superadmin harus tetap tampil pada semua Owner.
+  const q = query(collection(db,"productCatalogs"));
+  const snap = await getDocs(q);
+  catalogs = snap.docs
+    .map(d => ({id:d.id,...d.data()}))
+    .filter(c => c.aktif !== false);
+
+  $("sourceCount").textContent = `${catalogs.length} link`;
+  renderSources();
+  await loadAllProducts();
+}
+
+function renderSources(){
+  if(!catalogs.length){
+    $("sourceList").innerHTML = `
+      <div class="empty">Belum ada katalog produk yang tersedia.</div>`;
+    return;
+  }
+
+  $("sourceList").innerHTML = catalogs.map(c => `
+    <div class="source">
+      <div class="source-info">
+        <div class="source-name">${escapeHtml(c.nama || "Katalog Produk")}</div>
+        <div class="source-url">${escapeHtml(c.spreadsheetUrl || "")}</div>
+      </div>
+      <div class="source-actions">
+        <button class="edit" data-edit="${c.id}">Edit</button>
+        <button class="delete" data-delete="${c.id}">Hapus</button>
+      </div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll("[data-edit]").forEach(btn => {
+    btn.onclick = () => openEdit(btn.dataset.edit);
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(btn => {
+    btn.onclick = () => removeCatalog(btn.dataset.delete);
+  });
+}
+
+async function loadAllProducts(){
+  products = [];
+  $("products").innerHTML = `<div class="loading">Membaca Spreadsheet...</div>`;
+
+  if(!catalogs.length){
+    renderProducts();
+    return;
+  }
+
+  const errors = [];
+
+  for(const catalog of catalogs){
+    try{
+      const csvUrl = makeCSVUrl(catalog.spreadsheetUrl);
+      const response = await fetch(csvUrl, {cache:"no-store"});
+
+      if(!response.ok){
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const text = await response.text();
+
+      if(!text || text.trim().startsWith("<!DOCTYPE") || text.trim().startsWith("<html")){
+        throw new Error("Spreadsheet belum tersedia sebagai CSV publik.");
+      }
+
+      const rows = parseCSV(text);
+      const mapped = mapRows(rows, catalog.nama || "Katalog Produk");
+
+      mapped.forEach((p,i) => {
+        p._id = `${catalog.id}_${i}`;
+        products.push(p);
+      });
+    }catch(err){
+      errors.push(`${catalog.nama || "Katalog"}: ${err.message}`);
+    }
+  }
+
+  if(errors.length){
+    $("message").innerHTML = `
+      <div class="error">
+        <b>Sebagian katalog tidak bisa dibaca:</b><br>
+        ${errors.map(escapeHtml).join("<br>")}
+      </div>`;
+  }else{
+    $("message").innerHTML = "";
+  }
+
+  buildCategories();
+  renderProducts();
+}
+
+function buildCategories(){
+  const current = $("categoryFilter").value;
+  const categories = [...new Set(
+    products.map(p => p.kategori).filter(Boolean)
+  )].sort((a,b)=>a.localeCompare(b,"id"));
+
+  $("categoryFilter").innerHTML =
+    `<option value="">Semua kategori</option>` +
+    categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+
+  if(categories.includes(current)) $("categoryFilter").value = current;
+}
+
+function renderProducts(){
+  const search = $("searchInput").value.trim().toLowerCase();
+  const category = $("categoryFilter").value;
+
+  const filtered = products.filter(p => {
+    const text = `${p.nama} ${p.supplier} ${p.kategori}`.toLowerCase();
+    return (!search || text.includes(search))
+      && (!category || p.kategori === category);
+  });
+
+  $("productCount").textContent = `${filtered.length} produk`;
+
+  if(!filtered.length){
+    $("products").innerHTML = `
+      <div class="empty">
+        ${products.length ? "Produk tidak ditemukan." : "Belum ada produk yang dapat ditampilkan."}
+      </div>`;
+    return;
+  }
+
+  $("products").innerHTML = filtered.map(p => {
+    const img = imageUrl(p.gambar);
+    return `
+    <article class="product" data-product-preview="${escapeHtml(p._id)}">
+      ${img ? `
+        <div class="product-image-wrap">
+          <img class="product-image"
+               src="${escapeHtml(img)}"
+               alt="${escapeHtml(p.nama)}"
+               loading="lazy"
+               onerror="this.parentElement.classList.add('image-error');this.style.display='none';">
+        </div>
+      ` : ""}
+      <div class="product-name">${escapeHtml(p.nama)}</div>
+      <div class="product-grid">
+        <div class="info">
+          <small>Harga Tunai</small>
+          <b>${escapeHtml(money(p.tunai))}</b>
+        </div>
+        <div class="info">
+          <small>Harga Tempo</small>
+          <b>${escapeHtml(money(p.tempo))}</b>
+        </div>
+        <div class="info">
+          <small>Stok</small>
+          <b>${escapeHtml(p.stok || "-")}</b>
+        </div>
+        <div class="info">
+          <small>Supplier</small>
+          <b>${escapeHtml(p.supplier || "-")}</b>
+        </div>
+        <div class="info" style="grid-column:1/-1">
+          <small>Kategori</small>
+          <b>${escapeHtml(p.kategori || "-")}</b>
+        </div>
+      </div>
+      <div class="product-actions">
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}" aria-label="Tambah ke Keranjang" title="Tambah ke Keranjang">🛒</button>
+        <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
+      </div>
+    </article>
+  `;
+  }).join("");
+
+  // Tombol baru dibuat setelah HTML produk dirender.
+  bindProductActions();
+}
+
+function cartKey(){
+  return `fixzy_cart_${currentUser?.uid || "guest"}`;
+}
+
+function loadCart(){
+  try{
+    cart = JSON.parse(localStorage.getItem(cartKey()) || "[]");
+    if(!Array.isArray(cart)) cart=[];
+  }catch(e){ cart=[]; }
+  updateCartCount();
+}
+
+function saveCart(){
+  localStorage.setItem(cartKey(), JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateCartCount(){
+  const total = cart.reduce((sum,item)=>sum + Number(item.qty||0),0);
+  $("cartCount").textContent = total;
+}
+
+function addToCart(id, buyNow=false){
+  const p = products.find(x => x._id === id);
+  if(!p) return;
+
+  const stock = Number(String(p.stok).replace(/[^0-9-]/g,""));
+  if(Number.isFinite(stock) && stock <= 0){
+    alert("Stok produk sedang kosong.");
+    return;
+  }
+
+  const found = cart.find(x => x.id === id);
+  if(found){
+    if(Number.isFinite(stock) && found.qty >= stock){
+      alert("Jumlah melebihi stok tersedia.");
+      return;
+    }
+    found.qty += 1;
+  }else{
+    cart.push({
+      id:p._id,
+      nama:p.nama,
+      gambar:p.gambar || "",
+      tunai:p.tunai,
+      tempo:p.tempo,
+      supplier:p.supplier,
+      stok:p.stok,
+      qty:1
+    });
+  }
+  saveCart();
+  if(buyNow){
+    alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
+  }else{
+    alert("Produk ditambahkan ke keranjang.");
+  }
+}
+
+function bindProductActions(){
+  document.querySelectorAll("[data-cart]").forEach(btn=>{
+    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.cart,false); };
+  });
+  document.querySelectorAll("[data-buy]").forEach(btn=>{
+    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.buy,true); };
+  });
+  document.querySelectorAll("[data-product-preview]").forEach(card=>{
+    card.onclick=()=>openProductPreview(card.dataset.productPreview);
+  });
+}
+
+function openProductPreview(id){
+  const p = products.find(x => x._id === id);
+  if(!p) return;
+  const img = imageUrl(p.gambar);
+  $("productPreviewContent").innerHTML = `
+    ${img ? `<img class="product-preview-image" src="${escapeHtml(img)}" alt="${escapeHtml(p.nama)}" onerror="this.style.display='none';">` : ""}
+    <div class="product-preview-name">${escapeHtml(p.nama)}</div>
+    <div class="product-preview-info">
+      <div class="info"><small>Harga Tunai</small><b>${escapeHtml(money(p.tunai))}</b></div>
+      <div class="info"><small>Harga Tempo</small><b>${escapeHtml(money(p.tempo))}</b></div>
+      <div class="info"><small>Stok</small><b>${escapeHtml(p.stok || "-")}</b></div>
+      <div class="info"><small>Supplier</small><b>${escapeHtml(p.supplier || "-")}</b></div>
+      <div class="info" style="grid-column:1/-1"><small>Kategori</small><b>${escapeHtml(p.kategori || "-")}</b></div>
+    </div>
+    <div class="product-preview-stock">Tersedia</div>
+    <div class="product-preview-actions">
+      <button class="product-preview-cart" type="button" id="previewCartBtn" aria-label="Tambah ke Keranjang" title="Tambah ke Keranjang">🛒</button>
+      <button class="product-preview-buy" type="button" id="previewBuyBtn">Beli Sekarang</button>
+    </div>`;
+  $("previewCartBtn").onclick=()=>{ addToCart(id,false); closeProductPreview(); };
+  $("previewBuyBtn").onclick=()=>{ addToCart(id,true); closeProductPreview(); };
+  $("productPreviewModal").classList.remove("hidden");
+}
+
+function closeProductPreview(){
+  $("productPreviewModal").classList.add("hidden");
+}
+
+
+function openAdd(){
+  if(currentRole !== "superadmin") return;
+  editingId = null;
+  $("modalTitle").textContent = "Tambah Link Spreadsheet";
+  $("catalogName").value = "";
+  $("spreadsheetUrl").value = "";
+  $("modalMessage").innerHTML = "";
+  $("btnSave").textContent = "Simpan Link";
+  $("modal").classList.remove("hidden");
+}
+
+function openEdit(id){
+  if(currentRole !== "superadmin") return;
+  const item = catalogs.find(c => c.id === id);
+  if(!item) return;
+
+  editingId = id;
+  $("modalTitle").textContent = "Edit Link Spreadsheet";
+  $("catalogName").value = item.nama || "";
+  $("spreadsheetUrl").value = item.spreadsheetUrl || "";
+  $("modalMessage").innerHTML = "";
+  $("btnSave").textContent = "Simpan Perubahan";
+  $("modal").classList.remove("hidden");
+}
+
+function closeModal(){
+  $("modal").classList.add("hidden");
+}
+
+async function saveCatalog(){
+  if(currentRole !== "superadmin") return;
+  const nama = $("catalogName").value.trim();
+  const spreadsheetUrl = $("spreadsheetUrl").value.trim();
+
+  if(!nama){
+    $("modalMessage").innerHTML = `<div class="error">Nama katalog wajib diisi.</div>`;
+    return;
+  }
+
+  if(!spreadsheetUrl || !spreadsheetUrl.startsWith("https://docs.google.com/")){
+    $("modalMessage").innerHTML = `<div class="error">Masukkan link Google Spreadsheet yang valid.</div>`;
+    return;
+  }
+
+  $("btnSave").disabled = true;
+  $("btnSave").textContent = "Menyimpan...";
+
+  try{
+    // Tes sumber terlebih dahulu supaya link yang disimpan memang bisa dibaca.
+    const testUrl = makeCSVUrl(spreadsheetUrl);
+    const testResponse = await fetch(testUrl,{cache:"no-store"});
+
+    if(!testResponse.ok){
+      throw new Error("Spreadsheet tidak dapat dibaca. Pastikan sudah dipublish ke web.");
+    }
+
+    const testText = await testResponse.text();
+    const rows = parseCSV(testText);
+
+    if(!rows.length){
+      throw new Error("Spreadsheet kosong atau tidak menghasilkan data CSV.");
+    }
+
+    const mappedTest = mapRows(rows,nama);
+
+    if(!mappedTest.length){
+      throw new Error("Tidak ditemukan data produk pada kolom A Spreadsheet.");
+    }
+
+    if(editingId){
+      await updateDoc(doc(db,"productCatalogs",editingId),{
+        nama,
+        spreadsheetUrl,
+        updatedAt:serverTimestamp()
+      });
+    }else{
+      await addDoc(collection(db,"productCatalogs"),{
+        ownerUid:currentUser.uid,
+        nama,
+        spreadsheetUrl,
+        aktif:true,
+        createdAt:serverTimestamp(),
+        updatedAt:serverTimestamp()
+      });
+    }
+
+    closeModal();
+    await loadCatalogs();
+  }catch(err){
+    $("modalMessage").innerHTML =
+      `<div class="error">${escapeHtml(err.message || "Gagal menyimpan link.")}</div>`;
+  }finally{
+    $("btnSave").disabled = false;
+    $("btnSave").textContent = editingId ? "Simpan Perubahan" : "Simpan Link";
+  }
+}
+
+async function removeCatalog(id){
+  if(currentRole !== "superadmin") return;
+  const item = catalogs.find(c => c.id === id);
+  if(!item) return;
+
+  if(!confirm(`Hapus link "${item.nama || "Katalog Produk"}"?`)) return;
+
+  try{
+    await deleteDoc(doc(db,"productCatalogs",id));
+    await loadCatalogs();
+  }catch(err){
+    $("message").innerHTML =
+      `<div class="error">Gagal menghapus link: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+$("btnAdd").onclick = openAdd;
+$("cartBar").onclick = () => {
+  location.href = "checkout.html";
+};
+$("btnClose").onclick = closeModal;
+$("logoutBtn").onclick = async () => {
+  try{
+    const { signOut } = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js");
+    await signOut(auth);
+    location.href = "index.html";
+  }catch(err){
+    alert("Gagal keluar: " + (err.message || err));
+  }
+};
+$("productPreviewClose").onclick = closeProductPreview;
+$("productPreviewModal").onclick = (e)=>{ if(e.target === $("productPreviewModal")) closeProductPreview(); };
+document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeProductPreview(); });
+$("btnSave").onclick = saveCatalog;
+$("searchInput").oninput = renderProducts;
+$("categoryFilter").onchange = renderProducts;
+
+$("modal").addEventListener("click",e=>{
+  if(e.target === $("modal")) closeModal();
+});
+
+onAuthStateChanged(auth, async user => {
+  if(!user){
+    location.href = "index.html";
+    return;
+  }
+
+  currentUser = user;
+
+  // Role diambil dari users/{uid}. Hanya Superadmin yang boleh mengelola katalog.
+  try{
+    const profileSnap = await getDoc(doc(db,"users",user.uid));
+    const profile = profileSnap.exists() ? profileSnap.data() : {};
+    currentRole = profile.role === "superadmin" ? "superadmin" : "owner";
+  }catch(e){
+    currentRole = "owner";
+  }
+
+  document.body.classList.toggle("is-superadmin", currentRole === "superadmin");
+  if(currentRole === "superadmin") $("ownerName").textContent = "Superadmin";
+  await loadOwnerName();
+  loadCart();
+
+  try{
+    await loadCatalogs();
+  }catch(err){
+    console.error("FIXZY produk load error:", err);
+    $("message").innerHTML =
+      `<div class="error"><b>Gagal memuat katalog produk.</b><br>${escapeHtml(err.message || "Akses katalog gagal.")}</div>`;
+    $("products").innerHTML = `<div class="empty">Katalog belum dapat dibaca. Periksa akses koleksi <b>productCatalogs</b> di Firestore Rules.</div>`;
+    $("productCount").textContent = "0 produk";
+  }
+});
+</script>
+</body>
+</html>
