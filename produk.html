@@ -255,6 +255,29 @@ label{
   padding:13px;
   min-width:0;
 }
+.product-image-wrap{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  overflow:hidden;
+  background:#f3f4f6;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.product-image{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.product-image-wrap.image-error::after{
+  content:"Gambar tidak tersedia";
+  color:#9ca3af;
+  font-size:11px;
+  font-weight:700;
+}
 .product-name{
   font-weight:800;
   font-size:15px;
@@ -577,6 +600,10 @@ const aliases = {
     "namaproduk","namabarang","produk","barang","namaproduct",
     "productname","itemname","description","deskripsi"
   ],
+  gambar: [
+    "gambar","image","foto","photo","img","urlgambar","imageurl",
+    "fotoproduk","gambarproduk"
+  ],
   tunai: [
     "tunai","hargatunai","hargacash","cash","cashprice",
     "hargacash","hargaoffline"
@@ -659,6 +686,31 @@ function makeCSVUrl(url){
   return url;
 }
 
+function imageUrl(value){
+  const raw = cleanCell(value);
+  if(!raw) return "";
+
+  try{
+    const u = new URL(raw);
+
+    // Google Drive: https://drive.google.com/file/d/FILE_ID/view...
+    const m = u.pathname.match(/\/file\/d\/([^/]+)/);
+    if(u.hostname === "drive.google.com" && m){
+      return `https://lh3.googleusercontent.com/d/${m[1]}`;
+    }
+
+    // Google Drive open?id=FILE_ID
+    const id = u.searchParams.get("id");
+    if(u.hostname === "drive.google.com" && id){
+      return `https://lh3.googleusercontent.com/d/${id}`;
+    }
+
+    return raw;
+  }catch(e){
+    return raw;
+  }
+}
+
 function money(value){
   if(value === null || value === undefined || String(value).trim() === "") return "-";
 
@@ -703,6 +755,7 @@ function mapRows(rows, catalogName){
   const headers = rows[0];
   const idx = {
     nama: findHeaderIndex(headers,"nama"),
+    gambar: findHeaderIndex(headers,"gambar"),
     tunai: findHeaderIndex(headers,"tunai"),
     tempo: findHeaderIndex(headers,"tempo"),
     stok: findHeaderIndex(headers,"stok"),
@@ -718,6 +771,7 @@ function mapRows(rows, catalogName){
   return rows.slice(1)
     .map(row => ({
       nama: cleanCell(row[idx.nama]),
+      gambar: idx.gambar >= 0 ? cleanCell(row[idx.gambar]) : "",
       tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
       tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
       stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
@@ -870,8 +924,19 @@ function renderProducts(){
     return;
   }
 
-  $("products").innerHTML = filtered.map(p => `
+  $("products").innerHTML = filtered.map(p => {
+    const img = imageUrl(p.gambar);
+    return `
     <article class="product">
+      ${img ? `
+        <div class="product-image-wrap">
+          <img class="product-image"
+               src="${escapeHtml(img)}"
+               alt="${escapeHtml(p.nama)}"
+               loading="lazy"
+               onerror="this.parentElement.classList.add('image-error');this.style.display='none';">
+        </div>
+      ` : ""}
       <div class="product-name">${escapeHtml(p.nama)}</div>
       <div class="product-grid">
         <div class="info">
@@ -900,7 +965,8 @@ function renderProducts(){
         <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
       </div>
     </article>
-  `).join("");
+  `;
+  }).join("");
 
   // Tombol baru dibuat setelah HTML produk dirender.
   bindProductActions();
@@ -949,6 +1015,7 @@ function addToCart(id, buyNow=false){
     cart.push({
       id:p._id,
       nama:p.nama,
+      gambar:p.gambar || "",
       tunai:p.tunai,
       tempo:p.tempo,
       supplier:p.supplier,
