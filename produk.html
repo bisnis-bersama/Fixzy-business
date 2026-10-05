@@ -823,6 +823,37 @@ body.is-superadmin .owner-only-hide{display:none!important}
   }
 }
 
+
+/* CART: ICON ONLY — NO TEXT */
+.product-actions .btn-cart{
+  width:38px!important;
+  min-width:38px!important;
+  max-width:38px!important;
+  height:32px!important;
+  min-height:32px!important;
+  padding:0!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-indent:0!important;
+  font-size:17px!important;
+  line-height:1!important;
+  border-radius:8px!important;
+}
+@media(max-width:360px){
+  .product-actions .btn-cart{
+    width:34px!important;
+    min-width:34px!important;
+    max-width:34px!important;
+    height:29px!important;
+    min-height:29px!important;
+    font-size:15px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1340,7 +1371,7 @@ function renderProducts(){
         </div>
       </div>
       <div class="product-actions">
-        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒 Tambah ke Keranjang</button>
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒</button>
         <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
       </div>
     </article>
