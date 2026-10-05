@@ -753,31 +753,34 @@ function cleanCell(value){
 function mapRows(rows, catalogName){
   if(!rows.length) return [];
 
-  const headers = rows[0];
-  const idx = {
-    nama: findHeaderIndex(headers,"nama"),
-    gambar: findHeaderIndex(headers,"gambar"),
-    tunai: findHeaderIndex(headers,"tunai"),
-    tempo: findHeaderIndex(headers,"tempo"),
-    stok: findHeaderIndex(headers,"stok"),
-    supplier: findHeaderIndex(headers,"supplier"),
-    kategori: findHeaderIndex(headers,"kategori")
-  };
+  /*
+    Struktur katalog FIXZY:
+    A = produk
+    B = gambar
+    C = tunai
+    D = tempo
+    E = supplier
+    F = stock
 
-  // Nama produk adalah field wajib.
-  if(idx.nama < 0){
-    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
-  }
+    Data dibaca berdasarkan POSISI KOLOM, bukan nama header.
+    Jadi perubahan nama header tidak membuat katalog gagal dibaca.
+  */
 
-  return rows.slice(1)
+  const header = rows[0] || [];
+  const hasHeader = header.some(v =>
+    /produk|barang|gambar|image|foto|tunai|tempo|supplier|stok|stock/i.test(String(v || ""))
+  );
+
+  const startIndex = hasHeader ? 1 : 0;
+
+  return rows.slice(startIndex)
     .map(row => ({
-      nama: cleanCell(row[idx.nama]),
-      gambar: idx.gambar >= 0 ? cleanCell(row[idx.gambar]) : "",
-      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
-      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
-      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
-      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
-      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      nama: cleanCell(row[0]),
+      gambar: cleanCell(row[1]),
+      tunai: cleanCell(row[2]),
+      tempo: cleanCell(row[3]),
+      supplier: cleanCell(row[4]),
+      stok: cleanCell(row[5]),
       katalog: catalogName
     }))
     .filter(p => p.nama);
@@ -1099,7 +1102,16 @@ async function saveCatalog(){
 
     const testText = await testResponse.text();
     const rows = parseCSV(testText);
-    mapRows(rows,nama);
+
+    if(!rows.length){
+      throw new Error("Spreadsheet kosong atau tidak menghasilkan data CSV.");
+    }
+
+    const mappedTest = mapRows(rows,nama);
+
+    if(!mappedTest.length){
+      throw new Error("Tidak ditemukan data produk pada kolom A Spreadsheet.");
+    }
 
     if(editingId){
       await updateDoc(doc(db,"productCatalogs",editingId),{
