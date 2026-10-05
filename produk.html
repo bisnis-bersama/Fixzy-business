@@ -1412,8 +1412,12 @@ function bindProductActions(){
     btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.cart,false); };
   });
   document.querySelectorAll("[data-buy]").forEach(btn=>{
-    btn.onclick=(e)=>{ e.stopPropagation(); addToCart(btn.dataset.buy,true); };
-  });
+  btn.onclick=(e)=>{
+    e.stopPropagation();
+    addToCart(btn.dataset.buy,false);
+    location.href = "checkout.html";
+  };
+});
   document.querySelectorAll("[data-product-preview]").forEach(card=>{
     card.onclick=()=>openProductPreview(card.dataset.productPreview);
   });
@@ -1439,7 +1443,10 @@ function openProductPreview(id){
       <button class="product-preview-buy" type="button" id="previewBuyBtn">Beli Sekarang</button>
     </div>`;
   $("previewCartBtn").onclick=()=>{ addToCart(id,false); closeProductPreview(); };
-  $("previewBuyBtn").onclick=()=>{ addToCart(id,true); closeProductPreview(); };
+  $("previewBuyBtn").onclick=()=>{
+  addToCart(id,false);
+  location.href = "checkout.html";
+};
   $("productPreviewModal").classList.remove("hidden");
 }
 
