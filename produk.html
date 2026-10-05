@@ -854,6 +854,33 @@ body.is-superadmin .owner-only-hide{display:none!important}
   }
 }
 
+
+/* ===== IMAGE FALLBACK ===== */
+.product-image-wrap{
+  position:relative;
+}
+.product-image.fallback-logo{
+  object-fit:contain!important;
+  padding:18%;
+  background:#f5f5f5;
+}
+.image-unavailable{
+  display:none;
+  position:absolute;
+  left:6px;
+  right:6px;
+  bottom:6px;
+  padding:4px 3px;
+  border-radius:6px;
+  background:rgba(0,0,0,.62);
+  color:#fff;
+  text-align:center;
+  font-size:8px;
+  font-weight:700;
+  line-height:1.15;
+  pointer-events:none;
+}
+
 </style>
 </head>
 <body>
@@ -1338,15 +1365,15 @@ function renderProducts(){
     const img = imageUrl(p.gambar);
     return `
     <article class="product">
-      ${img ? `
-        <div class="product-image-wrap">
-          <img class="product-image"
-               src="${escapeHtml(img)}"
-               alt="${escapeHtml(p.nama)}"
-               loading="lazy"
-               onerror="this.parentElement.classList.add('image-error');this.style.display='none';">
-        </div>
-      ` : ""}
+      <div class="product-image-wrap">
+        <img class="product-image product-main-image"
+             src="${escapeHtml(img || "logofixzy.png")}"
+             alt="${escapeHtml(p.nama)}"
+             loading="lazy"
+             onclick="window.openProductImage && window.openProductImage(this.src,'${escapeHtml(p.nama)}')"
+             onerror="this.onerror=null;this.src='logofixzy.png';this.classList.add('fallback-logo');this.nextElementSibling.style.display='block';">
+        <div class="image-unavailable">Gambar belum tersedia</div>
+      </div>
       <div class="product-name">${escapeHtml(p.nama)}</div>
       <div class="product-grid">
         <div class="info">
