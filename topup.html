@@ -310,15 +310,8 @@ input:focus,select:focus{
         <label for="metode">Metode Pembayaran</label>
         <select id="metode" required>
           <option value="">Pilih metode pembayaran</option>
-          <option value="BCA">BCA</option>
-          <option value="BRI">BRI</option>
-          <option value="Mandiri">Mandiri</option>
-          <option value="BNI">BNI</option>
-          <option value="SeaBank">SeaBank</option>
-          <option value="DANA">DANA</option>
-          <option value="GoPay">GoPay</option>
           <option value="QRIS">QRIS</option>
-          <option value="Lainnya">Lainnya</option>
+          
         </select>
 
         <div id="paymentDetails" class="payment-details">
@@ -417,15 +410,9 @@ function refreshTransferTotal(){
 }
 
 const paymentDetails={
-  "BCA":`<div class="detail-title">🏦 BCA</div><div class="paybox"><b>Bank BCA</b><br>No. Rekening: 4180734771<br>A/N YUDI ALIYUDIN</div>`,
-  "BRI":`<div class="detail-title">🏦 BRI</div><div class="paybox"><b>Bank BRI</b><br>No. Rekening: 004601060489505<br>A/N YUDI ALIYUDIN</div>`,
-  "Mandiri":`<div class="detail-title">🏦 Mandiri</div><div class="paybox"><b>Bank Mandiri</b><br>No. Rekening: 1340033268904<br>A/N YUDI ALIYUDIN</div>`,
-  "BNI":`<div class="detail-title">🏦 BNI</div><div class="paybox"><b>Bank BNI</b><br>Nomor rekening BNI belum diatur.</div>`,
-  "SeaBank":`<div class="detail-title">🏦 SeaBank</div><div class="paybox"><b>SeaBank</b><br>No. Rekening: 901341445605<br>A/N YUDI ALIYUDIN</div>`,
-  "DANA":`<div class="detail-title">💳 DANA</div><div class="paybox"><b>DANA</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>`,
-  "GoPay":`<div class="detail-title">💳 GoPay</div><div class="paybox"><b>GoPay</b><br>No. HP: 082319264646<br>A/N YUDI ALIYUDIN</div>`,
+  
   "QRIS":`<div class="detail-title">📲 QRIS</div><div class="qrbox"><img src="qris.jpg" alt="QRIS pembayaran FIXZY BUSINESS" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="qrfallback">File <b>qris.jpg</b> belum tersedia.</div></div>`,
-  "Lainnya":`<div class="detail-title">💬 Metode Lainnya</div><div class="paybox">Silakan hubungi Superadmin untuk mendapatkan instruksi pembayaran.</div>`
+  
 };
 
 function updatePaymentDetails(method){
