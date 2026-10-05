@@ -252,9 +252,34 @@ label{
   background:#fff;
   border:1px solid var(--border);
   border-radius:14px;
-  padding:13px;
+  padding:10px;
   min-width:0;
+  overflow:hidden;
 }
+.product-image{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  background:#f1f1f1;
+  overflow:hidden;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.product-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.product-image .no-image{
+  color:#9ca3af;
+  font-size:12px;
+  text-align:center;
+  padding:10px;
+}
+
 .product-name{
   font-weight:800;
   font-size:15px;
@@ -398,15 +423,24 @@ body.is-superadmin .owner-only-hide{display:none!important}
   .modal-card{border-radius:18px}
 }
 @media(max-width:650px){
-  .products{grid-template-columns:1fr}
+  .products{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .search-row{grid-template-columns:1fr}
   .source{align-items:flex-start}
+  .product{padding:8px}
+  .product-name{font-size:12px;line-height:1.3;margin-bottom:7px}
+  .product-grid{grid-template-columns:1fr 1fr;gap:5px}
+  .info{padding:6px}
+  .info small{font-size:9px}
+  .info b{font-size:11px}
+  .product-actions{gap:5px}
+  .product-actions button{padding:8px 4px;font-size:10px}
 }
 @media(max-width:430px){
   .container{padding:0 12px 100px}
   .source{flex-direction:column}
   .source-actions{width:100%}
   .source-actions button{flex:1}
+  .products{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:420px){
@@ -577,6 +611,10 @@ const aliases = {
     "namaproduk","namabarang","produk","barang","namaproduct",
     "productname","itemname","description","deskripsi"
   ],
+  gambar: [
+    "gambar","image","foto","photo","picture","imageurl","fotoproduk",
+    "gambarproduk","linkgambar","urlgambar","linkfoto","urlfoto"
+  ],
   tunai: [
     "tunai","hargatunai","hargacash","cash","cashprice",
     "hargacash","hargaoffline"
@@ -607,6 +645,17 @@ function findHeaderIndex(headers, field){
 }
 
 function parseCSV(text){
+  text = String(text ?? "").replace(/^\uFEFF/,"");
+
+  // Detect delimiter from the first non-empty line.
+  const firstLine = text.split(/\r?\n/).find(x => x.trim() !== "") || "";
+  let delimiter = ",";
+  if((firstLine.match(/;/g)||[]).length > (firstLine.match(/,/g)||[]).length){
+    delimiter = ";";
+  }else if((firstLine.match(/\t/g)||[]).length > (firstLine.match(/,/g)||[]).length){
+    delimiter = "\t";
+  }
+
   const rows = [];
   let row = [];
   let cell = "";
@@ -622,7 +671,7 @@ function parseCSV(text){
       }else{
         quoted = !quoted;
       }
-    }else if(c === "," && !quoted){
+    }else if(c === delimiter && !quoted){
       row.push(cell);
       cell = "";
     }else if((c === "\n" || c === "\r") && !quoted){
@@ -640,6 +689,7 @@ function parseCSV(text){
     row.push(cell);
     if(row.some(v => String(v).trim() !== "")) rows.push(row);
   }
+
   return rows;
 }
 
@@ -700,9 +750,30 @@ function cleanCell(value){
 function mapRows(rows, catalogName){
   if(!rows.length) return [];
 
-  const headers = rows[0];
+  // Find the real header row. The expected sheet is:
+  // A=produk, B=gambar, C=tunai, D=tempo, E=supplier, F=stock.
+  let headerRowIndex = 0;
+  let bestScore = -1;
+
+  rows.slice(0,10).forEach((row, i) => {
+    const normalized = row.map(normalizeHeader);
+    let score = 0;
+    if(normalized.includes("produk") || normalized.includes("namaproduk") || normalized.includes("namabarang")) score += 4;
+    if(normalized.includes("gambar") || normalized.includes("image") || normalized.includes("foto")) score += 2;
+    if(normalized.includes("tunai") || normalized.includes("hargatunai")) score += 1;
+    if(normalized.includes("tempo") || normalized.includes("hargatempo")) score += 1;
+    if(normalized.includes("supplier") || normalized.includes("suplier")) score += 1;
+    if(normalized.includes("stok") || normalized.includes("stock")) score += 1;
+    if(score > bestScore){
+      bestScore = score;
+      headerRowIndex = i;
+    }
+  });
+
+  const headers = rows[headerRowIndex] || [];
   const idx = {
     nama: findHeaderIndex(headers,"nama"),
+    gambar: findHeaderIndex(headers,"gambar"),
     tunai: findHeaderIndex(headers,"tunai"),
     tempo: findHeaderIndex(headers,"tempo"),
     stok: findHeaderIndex(headers,"stok"),
@@ -710,14 +781,17 @@ function mapRows(rows, catalogName){
     kategori: findHeaderIndex(headers,"kategori")
   };
 
-  // Nama produk adalah field wajib.
   if(idx.nama < 0){
-    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
+    throw new Error(
+      `Kolom produk/nama produk tidak ditemukan pada katalog "${catalogName}". ` +
+      `Header terbaca: ${headers.map(x => String(x).trim()).join(" | ")}`
+    );
   }
 
-  return rows.slice(1)
+  return rows.slice(headerRowIndex + 1)
     .map(row => ({
       nama: cleanCell(row[idx.nama]),
+      gambar: idx.gambar >= 0 ? cleanCell(row[idx.gambar]) : "",
       tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
       tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
       stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
@@ -850,6 +924,35 @@ function buildCategories(){
   if(categories.includes(current)) $("categoryFilter").value = current;
 }
 
+function imageUrl(value){
+  const raw = String(value ?? "").trim();
+  if(!raw) return "";
+
+  // Already a normal image URL.
+  if(/^https?:\/\/.+/i.test(raw) && !/drive\.google\.com/i.test(raw)){
+    return raw;
+  }
+
+  // Google Drive file links:
+  // /file/d/FILE_ID/view
+  // /open?id=FILE_ID
+  // /uc?id=FILE_ID
+  const m = raw.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i);
+  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`;
+
+  const idMatch = raw.match(/[?&]id=([^&#]+)/i);
+  if(/drive\.google\.com/i.test(raw) && idMatch){
+    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
+  }
+
+  // If the spreadsheet contains only a Drive file ID.
+  if(/^[A-Za-z0-9_-]{20,}$/.test(raw)){
+    return `https://drive.google.com/thumbnail?id=${raw}&sz=w1000`;
+  }
+
+  return raw;
+}
+
 function renderProducts(){
   const search = $("searchInput").value.trim().toLowerCase();
   const category = $("categoryFilter").value;
@@ -872,7 +975,19 @@ function renderProducts(){
 
   $("products").innerHTML = filtered.map(p => `
     <article class="product">
+      <div class="product-image">
+        ${
+          imageUrl(p.gambar)
+            ? `<img src="${escapeHtml(imageUrl(p.gambar))}" alt="${escapeHtml(p.nama)}"
+                    loading="lazy"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+               <div class="no-image" style="display:none">Gambar tidak dapat dimuat</div>`
+            : `<div class="no-image">Tidak ada gambar</div>`
+        }
+      </div>
+
       <div class="product-name">${escapeHtml(p.nama)}</div>
+
       <div class="product-grid">
         <div class="info">
           <small>Harga Tunai</small>
@@ -882,21 +997,14 @@ function renderProducts(){
           <small>Harga Tempo</small>
           <b>${escapeHtml(money(p.tempo))}</b>
         </div>
-        <div class="info">
+        <div class="info" style="grid-column:1/-1">
           <small>Stok</small>
           <b>${escapeHtml(p.stok || "-")}</b>
         </div>
-        <div class="info">
-          <small>Supplier</small>
-          <b>${escapeHtml(p.supplier || "-")}</b>
-        </div>
-        <div class="info" style="grid-column:1/-1">
-          <small>Kategori</small>
-          <b>${escapeHtml(p.kategori || "-")}</b>
-        </div>
       </div>
+
       <div class="product-actions">
-        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒 Tambah ke Keranjang</button>
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒</button>
         <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
       </div>
     </article>
@@ -957,9 +1065,11 @@ function addToCart(id, buyNow=false){
     });
   }
   saveCart();
-  // Setelah produk dipilih, langsung buka halaman pesanan.
-  // Data keranjang tetap disimpan di localStorage agar pesanan.html dapat membacanya.
-  location.href = "pesanan.html";
+  if(buyNow){
+    location.href = "checkout.html";
+  }else{
+    alert("Produk ditambahkan ke keranjang.");
+  }
 }
 
 function bindProductActions(){
@@ -1076,6 +1186,9 @@ async function removeCatalog(id){
 }
 
 $("btnAdd").onclick = openAdd;
+$("cartBar").onclick = () => {
+  location.href = "checkout.html";
+};
 $("btnClose").onclick = closeModal;
 $("logoutBtn").onclick = async () => {
   try{
