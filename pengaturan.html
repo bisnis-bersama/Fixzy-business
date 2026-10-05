@@ -124,11 +124,22 @@ async function load(){
  }else{
   $('pageTitle').textContent='Pengaturan Superadmin'; $('pageSubtitle').textContent='Pengaturan sistem, UP Pengelola, rekening dan profil Superadmin.';
   $('adminOrderCard').style.display='block'; $('adminPaymentCard').style.display='block'; $('adminProfileCard').style.display='block';
-  const ss=await getDoc(doc(db,'systemSettings','main'));
-  const d=ss.exists()?ss.data():{};
+  let d={};
+  try{
+    const ss=await getDoc(doc(db,'systemSettings','main'));
+    d=ss.exists()?ss.data():{};
+  }catch(e){
+    console.warn('systemSettings belum bisa dibaca:',e);
+  }
   $('upPengelolaPerPcs').value=d.upPengelolaPerPcs??'';
   const p=d.pembayaran||{};
-  $('mandiri').value=p.mandiri||''; $('bca').value=p.bca||''; $('bri').value=p.bri||''; $('ewallet').value=p.ewallet||''; $('seabank').value=p.seabank||''; $('adminWa').value=d.adminWa||'082319264646';
+  // Jika pengaturan Firebase belum tersedia, tampilkan rekening yang saat ini digunakan FIXZY.
+  $('mandiri').value=p.mandiri||'1340033268904 / A/N YUDI ALIYUDIN';
+  $('bca').value=p.bca||'4180734771 / A/N YUDI ALIYUDIN';
+  $('bri').value=p.bri||'004601060489505 / A/N YUDI ALIYUDIN';
+  $('ewallet').value=p.ewallet||'DANA / GoPay 082319264646 / A/N YUDI ALIYUDIN';
+  $('seabank').value=p.seabank||'901341445605 / A/N YUDI ALIYUDIN';
+  $('adminWa').value=d.adminWa||'082319264646';
   $('adminNama').value=u.nama||u.namaLengkap||''; $('adminProfileWa').value=u.whatsapp||u.noWhatsApp||d.adminWa||''; $('adminEmail').value=u.email||user.email||'';
  }
 }
