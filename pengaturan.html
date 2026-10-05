@@ -21,7 +21,7 @@ h3{font-size:17px;margin:0 0 12px}.note{font-size:12px;color:var(--muted);line-h
 .btn{display:inline-block;padding:10px 13px;border-radius:10px;border:0;background:#111;color:#fff;text-decoration:none;font-weight:700;font-size:12px}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--yellow);display:flex;z-index:10}
 .bottom a{flex:1;padding:10px 3px;text-align:center;text-decoration:none;color:#bbb;font-size:11px;font-weight:700}.bottom a.active{color:var(--yellow)}.bottom span{display:block;font-size:19px;line-height:20px}
-@media(max-width:520px){.content{padding:0 12px 90px}}
+input{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:#fff} .field{margin:10px 0}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:5px}.save{background:var(--yellow);color:#111;border:0;border-radius:10px;padding:11px 15px;font-weight:800;cursor:pointer}.status{margin-top:8px;font-size:12px}.hidden{display:none!important}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.content{padding:0 12px 90px}.grid2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -31,57 +31,114 @@ h3{font-size:17px;margin:0 0 12px}.note{font-size:12px;color:var(--muted);line-h
 </div></header>
 
 <main class="content">
-<section class="card hero"><h2>Pengaturan</h2><small>Konfigurasi utama sistem FIXZY BUSINESS.</small></section>
+<section class="card hero"><h2 id="pageTitle">Pengaturan</h2><small id="pageSubtitle">Memuat hak akses...</small></section>
 
-<section class="card">
-<h3>Pengaturan Sistem</h3>
-<div class="item"><div><div class="label">Nama Aplikasi</div><div class="note">Nama yang digunakan di seluruh sistem.</div></div><div class="value">FIXZY BUSINESS</div></div>
-<div class="item"><div><div class="label">Status Pendaftaran Owner</div><div class="note">Kontrol apakah Owner baru dapat mendaftar.</div></div><span class="badge">AKTIF</span></div>
-<div class="item"><div><div class="label">Versi Sistem</div></div><div class="value">FIXZY BUSINESS</div></div>
+<section class="card" id="ownerOrderCard" style="display:none">
+<h3>Pengaturan Order Owner</h3>
+<div class="field"><label>Menabung / PCS</label><input id="tabunganPerPcs" type="number" min="0" step="100" placeholder="Contoh: 4000"></div>
+<div class="note">Nominal ini ditentukan oleh Owner. Pada setiap order, Owner tetap memilih apakah order tersebut ikut menabung atau tidak.</div>
+<button class="save" id="saveOwnerOrder">Simpan Pengaturan</button>
+<div class="status" id="ownerOrderStatus"></div>
+</section>
+
+<section class="card" id="ownerProfileCard" style="display:none">
+<h3>Profil Owner</h3>
+<div class="field"><label>Nama</label><input id="ownerNama"></div>
+<div class="field"><label>Nama Usaha</label><input id="ownerUsaha"></div>
+<div class="field"><label>WhatsApp</label><input id="ownerWa"></div>
+<div class="field"><label>Email</label><input id="ownerEmail" type="email"></div>
+<button class="save" id="saveOwnerProfile">Simpan Profil</button>
+<div class="status" id="ownerProfileStatus"></div>
+</section>
+
+<section class="card" id="adminOrderCard" style="display:none">
+<h3>Pengaturan Order Superadmin</h3>
+<div class="field"><label>UP Pengelola / PCS</label><input id="upPengelolaPerPcs" type="number" min="0" step="100" placeholder="Contoh: 300"></div>
+<div class="note">Nominal ini ditentukan Superadmin dan wajib digunakan pada setiap order.</div>
+<button class="save" id="saveAdminOrder">Simpan Pengaturan</button>
+<div class="status" id="adminOrderStatus"></div>
+</section>
+
+<section class="card" id="adminPaymentCard" style="display:none">
+<h3>Data Rekening Pembayaran</h3>
+<div class="field"><label>Bank Mandiri</label><input id="mandiri"></div>
+<div class="field"><label>Bank BCA</label><input id="bca"></div>
+<div class="field"><label>Bank BRI</label><input id="bri"></div>
+<div class="field"><label>DANA / GoPay</label><input id="ewallet"></div>
+<div class="field"><label>SeaBank</label><input id="seabank"></div>
+<div class="field"><label>Nomor WhatsApp Admin</label><input id="adminWa"></div>
+<button class="save" id="savePayments">Simpan Rekening</button>
+<div class="status" id="paymentStatus"></div>
+</section>
+
+<section class="card" id="adminProfileCard" style="display:none">
+<h3>Profil Superadmin</h3>
+<div class="field"><label>Nama</label><input id="adminNama"></div>
+<div class="field"><label>WhatsApp</label><input id="adminProfileWa"></div>
+<div class="field"><label>Email</label><input id="adminEmail" type="email"></div>
+<button class="save" id="saveAdminProfile">Simpan Profil</button>
+<div class="status" id="adminProfileStatus"></div>
 </section>
 
 <section class="card">
-<h3>Pengaturan Admin</h3>
-<div class="item"><div><div class="label">WhatsApp Admin</div><div class="note">Nomor untuk komunikasi Top Up dan verifikasi.</div></div><div class="value">082319264646</div></div>
-<div class="item"><div><div class="label">Email Admin</div></div><div class="value">Akun Superadmin</div></div>
-</section>
-
-<section class="card">
-<h3>Pembayaran</h3>
-<div class="item"><div class="label">Bank Mandiri</div><div class="value">YUDI ALIYUDIN</div></div>
-<div class="item"><div class="label">Bank BCA</div><div class="value">YUDI ALIYUDIN</div></div>
-<div class="item"><div class="label">Bank BRI</div><div class="value">YUDI ALIYUDIN</div></div>
-<div class="item"><div class="label">DANA / GoPay</div><div class="value">YUDI ALIYUDIN</div></div>
-<div class="item"><div class="label">SeaBank</div><div class="value">YUDI ALIYUDIN</div></div>
-<div class="item"><div class="label">QRIS</div><div class="value">Aktif</div></div>
-</section>
-
-<section class="card">
-<h3>Pengaturan Order</h3>
-<div class="item"><div><div class="label">UP Pengelola / PCS</div><div class="note">Nominal UP Pengelola ditentukan oleh Superadmin dan wajib dicantumkan pada setiap order.</div></div><div class="value"><strong id="upPengelolaValue">Rp 0</strong></div></div>
-<div class="note" style="margin-top:10px">Menabung / PCS ditentukan oleh masing-masing Owner. Owner dapat memilih pada setiap order apakah order tersebut ikut menabung atau tidak.</div>
-<div class="note" style="margin-top:8px"><b>Aturan:</b> sebelum tagihan lunas, Tabungan dan UP Pengelola hanya menjadi estimasi. Setelah LUNAS, Tabungan masuk Saldo Pribadi Owner dan UP Pengelola masuk Saldo Pengelola.</div>
-</section>
-
-<section class="card">
-<h3>Katalog Produk</h3>
-<div class="item"><div><div class="label">Spreadsheet Katalog</div><div class="note">Hanya Superadmin yang boleh mengatur sumber katalog produk.</div></div><div class="value">Belum diatur</div></div>
-<div class="note" style="margin-top:10px">Pengaturan link Spreadsheet akan kita sambungkan ke Firebase setelah struktur penyimpanannya ditetapkan, agar tidak mengubah Rules yang sudah berjalan.</div>
-</section>
-
-<section class="card">
-<h3>Keamanan</h3>
-<div class="item"><div><div class="label">Hak Akses</div><div class="note">Pengaturan ini hanya untuk Superadmin.</div></div><span class="badge">SUPERADMIN</span></div>
-<div class="item"><div><div class="label">Data Owner</div><div class="note">Data bisnis Owner tidak dikelola dari halaman ini.</div></div><div class="value">Terpisah</div></div>
+<h3>Aturan Perhitungan</h3>
+<div class="note">Sebelum tagihan LUNAS, Tabungan dan UP Pengelola hanya ditampilkan sebagai estimasi. Setelah LUNAS, Tabungan masuk Saldo Pribadi Owner dan UP Pengelola masuk Saldo Pengelola.</div>
 </section>
 </main>
 
 <nav class="bottom">
-<a href="index-superadmin.html"><span>⌂</span>Beranda</a>
-<a href="admin-topup-fixzy-business.html"><span>💰</span>Top Up</a>
-<a href="data-owner.html"><span>👥</span>Owner</a>
-<a href="laporan.html"><span>📊</span>Laporan</a>
+<a href="index.html"><span>⌂</span>Beranda</a>
+<a href="produk.html"><span>🛒</span>Belanja</a>
+<a href="tagihan.html"><span>🧾</span>Tagihan</a>
+<a href="riwayat.html"><span>↔</span>Riwayat</a>
 <a class="active" href="pengaturan.html"><span>⚙</span>Pengaturan</a>
 </nav>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+const rp=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+function msg(id,t,ok=false){$(id).textContent=t;$(id).style.color=ok?'#166534':'#b91c1c'}
+
+async function load(){
+ const user=auth.currentUser;
+ if(!user){location.replace('index.html');return}
+ const us=await getDoc(doc(db,'users',user.uid));
+ if(!us.exists()){location.replace('index.html');return}
+ const u=us.data()||{}; const role=u.role;
+ if(role!=='owner'&&role!=='superadmin'){location.replace('index.html');return}
+
+ if(role==='owner'){
+  $('pageTitle').textContent='Pengaturan Owner'; $('pageSubtitle').textContent='Pengaturan tabungan dan profil Owner.';
+  $('ownerOrderCard').style.display='block'; $('ownerProfileCard').style.display='block';
+  const os=await getDoc(doc(db,'ownerSettings',user.uid));
+  if(os.exists()) $('tabunganPerPcs').value=os.data().tabunganPerPcs??'';
+  $('ownerNama').value=u.nama||u.namaLengkap||'';
+  $('ownerUsaha').value=u.namaUsaha||'';
+  $('ownerWa').value=u.whatsapp||u.noWhatsApp||'';
+  $('ownerEmail').value=u.email||user.email||'';
+ }else{
+  $('pageTitle').textContent='Pengaturan Superadmin'; $('pageSubtitle').textContent='Pengaturan sistem, UP Pengelola, rekening dan profil Superadmin.';
+  $('adminOrderCard').style.display='block'; $('adminPaymentCard').style.display='block'; $('adminProfileCard').style.display='block';
+  const ss=await getDoc(doc(db,'systemSettings','main'));
+  const d=ss.exists()?ss.data():{};
+  $('upPengelolaPerPcs').value=d.upPengelolaPerPcs??'';
+  const p=d.pembayaran||{};
+  $('mandiri').value=p.mandiri||''; $('bca').value=p.bca||''; $('bri').value=p.bri||''; $('ewallet').value=p.ewallet||''; $('seabank').value=p.seabank||''; $('adminWa').value=d.adminWa||'082319264646';
+  $('adminNama').value=u.nama||u.namaLengkap||''; $('adminProfileWa').value=u.whatsapp||u.noWhatsApp||d.adminWa||''; $('adminEmail').value=u.email||user.email||'';
+ }
+}
+
+$('saveOwnerOrder').onclick=async()=>{const user=auth.currentUser;if(!user)return;const v=Math.max(0,Number($('tabunganPerPcs').value)||0);try{await setDoc(doc(db,'ownerSettings',user.uid),{ownerUid:user.uid,tabunganPerPcs:v,updatedAt:serverTimestamp()},{merge:true});msg('ownerOrderStatus','✓ Tersimpan: '+rp(v)+' / PCS',true)}catch(e){msg('ownerOrderStatus','Gagal menyimpan: '+(e.code||e.message))}};
+$('saveAdminOrder').onclick=async()=>{const v=Math.max(0,Number($('upPengelolaPerPcs').value)||0);try{await setDoc(doc(db,'systemSettings','main'),{upPengelolaPerPcs:v,updatedAt:serverTimestamp()},{merge:true});msg('adminOrderStatus','✓ Tersimpan: '+rp(v)+' / PCS',true)}catch(e){msg('adminOrderStatus','Gagal menyimpan: '+(e.code||e.message))}};
+$('savePayments').onclick=async()=>{try{await setDoc(doc(db,'systemSettings','main'),{pembayaran:{mandiri:$('mandiri').value.trim(),bca:$('bca').value.trim(),bri:$('bri').value.trim(),ewallet:$('ewallet').value.trim(),seabank:$('seabank').value.trim()},adminWa:$('adminWa').value.trim(),updatedAt:serverTimestamp()},{merge:true});msg('paymentStatus','✓ Data rekening tersimpan',true)}catch(e){msg('paymentStatus','Gagal menyimpan: '+(e.code||e.message))}};
+$('saveOwnerProfile').onclick=async()=>{const user=auth.currentUser;try{await setDoc(doc(db,'users',user.uid),{nama:$('ownerNama').value.trim(),namaUsaha:$('ownerUsaha').value.trim(),whatsapp:$('ownerWa').value.trim(),email:$('ownerEmail').value.trim(),updatedAt:serverTimestamp()},{merge:true});msg('ownerProfileStatus','✓ Profil tersimpan',true)}catch(e){msg('ownerProfileStatus','Gagal menyimpan: '+(e.code||e.message))}};
+$('saveAdminProfile').onclick=async()=>{const user=auth.currentUser;try{await setDoc(doc(db,'users',user.uid),{nama:$('adminNama').value.trim(),whatsapp:$('adminProfileWa').value.trim(),email:$('adminEmail').value.trim(),updatedAt:serverTimestamp()},{merge:true});msg('adminProfileStatus','✓ Profil tersimpan',true)}catch(e){msg('adminProfileStatus','Gagal menyimpan: '+(e.code||e.message))}};
+
+onAuthStateChanged(auth,()=>load().catch(e=>{console.error(e);document.getElementById('pageSubtitle').textContent='Gagal memuat pengaturan: '+(e.code||e.message)}));
+</script>
 </body>
-</html>
