@@ -252,34 +252,32 @@ label{
   background:#fff;
   border:1px solid var(--border);
   border-radius:14px;
-  padding:10px;
+  padding:13px;
   min-width:0;
-  overflow:hidden;
 }
-.product-image{
+.product-image-wrap{
   width:100%;
-  aspect-ratio:1/1;
+  height:clamp(180px,24vw,300px);
   border-radius:12px;
-  background:#f1f1f1;
   overflow:hidden;
-  margin-bottom:10px;
+  background:#f3f4f6;
+  margin-bottom:12px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.product-image img{
+.product-image{
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
   display:block;
 }
-.product-image .no-image{
+.product-image-wrap.image-error::after{
+  content:"Gambar tidak tersedia";
   color:#9ca3af;
-  font-size:12px;
-  text-align:center;
-  padding:10px;
+  font-size:11px;
+  font-weight:700;
 }
-
 .product-name{
   font-weight:800;
   font-size:15px;
@@ -423,24 +421,15 @@ body.is-superadmin .owner-only-hide{display:none!important}
   .modal-card{border-radius:18px}
 }
 @media(max-width:650px){
-  .products{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .products{grid-template-columns:1fr}
   .search-row{grid-template-columns:1fr}
   .source{align-items:flex-start}
-  .product{padding:8px}
-  .product-name{font-size:12px;line-height:1.3;margin-bottom:7px}
-  .product-grid{grid-template-columns:1fr 1fr;gap:5px}
-  .info{padding:6px}
-  .info small{font-size:9px}
-  .info b{font-size:11px}
-  .product-actions{gap:5px}
-  .product-actions button{padding:8px 4px;font-size:10px}
 }
 @media(max-width:430px){
   .container{padding:0 12px 100px}
   .source{flex-direction:column}
   .source-actions{width:100%}
   .source-actions button{flex:1}
-  .products{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:420px){
@@ -459,6 +448,326 @@ body.is-superadmin .owner-only-hide{display:none!important}
     padding-right:28px;
   }
 }
+
+/* ===== RESPONSIVE PRODUCT GRID ===== */
+.product{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+.product-name{
+  min-height:3.9em;
+}
+
+.product-grid{
+  flex:1;
+}
+
+.product-actions{
+  margin-top:auto;
+}
+
+@media (min-width:1100px){
+  .products{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+  }
+}
+
+@media (min-width:760px) and (max-width:1099px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+  }
+}
+
+@media (max-width:759px){
+  .container{
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  /* HP: selalu 3 kartu per baris */
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px;
+  }
+
+  .product{
+    padding:7px;
+    border-radius:11px;
+  }
+
+  .product-image-wrap{
+    height:clamp(105px,31vw,155px);
+    min-height:105px;
+    margin-bottom:7px;
+    border-radius:9px;
+  }
+
+  .product-name{
+    min-height:4.2em;
+    font-size:11px;
+    line-height:1.3;
+    margin-bottom:7px;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+
+  .info{
+    padding:6px;
+    border-radius:7px;
+  }
+
+  .info small{
+    font-size:8px;
+    margin-bottom:2px;
+  }
+
+  .info b{
+    font-size:9px;
+    line-height:1.2;
+  }
+
+  .product-actions{
+    grid-template-columns:1fr;
+    gap:5px;
+    margin-top:7px;
+  }
+
+  .product-actions button{
+    min-width:0;
+    padding:8px 4px;
+    border-radius:8px;
+    font-size:9px;
+    line-height:1.15;
+  }
+
+  .cart-bar{
+    right:8px;
+    bottom:82px;
+    max-width:calc(100vw - 16px);
+    white-space:nowrap;
+    padding:8px 10px;
+    font-size:12px;
+  }
+}
+
+@media (max-width:430px){
+  .product-image-wrap{
+    height:230px;
+    min-height:230px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .product-actions button{
+    font-size:12px;
+  }
+}
+
+@media (max-width:360px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:5px;
+  }
+
+  .product{
+    padding:6px;
+  }
+
+  .product-image-wrap{
+    height:100px;
+    min-height:100px;
+  }
+
+  .product-name{
+    font-size:10px;
+    min-height:3.9em;
+  }
+
+  .info{
+    padding:5px;
+  }
+
+  .info small{
+    font-size:7px;
+  }
+
+  .info b{
+    font-size:8px;
+  }
+
+  .product-actions button{
+    font-size:8px;
+    padding:7px 3px;
+  }
+}
+
+
+/* ===== SAFE UI ONLY: DATA/FIREBASE/SPREADSHEET CODE UNTOUCHED ===== */
+
+/* ===== KERANJANG AKTIF ===== */
+.btn-cart{
+  display:block!important;
+}
+.cart-bar{
+  display:block!important;
+}
+
+/* Kartu bersih */
+.product{
+  padding:7px!important;
+  border-radius:11px!important;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.product-image-wrap{
+  width:100%!important;
+  aspect-ratio:1/1!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:0!important;
+  margin:0 0 7px!important;
+  border-radius:9px!important;
+  overflow:hidden!important;
+}
+
+.product-image{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  display:block;
+}
+
+.product-name{
+  font-size:10px!important;
+  line-height:1.25!important;
+  min-height:2.5em!important;
+  margin:0 1px 6px!important;
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+
+/* Harga tetap terlihat */
+.product-grid{
+  grid-template-columns:1fr 1fr!important;
+  gap:5px!important;
+}
+
+.info{
+  padding:5px!important;
+  border-radius:7px!important;
+}
+
+.info small{
+  font-size:7px!important;
+}
+
+.info b{
+  font-size:8.5px!important;
+}
+
+/* Sembunyikan supplier dan kategori tanpa menyentuh JS */
+.product-grid .info:nth-child(4),
+.product-grid .info:nth-child(5){
+  display:none!important;
+}
+
+/* Baris stok: angka tidak ditampilkan, diganti label sederhana */
+.product-grid .info:nth-child(3){
+  grid-column:1/-1!important;
+  text-align:center;
+  padding:5px!important;
+  background:#eaf8ef!important;
+}
+
+.product-grid .info:nth-child(3) small{
+  display:none!important;
+}
+
+.product-grid .info:nth-child(3) b{
+  font-size:0!important;
+  color:#16804a!important;
+}
+
+.product-grid .info:nth-child(3) b::after{
+  content:"Tersedia";
+  font-size:8px;
+}
+
+/* Tombol beli saja */
+.product-actions{
+  grid-template-columns:1fr!important;
+  margin-top:6px!important;
+}
+
+.product-actions .btn-buy{
+  width:100%;
+  min-height:30px;
+  padding:7px 4px!important;
+  font-size:9px!important;
+  border-radius:8px!important;
+}
+
+/* HP: 3 grid */
+@media(max-width:759px){
+  .container{
+    padding-left:8px!important;
+    padding-right:8px!important;
+  }
+
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+
+  .product{
+    padding:6px!important;
+  }
+
+  .product-image-wrap{
+    aspect-ratio:1/1!important;
+  }
+}
+
+@media(max-width:360px){
+  .products{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+
+  .product{
+    padding:5px!important;
+  }
+
+  .product-name{
+    font-size:9px!important;
+  }
+
+  .info small{
+    font-size:6px!important;
+  }
+
+  .info b::after{
+    font-size:7.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -599,6 +908,7 @@ function escapeHtml(value){
 
 function normalizeHeader(value){
   return String(value ?? "")
+    .replace(/^\uFEFF/,"")
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"")
@@ -612,8 +922,8 @@ const aliases = {
     "productname","itemname","description","deskripsi"
   ],
   gambar: [
-    "gambar","image","foto","photo","picture","imageurl","fotoproduk",
-    "gambarproduk","linkgambar","urlgambar","linkfoto","urlfoto"
+    "gambar","image","foto","photo","img","urlgambar","imageurl",
+    "fotoproduk","gambarproduk"
   ],
   tunai: [
     "tunai","hargatunai","hargacash","cash","cashprice",
@@ -645,17 +955,6 @@ function findHeaderIndex(headers, field){
 }
 
 function parseCSV(text){
-  text = String(text ?? "").replace(/^\uFEFF/,"");
-
-  // Detect delimiter from the first non-empty line.
-  const firstLine = text.split(/\r?\n/).find(x => x.trim() !== "") || "";
-  let delimiter = ",";
-  if((firstLine.match(/;/g)||[]).length > (firstLine.match(/,/g)||[]).length){
-    delimiter = ";";
-  }else if((firstLine.match(/\t/g)||[]).length > (firstLine.match(/,/g)||[]).length){
-    delimiter = "\t";
-  }
-
   const rows = [];
   let row = [];
   let cell = "";
@@ -671,7 +970,7 @@ function parseCSV(text){
       }else{
         quoted = !quoted;
       }
-    }else if(c === delimiter && !quoted){
+    }else if(c === "," && !quoted){
       row.push(cell);
       cell = "";
     }else if((c === "\n" || c === "\r") && !quoted){
@@ -689,7 +988,6 @@ function parseCSV(text){
     row.push(cell);
     if(row.some(v => String(v).trim() !== "")) rows.push(row);
   }
-
   return rows;
 }
 
@@ -707,6 +1005,31 @@ function makeCSVUrl(url){
   }
 
   return url;
+}
+
+function imageUrl(value){
+  const raw = cleanCell(value);
+  if(!raw) return "";
+
+  try{
+    const u = new URL(raw);
+
+    // Google Drive: https://drive.google.com/file/d/FILE_ID/view...
+    const m = u.pathname.match(/\/file\/d\/([^/]+)/);
+    if(u.hostname === "drive.google.com" && m){
+      return `https://lh3.googleusercontent.com/d/${m[1]}`;
+    }
+
+    // Google Drive open?id=FILE_ID
+    const id = u.searchParams.get("id");
+    if(u.hostname === "drive.google.com" && id){
+      return `https://lh3.googleusercontent.com/d/${id}`;
+    }
+
+    return raw;
+  }catch(e){
+    return raw;
+  }
 }
 
 function money(value){
@@ -750,53 +1073,34 @@ function cleanCell(value){
 function mapRows(rows, catalogName){
   if(!rows.length) return [];
 
-  // Find the real header row. The expected sheet is:
-  // A=produk, B=gambar, C=tunai, D=tempo, E=supplier, F=stock.
-  let headerRowIndex = 0;
-  let bestScore = -1;
+  /*
+    Struktur katalog FIXZY:
+    A = produk
+    B = gambar
+    C = tunai
+    D = tempo
+    E = supplier
+    F = stock
 
-  rows.slice(0,10).forEach((row, i) => {
-    const normalized = row.map(normalizeHeader);
-    let score = 0;
-    if(normalized.includes("produk") || normalized.includes("namaproduk") || normalized.includes("namabarang")) score += 4;
-    if(normalized.includes("gambar") || normalized.includes("image") || normalized.includes("foto")) score += 2;
-    if(normalized.includes("tunai") || normalized.includes("hargatunai")) score += 1;
-    if(normalized.includes("tempo") || normalized.includes("hargatempo")) score += 1;
-    if(normalized.includes("supplier") || normalized.includes("suplier")) score += 1;
-    if(normalized.includes("stok") || normalized.includes("stock")) score += 1;
-    if(score > bestScore){
-      bestScore = score;
-      headerRowIndex = i;
-    }
-  });
+    Data dibaca berdasarkan POSISI KOLOM, bukan nama header.
+    Jadi perubahan nama header tidak membuat katalog gagal dibaca.
+  */
 
-  const headers = rows[headerRowIndex] || [];
-  const idx = {
-    nama: findHeaderIndex(headers,"nama"),
-    gambar: findHeaderIndex(headers,"gambar"),
-    tunai: findHeaderIndex(headers,"tunai"),
-    tempo: findHeaderIndex(headers,"tempo"),
-    stok: findHeaderIndex(headers,"stok"),
-    supplier: findHeaderIndex(headers,"supplier"),
-    kategori: findHeaderIndex(headers,"kategori")
-  };
+  const header = rows[0] || [];
+  const hasHeader = header.some(v =>
+    /produk|barang|gambar|image|foto|tunai|tempo|supplier|stok|stock/i.test(String(v || ""))
+  );
 
-  if(idx.nama < 0){
-    throw new Error(
-      `Kolom produk/nama produk tidak ditemukan pada katalog "${catalogName}". ` +
-      `Header terbaca: ${headers.map(x => String(x).trim()).join(" | ")}`
-    );
-  }
+  const startIndex = hasHeader ? 1 : 0;
 
-  return rows.slice(headerRowIndex + 1)
+  return rows.slice(startIndex)
     .map(row => ({
-      nama: cleanCell(row[idx.nama]),
-      gambar: idx.gambar >= 0 ? cleanCell(row[idx.gambar]) : "",
-      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
-      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
-      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
-      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
-      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
+      nama: cleanCell(row[0]),
+      gambar: cleanCell(row[1]),
+      tunai: cleanCell(row[2]),
+      tempo: cleanCell(row[3]),
+      supplier: cleanCell(row[4]),
+      stok: cleanCell(row[5]),
       katalog: catalogName
     }))
     .filter(p => p.nama);
@@ -924,35 +1228,6 @@ function buildCategories(){
   if(categories.includes(current)) $("categoryFilter").value = current;
 }
 
-function imageUrl(value){
-  const raw = String(value ?? "").trim();
-  if(!raw) return "";
-
-  // Already a normal image URL.
-  if(/^https?:\/\/.+/i.test(raw) && !/drive\.google\.com/i.test(raw)){
-    return raw;
-  }
-
-  // Google Drive file links:
-  // /file/d/FILE_ID/view
-  // /open?id=FILE_ID
-  // /uc?id=FILE_ID
-  const m = raw.match(/drive\.google\.com\/file\/d\/([^/?#]+)/i);
-  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1000`;
-
-  const idMatch = raw.match(/[?&]id=([^&#]+)/i);
-  if(/drive\.google\.com/i.test(raw) && idMatch){
-    return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
-  }
-
-  // If the spreadsheet contains only a Drive file ID.
-  if(/^[A-Za-z0-9_-]{20,}$/.test(raw)){
-    return `https://drive.google.com/thumbnail?id=${raw}&sz=w1000`;
-  }
-
-  return raw;
-}
-
 function renderProducts(){
   const search = $("searchInput").value.trim().toLowerCase();
   const category = $("categoryFilter").value;
@@ -973,21 +1248,20 @@ function renderProducts(){
     return;
   }
 
-  $("products").innerHTML = filtered.map(p => `
+  $("products").innerHTML = filtered.map(p => {
+    const img = imageUrl(p.gambar);
+    return `
     <article class="product">
-      <div class="product-image">
-        ${
-          imageUrl(p.gambar)
-            ? `<img src="${escapeHtml(imageUrl(p.gambar))}" alt="${escapeHtml(p.nama)}"
-                    loading="lazy"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-               <div class="no-image" style="display:none">Gambar tidak dapat dimuat</div>`
-            : `<div class="no-image">Tidak ada gambar</div>`
-        }
-      </div>
-
+      ${img ? `
+        <div class="product-image-wrap">
+          <img class="product-image"
+               src="${escapeHtml(img)}"
+               alt="${escapeHtml(p.nama)}"
+               loading="lazy"
+               onerror="this.parentElement.classList.add('image-error');this.style.display='none';">
+        </div>
+      ` : ""}
       <div class="product-name">${escapeHtml(p.nama)}</div>
-
       <div class="product-grid">
         <div class="info">
           <small>Harga Tunai</small>
@@ -997,18 +1271,26 @@ function renderProducts(){
           <small>Harga Tempo</small>
           <b>${escapeHtml(money(p.tempo))}</b>
         </div>
-        <div class="info" style="grid-column:1/-1">
+        <div class="info">
           <small>Stok</small>
           <b>${escapeHtml(p.stok || "-")}</b>
         </div>
+        <div class="info">
+          <small>Supplier</small>
+          <b>${escapeHtml(p.supplier || "-")}</b>
+        </div>
+        <div class="info" style="grid-column:1/-1">
+          <small>Kategori</small>
+          <b>${escapeHtml(p.kategori || "-")}</b>
+        </div>
       </div>
-
       <div class="product-actions">
-        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒</button>
+        <button class="btn-cart" type="button" data-cart="${escapeHtml(p._id)}">🛒 Tambah ke Keranjang</button>
         <button class="btn-buy" type="button" data-buy="${escapeHtml(p._id)}">Beli Sekarang</button>
       </div>
     </article>
-  `).join("");
+  `;
+  }).join("");
 
   // Tombol baru dibuat setelah HTML produk dirender.
   bindProductActions();
@@ -1057,6 +1339,7 @@ function addToCart(id, buyNow=false){
     cart.push({
       id:p._id,
       nama:p.nama,
+      gambar:p.gambar || "",
       tunai:p.tunai,
       tempo:p.tempo,
       supplier:p.supplier,
@@ -1066,7 +1349,7 @@ function addToCart(id, buyNow=false){
   }
   saveCart();
   if(buyNow){
-    location.href = "checkout.html";
+    alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
   }else{
     alert("Produk ditambahkan ke keranjang.");
   }
@@ -1139,7 +1422,16 @@ async function saveCatalog(){
 
     const testText = await testResponse.text();
     const rows = parseCSV(testText);
-    mapRows(rows,nama);
+
+    if(!rows.length){
+      throw new Error("Spreadsheet kosong atau tidak menghasilkan data CSV.");
+    }
+
+    const mappedTest = mapRows(rows,nama);
+
+    if(!mappedTest.length){
+      throw new Error("Tidak ditemukan data produk pada kolom A Spreadsheet.");
+    }
 
     if(editingId){
       await updateDoc(doc(db,"productCatalogs",editingId),{
