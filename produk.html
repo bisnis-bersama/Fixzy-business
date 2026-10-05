@@ -1400,10 +1400,8 @@ function addToCart(id, buyNow=false){
     });
   }
   saveCart();
-  saveCart();
-
-if(buyNow){
-  location.href = "checkout.html";
+  if(buyNow){
+  alert("Produk sudah masuk keranjang. Proses pembelian kita lanjutkan pada tahap checkout.");
 }else{
   alert("Produk ditambahkan ke keranjang.");
 }
