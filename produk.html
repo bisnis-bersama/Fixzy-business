@@ -881,6 +881,261 @@ body.is-superadmin .owner-only-hide{display:none!important}
   pointer-events:none;
 }
 
+
+/* ===== FLOATING CART + CHECKOUT ===== */
+.floating-cart{
+  position:fixed;
+  right:14px;
+  bottom:82px;
+  z-index:80;
+  width:52px;
+  height:52px;
+  border:0;
+  border-radius:50%;
+  background:#111;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+  cursor:pointer;
+}
+.cart-badge{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  min-width:20px;
+  height:20px;
+  padding:0 5px;
+  border-radius:999px;
+  background:#FFC107;
+  color:#111;
+  font-size:11px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #111;
+}
+.checkout-modal{
+  position:fixed;
+  inset:0;
+  z-index:120;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+.checkout-modal.hidden{display:none}
+.checkout-backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.58);
+}
+.checkout-sheet{
+  position:relative;
+  z-index:1;
+  width:min(620px,100%);
+  max-height:88vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:20px 20px 0 0;
+  padding:16px;
+  box-shadow:0 -10px 35px rgba(0,0,0,.25);
+}
+.checkout-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.checkout-head h2{
+  margin:0;
+  font-size:20px;
+}
+.checkout-head small{
+  color:#777;
+}
+.checkout-close{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:50%;
+  background:#f2f2f2;
+  font-size:25px;
+}
+.checkout-items{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:12px;
+}
+.checkout-empty{
+  text-align:center;
+  padding:30px 10px;
+  color:#888;
+}
+.checkout-item{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  gap:9px;
+  align-items:center;
+  padding:8px;
+  border:1px solid #e7e7e7;
+  border-radius:10px;
+}
+.checkout-item img{
+  width:54px;
+  height:54px;
+  object-fit:cover;
+  border-radius:8px;
+  background:#f3f3f3;
+}
+.checkout-item-name{
+  font-size:12px;
+  font-weight:800;
+  line-height:1.25;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+.checkout-item-price{
+  font-size:11px;
+  color:#777;
+  margin-top:3px;
+}
+.checkout-qty{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.checkout-qty button{
+  width:27px;
+  height:27px;
+  border:0;
+  border-radius:7px;
+  background:#eee;
+  font-weight:900;
+}
+.checkout-qty b{
+  min-width:18px;
+  text-align:center;
+  font-size:11px;
+}
+.checkout-remove{
+  border:0!important;
+  background:transparent!important;
+  color:#d33;
+  font-size:14px;
+}
+.checkout-total{
+  border-top:1px solid #eee;
+  border-bottom:1px solid #eee;
+  padding:11px 0;
+  margin:10px 0;
+}
+.checkout-total div{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.checkout-total b{
+  font-size:18px;
+}
+.checkout-payment{
+  margin:10px 0;
+}
+.checkout-label{
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+.payment-switch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.payment-option{
+  border:1px solid #ddd;
+  background:#fff;
+  border-radius:9px;
+  padding:9px;
+  font-weight:800;
+}
+.payment-option.active{
+  background:#FFC107;
+  border-color:#FFC107;
+}
+.checkout-submit{
+  width:100%;
+  min-height:44px;
+  border:0;
+  border-radius:10px;
+  background:#FFC107;
+  color:#111;
+  font-size:14px;
+  font-weight:900;
+}
+@media(max-width:759px){
+  .floating-cart{
+    right:12px;
+    bottom:82px;
+    width:50px;
+    height:50px;
+  }
+  .checkout-sheet{
+    padding:13px;
+  }
+}
+
+
+/* ===== FLOATING CART FIX ===== */
+#floatingCart.floating-cart{
+  display:flex!important;
+  position:fixed!important;
+  right:12px!important;
+  bottom:84px!important;
+  z-index:9999!important;
+  width:52px!important;
+  height:52px!important;
+  border:0!important;
+  border-radius:50%!important;
+  background:#111!important;
+  color:#fff!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:24px!important;
+  line-height:1!important;
+  box-shadow:0 5px 18px rgba(0,0,0,.3)!important;
+}
+#floatingCart .cart-badge{
+  position:absolute!important;
+  top:-3px!important;
+  right:-3px!important;
+  min-width:20px!important;
+  height:20px!important;
+  padding:0 5px!important;
+  border-radius:999px!important;
+  background:#FFC107!important;
+  color:#111!important;
+  border:2px solid #111!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:11px!important;
+  font-weight:900!important;
+}
+@media(max-width:759px){
+  #floatingCart.floating-cart{
+    right:10px!important;
+    bottom:82px!important;
+    width:50px!important;
+    height:50px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -939,7 +1194,45 @@ body.is-superadmin .owner-only-hide{display:none!important}
 
 </main>
 
-<button class="cart-bar" id="cartBar" type="button">🛒 Keranjang <b id="cartCount">0</b></button>
+<!-- FLOATING CART -->
+<button id="floatingCart" class="floating-cart" type="button" aria-label="Buka keranjang">
+  🛒
+  <span id="cartCount" class="cart-badge">0</span>
+</button>
+
+<!-- CHECKOUT -->
+<div id="checkoutModal" class="checkout-modal hidden">
+  <div class="checkout-backdrop" id="checkoutBackdrop"></div>
+  <section class="checkout-sheet" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="checkout-head">
+      <div>
+        <h2 id="checkoutTitle">Keranjang & Checkout</h2>
+        <small id="checkoutSummary">0 item</small>
+      </div>
+      <button id="checkoutClose" class="checkout-close" type="button">×</button>
+    </div>
+
+    <div id="checkoutItems" class="checkout-items">
+      <div class="checkout-empty">Keranjang masih kosong.</div>
+    </div>
+
+    <div class="checkout-total">
+      <div><span>Subtotal</span><b id="checkoutTotal">Rp 0</b></div>
+    </div>
+
+    <div class="checkout-payment">
+      <div class="checkout-label">Jenis harga</div>
+      <div class="payment-switch">
+        <button type="button" class="payment-option active" data-payment="tunai">Tunai</button>
+        <button type="button" class="payment-option" data-payment="tempo">Tempo</button>
+      </div>
+    </div>
+
+    <button id="checkoutSubmit" class="checkout-submit" type="button">
+      Checkout
+    </button>
+  </section>
+</div>
 
 <nav class="bottom">
   <a href="index.html"><span class="nav-icon">⌂</span><span>Beranda</span></a>
@@ -1645,5 +1938,160 @@ onAuthStateChanged(auth, async user => {
   }
 });
 </script>
+
+<script>
+(function(){
+  let checkoutPayment="tunai";
+
+  function rupiah(v){
+    const n=Number(v)||0;
+    return "Rp "+n.toLocaleString("id-ID");
+  }
+
+  function checkoutCart(){
+    try{
+      const key=`fixzy_cart_${window.currentUser?.uid || "guest"}`;
+      const c=JSON.parse(localStorage.getItem(key)||"[]");
+      return Array.isArray(c)?c:[];
+    }catch(e){ return []; }
+  }
+
+  function checkoutSave(c){
+    const key=`fixzy_cart_${window.currentUser?.uid || "guest"}`;
+    localStorage.setItem(key,JSON.stringify(c));
+    if(typeof window.updateCartCount==="function") window.updateCartCount();
+    const badge=document.getElementById("cartCount");
+    if(badge) badge.textContent=c.reduce((s,x)=>s+Number(x.qty||0),0);
+  }
+
+  function priceOf(item){
+    const raw=checkoutPayment==="tempo"?item.tempo:item.tunai;
+    const n=Number(String(raw??"").replace(/[^0-9-]/g,""));
+    return Number.isFinite(n)?n:0;
+  }
+
+  function renderCheckout(){
+    const items=checkoutCart();
+    const box=document.getElementById("checkoutItems");
+    const summary=document.getElementById("checkoutSummary");
+    const totalEl=document.getElementById("checkoutTotal");
+    const submit=document.getElementById("checkoutSubmit");
+    if(!box) return;
+
+    const totalQty=items.reduce((s,x)=>s+Number(x.qty||0),0);
+    summary.textContent=`${totalQty} item`;
+    submit.disabled=items.length===0;
+    submit.style.opacity=items.length===0?".5":"1";
+
+    if(!items.length){
+      box.innerHTML='<div class="checkout-empty">Keranjang masih kosong.</div>';
+      totalEl.textContent="Rp 0";
+      return;
+    }
+
+    let total=0;
+    box.innerHTML=items.map((item,i)=>{
+      const qty=Number(item.qty||1);
+      const price=priceOf(item);
+      total+=price*qty;
+      const img=item.gambar || "logofixzy.png";
+      return `
+        <div class="checkout-item">
+          <img src="${String(img).replace(/"/g,"&quot;")}" alt="">
+          <div>
+            <div class="checkout-item-name">${String(item.nama||"Produk").replace(/[<>&"]/g,m=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[m]))}</div>
+            <div class="checkout-item-price">${rupiah(price)} × ${qty}</div>
+            <div class="checkout-qty">
+              <button type="button" data-cq="minus" data-i="${i}">−</button>
+              <b>${qty}</b>
+              <button type="button" data-cq="plus" data-i="${i}">+</button>
+              <button type="button" class="checkout-remove" data-cq="remove" data-i="${i}">Hapus</button>
+            </div>
+          </div>
+          <b>${rupiah(price*qty)}</b>
+        </div>`;
+    }).join("");
+    totalEl.textContent=rupiah(total);
+  }
+
+  function openCheckout(){
+    renderCheckout();
+    document.getElementById("checkoutModal")?.classList.remove("hidden");
+  }
+
+  function closeCheckout(){
+    document.getElementById("checkoutModal")?.classList.add("hidden");
+  }
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    document.getElementById("floatingCart")?.addEventListener("click",openCheckout);
+    document.getElementById("checkoutClose")?.addEventListener("click",closeCheckout);
+    document.getElementById("checkoutBackdrop")?.addEventListener("click",closeCheckout);
+
+    document.querySelectorAll(".payment-option").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        checkoutPayment=btn.dataset.payment;
+        document.querySelectorAll(".payment-option").forEach(x=>x.classList.remove("active"));
+        btn.classList.add("active");
+        renderCheckout();
+      });
+    });
+
+    document.getElementById("checkoutItems")?.addEventListener("click",(e)=>{
+      const btn=e.target.closest("[data-cq]");
+      if(!btn) return;
+      const items=checkoutCart();
+      const i=Number(btn.dataset.i);
+      if(!items[i]) return;
+      if(btn.dataset.cq==="plus") items[i].qty=Number(items[i].qty||0)+1;
+      if(btn.dataset.cq==="minus") items[i].qty=Math.max(0,Number(items[i].qty||0)-1);
+      if(btn.dataset.cq==="remove" || Number(items[i].qty)===0) items.splice(i,1);
+      checkoutSave(items);
+      renderCheckout();
+    });
+
+    document.getElementById("checkoutSubmit")?.addEventListener("click",()=>{
+      const items=checkoutCart();
+      if(!items.length){ alert("Keranjang masih kosong."); return; }
+      const total=items.reduce((s,x)=>s+priceOf(x)*Number(x.qty||0),0);
+      alert(`Checkout siap. Total ${checkoutPayment==="tempo"?"tempo":"tunai"}: ${rupiah(total)}.\\n\\nTahap berikutnya dapat disambungkan ke penyimpanan transaksi/WhatsApp.`);
+    });
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  function getCartCount(){
+    try{
+      const uid = window.currentUser?.uid || "guest";
+      const keys = [`fixzy_cart_${uid}`, "cart"];
+      for(const key of keys){
+        const raw=localStorage.getItem(key);
+        if(!raw) continue;
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr)) return arr.reduce((n,x)=>n+Number(x.qty||1),0);
+      }
+    }catch(e){}
+    return 0;
+  }
+
+  function refreshFloatingCart(){
+    const el=document.getElementById("cartCount");
+    if(el) el.textContent=String(getCartCount());
+  }
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    refreshFloatingCart();
+    setInterval(refreshFloatingCart,1000);
+    document.getElementById("floatingCart")?.addEventListener("click",()=>{
+      document.getElementById("checkoutModal")?.classList.remove("hidden");
+      if(typeof window.renderCheckout==="function") window.renderCheckout();
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
