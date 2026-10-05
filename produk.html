@@ -355,60 +355,12 @@ label{
 .product-actions button{border:0;border-radius:10px;padding:10px 8px;font-weight:800;cursor:pointer;font-size:12px}
 .btn-cart{background:#111;color:#fff}
 .btn-buy{background:#FFC107;color:#111}
-.floating-order{
-  position:fixed;
-  right:12px;
-  bottom:82px;
-  z-index:9999;
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  background:#111;
-  color:#FFC107;
-  text-decoration:none;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:1px;
-  border:2px solid #FFC107;
-  box-shadow:0 5px 18px rgba(0,0,0,.30);
-  font-size:22px;
-  line-height:1;
-  cursor:pointer;
-}
-.floating-order span{
-  font-size:8px;
-  font-weight:900;
-  color:#fff;
-  line-height:1;
-}
-.floating-order .cart-badge{
-  position:absolute;
-  top:-4px;
-  right:-4px;
-  min-width:20px;
-  height:20px;
-  padding:0 5px;
-  border-radius:999px;
-  background:#FFC107;
-  color:#111;
-  border:2px solid #111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:10px;
-  font-weight:900;
-}
-.floating-order:active{transform:scale(.94)}
+.cart-bar{position:fixed;right:14px;bottom:86px;z-index:25;background:#111;color:#fff;border:1px solid #333;border-radius:14px;padding:10px 14px;box-shadow:0 8px 22px rgba(0,0,0,.22);font-weight:800;cursor:pointer}
+.cart-bar b{color:#FFC107}
 .superadmin-only{display:none}
 body.is-superadmin .superadmin-only{display:block}
 body.is-superadmin .owner-only-hide{display:none!important}
-@media(max-width:420px){
-  .product-actions{grid-template-columns:1fr 1fr}
-  .floating-order{right:10px;bottom:82px;width:52px;height:52px;font-size:20px}
-  .floating-order span{font-size:7px}
-}
+@media(max-width:420px){.product-actions{grid-template-columns:1fr 1fr}.cart-bar{right:10px;bottom:82px}}
 .modal{
   position:fixed;
   inset:0;
@@ -531,12 +483,7 @@ body.is-superadmin .owner-only-hide{display:none!important}
 
 </main>
 
-<!-- TOMBOL PESANAN MELAYANG -->
-<a href="pesanan.html" class="floating-order" aria-label="Buka Pesanan">
-  🛒
-  <span>Pesanan</span>
-  <b id="cartCount" class="cart-badge">0</b>
-</a>
+<button class="cart-bar" id="cartBar" type="button">🛒 Keranjang <b id="cartCount">0</b></button>
 
 <nav class="bottom">
   <a href="index.html"><span class="nav-icon">⌂</span><span>Beranda</span></a>
@@ -753,46 +700,29 @@ function cleanCell(value){
 function mapRows(rows, catalogName){
   if(!rows.length) return [];
 
-  /*
-    FORMAT SPREADSHEET FIXZY YANG DIPAKAI:
-    A = produk
-    B = gambar
-    C = tunai
-    D = tempo
-    E = supplier
-    F = stock
+  const headers = rows[0];
+  const idx = {
+    nama: findHeaderIndex(headers,"nama"),
+    tunai: findHeaderIndex(headers,"tunai"),
+    tempo: findHeaderIndex(headers,"tempo"),
+    stok: findHeaderIndex(headers,"stok"),
+    supplier: findHeaderIndex(headers,"supplier"),
+    kategori: findHeaderIndex(headers,"kategori")
+  };
 
-    Pembacaan memakai POSISI KOLOM A-F.
-    Jadi tidak tergantung nama/header kolom.
-    Contoh header pada Spreadsheet:
-    produk | gambar | tunai | tempo | supplier | stock
-  */
+  // Nama produk adalah field wajib.
+  if(idx.nama < 0){
+    throw new Error(`Kolom Nama Produk/Barang tidak ditemukan pada katalog "${catalogName}".`);
+  }
 
-  const firstRow = rows[0] || [];
-  const firstCells = firstRow.slice(0,6).map(v => normalizeHeader(v));
-
-  const headerWords = [
-    "produk","barang","namaproduk","namabarang",
-    "gambar","image","foto",
-    "tunai","hargatunai","cash",
-    "tempo","hargatempo","kredit",
-    "supplier","suplier",
-    "stok","stock","persediaan"
-  ];
-
-  const hasHeader = firstCells.some(v => headerWords.includes(v));
-
-  const startIndex = hasHeader ? 1 : 0;
-
-  return rows.slice(startIndex)
+  return rows.slice(1)
     .map(row => ({
-      nama: cleanCell(row[0]),
-      gambar: cleanCell(row[1]),
-      tunai: cleanCell(row[2]),
-      tempo: cleanCell(row[3]),
-      supplier: cleanCell(row[4]),
-      stok: cleanCell(row[5]),
-      kategori: cleanCell(row[6] || ""),
+      nama: cleanCell(row[idx.nama]),
+      tunai: idx.tunai >= 0 ? cleanCell(row[idx.tunai]) : "",
+      tempo: idx.tempo >= 0 ? cleanCell(row[idx.tempo]) : "",
+      stok: idx.stok >= 0 ? cleanCell(row[idx.stok]) : "",
+      supplier: idx.supplier >= 0 ? cleanCell(row[idx.supplier]) : "",
+      kategori: idx.kategori >= 0 ? cleanCell(row[idx.kategori]) : "",
       katalog: catalogName
     }))
     .filter(p => p.nama);
@@ -1009,7 +939,6 @@ function addToCart(id, buyNow=false){
   }
 
   const found = cart.find(x => x.id === id);
-
   if(found){
     if(Number.isFinite(stock) && found.qty >= stock){
       alert("Jumlah melebihi stok tersedia.");
@@ -1020,7 +949,6 @@ function addToCart(id, buyNow=false){
     cart.push({
       id:p._id,
       nama:p.nama,
-      gambar:p.gambar || "",
       tunai:p.tunai,
       tempo:p.tempo,
       supplier:p.supplier,
@@ -1028,11 +956,9 @@ function addToCart(id, buyNow=false){
       qty:1
     });
   }
-
   saveCart();
-
-  // Semua proses pesanan dilanjutkan di pesanan.html.
-  // Beli Sekarang dan tombol keranjang sama-sama membawa user ke sana.
+  // Setelah produk dipilih, langsung buka halaman pesanan.
+  // Data keranjang tetap disimpan di localStorage agar pesanan.html dapat membacanya.
   location.href = "pesanan.html";
 }
 
@@ -1175,7 +1101,6 @@ onAuthStateChanged(auth, async user => {
   }
 
   currentUser = user;
-  window.currentUser = user;
 
   // Role diambil dari users/{uid}. Hanya Superadmin yang boleh mengelola katalog.
   try{
