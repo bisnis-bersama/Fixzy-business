@@ -43,10 +43,10 @@ tr:last-child td{border-bottom:0}.member{font-weight:800}.muted{color:var(--m)}
  .top{padding:16px 12px 66px}.content{padding:0 8px;margin-top:-42px}
  .stats{grid-template-columns:repeat(2,1fr)}.stat b{font-size:12px}
  .filter{grid-template-columns:1fr}.filter .btn{width:100%}
- .due-list{grid-template-columns:1fr 1fr}
- .table-wrap{display:none}.mobile-list{display:block}
+ .due-list{display:none}
+ .table-wrap{display:block}.mobile-list{display:none}
 }
-@media(max-width:430px){.due-list{grid-template-columns:1fr}.card{padding:10px}.title{font-size:17px}}
+@media(max-width:430px){.due-list{display:none}.card{padding:10px}.title{font-size:17px}}
 </style></head><body><div class="app">
 <header class="top"><div class="brand"><div class="left"><div class="logo"><img src="logofixzy.png" alt="FIXZY"></div><div><h1>FIXZY BUSINESS</h1><span class="small">Superadmin · Data Tagihan</span></div></div><a class="home" href="index-superadmin.html">⌂</a></div></header>
 <main class="content">
@@ -69,10 +69,7 @@ tr:last-child td{border-bottom:0}.member{font-weight:800}.muted{color:var(--m)}
 
 <div id="msg" class="msg"></div>
 
-<section class="card">
-  <div class="section-head">📅 TAGIHAN BERDASARKAN TANGGAL JATUH TEMPO</div>
-  <div id="dueList" class="due-list"><div class="empty">Memuat...</div></div>
-</section>
+
 
 <section class="card">
   <div class="section-head">📋 DAFTAR TAGIHAN</div>
@@ -264,33 +261,11 @@ async function load(){
     const selected=$("dueFilter").value;
     const search=$("searchInput").value.trim().toLowerCase();
 
-    let filtered=invs.filter(x=>{
+    const filtered=invs.filter(x=>{
       const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
-      const text=`${x.nomorPesanan||x.invoiceNo||x.id} ${x.ownerName||x.namaOwner||x.memberName||x.namaMember||""}`.toLowerCase();
+      const text=`${x.nomorPesanan||x.invoiceNo||x.id} ${x._ownerDisplayName||x.ownerName||x.namaOwner||x.memberName||x.namaMember||""}`.toLowerCase();
       return (!selected||key===selected)&&(!search||text.includes(search));
     });
-
-    const fg={};
-    filtered.forEach(x=>{
-      const key=x.jatuhTempo?.toDate?x.jatuhTempo.toDate().toISOString().slice(0,10):String(x.jatuhTempo||"");
-      if(!fg[key])fg[key]={date:x.jatuhTempo,count:0,total:0,items:[]};
-      const remain=Number(x.sisaTagihan??(Number(x.total||0)-Number(x.totalTerbayar||0)));
-      fg[key].count++;fg[key].total+=remain;fg[key].items.push(x);
-    });
-
-    const gkeys=Object.keys(fg).sort();
-    $("dueList").innerHTML=gkeys.length?gkeys.map(k=>{
-      const g=fg[k];
-      const days=g.date?.toDate?Math.ceil((g.date.toDate()-Date.now())/86400000):null;
-      const label=days===null?"":(days<0?`${Math.abs(days)} HARI TERLAMBAT`:days===0?"JATUH TEMPO HARI INI":`TEMPO ${days} HARI`);
-      return `<div class="due-card">
-        <div class="due-date">📅 ${date(g.date)}</div>
-        <div class="due-mode">${label}</div>
-        <div class="due-row"><span>Jumlah Nota</span><b>${g.count}</b></div>
-        <div class="due-row"><span>Sisa Tagihan</span><b>${money(g.total)}</b></div>
-        <div class="due-total">Total ${money(g.total)}</div>
-      </div>`;
-    }).join(""):'<div class="empty">Tidak ada tagihan.</div>';
 
     const rows=filtered.map(x=>{
       const total=Number(x.total||x.totalTagihan||0);
@@ -315,24 +290,8 @@ async function load(){
 
     $("tableBody").innerHTML=rows||'<tr><td colspan="9" class="empty">Belum ada tagihan.</td></tr>';
 
-    $("mobileList").innerHTML=filtered.length?filtered.map(x=>{
-      const total=Number(x.total||x.totalTagihan||0);
-      const paid=Number(x.totalTerbayar||0);
-      const remain=Number(x.sisaTagihan??Math.max(0,total-paid));
-      const method=String(x.metodePembayaran||x.metode||"TEMPO").toUpperCase();
-      const status=String(x.status||"BELUM_LUNAS").toUpperCase();
-      const member=x._ownerDisplayName||"-";
-      return `<article class="item">
-        <div class="item-head"><div><div class="item-no">${esc(x.nomorPesanan||x.invoiceNo||x.id)}</div><div class="item-owner">${esc(member)}</div></div><span class="badge">${esc(status)}</span></div>
-        <div class="item-grid">
-          <div class="mini"><small>Jenis</small><b>${esc(method)}</b></div>
-          <div class="mini"><small>Jatuh Tempo</small><b>${date(x.jatuhTempo)}</b></div>
-          <div class="mini"><small>Nilai Barang</small><b>${money(total)}</b></div>
-          <div class="mini"><small>Sisa Tagihan</small><b>${money(remain)}</b></div>
-        </div>
-        <div class="item-actions"><button class="wa-btn" data-wa="${esc(x.id)}">📱 Kirim WA Tagihan</button></div>
-      </article>`;
-    }).join(""):'<div class="empty">Belum ada tagihan.</div>';
+    // Mobile sengaja memakai tabel yang sama dengan desktop.
+    $("mobileList").innerHTML="";
 
     document.querySelectorAll("[data-wa]").forEach(b=>b.onclick=()=>sendWA(filtered.find(x=>x.id===b.dataset.wa)));
   }
