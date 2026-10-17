@@ -16,7 +16,7 @@ button,input{font:inherit}
 .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand-left{display:flex;align-items:center;gap:11px;min-width:0}
 .logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
-.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
 .brand h1{font-size:17px;margin:0;font-weight:900;color:var(--yellow)}
 .brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
 .logout{border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800}
@@ -49,7 +49,7 @@ button,input{font:inherit}
 .landing-brand{background:#111;margin:0 -14px 18px;padding:18px 14px;border-radius:0 0 20px 20px;color:#fff}
 .landing-subtitle{color:#d1d5db}
 .landing-inner{max-width:1000px;margin:auto}
-.landing-brand{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.landing-brand{display:flex;align-items:center;gap:12px;margin:0 0 16px;min-width:0}
 .landing-logo{width:64px;height:64px;border-radius:17px;background:#111;border:1px solid var(--yellow);overflow:hidden;flex:0 0 64px}
 .landing-logo img{width:100%;height:100%;object-fit:contain;display:block}
 .landing-title{font-size:clamp(20px,3vw,30px);font-weight:900;color:var(--yellow)}
@@ -62,8 +62,8 @@ button,input{font:inherit}
 .slide{width:100%;min-width:100%;flex:0 0 100%;}
 .slide img{object-fit:cover;object-position:center;max-width:100%}
 .slide{position:relative;flex:0 0 100%;aspect-ratio:16/9;min-height:0;background:#111;overflow:hidden}
-.slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;display:block}
-.slide:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.84) 0%,rgba(0,0,0,.58) 42%,rgba(0,0,0,.04) 100%);pointer-events:none}
+.slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:contain;object-position:center;display:block;background:#111}
+.slide:after{content:none}
 .slide-copy{position:absolute;z-index:2;left:clamp(16px,4vw,44px);top:50%;transform:translateY(-50%);width:min(56%,530px);color:#fff;background:rgba(8,8,8,.88);padding:clamp(10px,2vw,20px);border:1px solid rgba(255,193,7,.24);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .slide-kicker{color:var(--yellow);font-size:clamp(9px,1.2vw,13px);font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
 .slide-copy h3{font-size:clamp(19px,4vw,43px);line-height:1.04;margin:8px 0 10px;font-weight:900}
@@ -115,7 +115,7 @@ button,input{font:inherit}
 @media(max-width:700px){
  .top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}
  .landing{padding:18px 0 22px}.landing-inner{width:100%}
- .landing-brand{padding:0 3px}.landing-logo{width:56px;height:56px;flex-basis:56px}
+ .landing-brand{padding:0 3px;min-width:0}.landing-logo{width:56px;height:56px;flex:0 0 56px;overflow:hidden}.landing-logo img{width:100%;height:100%;object-fit:contain;object-position:center}
  .carousel{border-radius:15px}
  .slide-copy{left:12px;width:calc(100% - 64px);max-width:390px;padding:10px 11px;border-radius:11px}
  .slide-copy h3{font-size:clamp(17px,4.4vw,28px);margin:5px 0 6px}
@@ -152,23 +152,18 @@ button,input{font:inherit}
    <div class="slides" id="promoSlides">
     <article class="slide">
      <img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama">
-     <div class="slide-copy"><div class="slide-kicker">FIXZY BUSINESS</div><h3>Solusi Lengkap untuk Bisnis Anda</h3><p>Belanja, limit, tagihan, dan transaksi bisnis dalam satu platform.</p><a class="slide-cta" href="register.html">Mulai Sekarang →</a></div>
     </article>
     <article class="slide">
      <img src="fixzy-promo-2.jpg" alt="Belanja produk lebih mudah">
-     <div class="slide-copy"><div class="slide-kicker">BELANJA PRODUK</div><h3>Sparepart Bisnis Lebih Mudah</h3><p>Akses kebutuhan produk dan sparepart untuk mendukung usaha Anda.</p><a class="slide-cta" href="produk.html">Lihat Produk →</a></div>
     </article>
     <article class="slide">
      <img src="fixzy-promo-3.jpg" alt="Limit bisnis">
-     <div class="slide-copy"><div class="slide-kicker">LIMIT BISNIS</div><h3>Peluang Limit untuk Usaha</h3><p>Kelola kebutuhan belanja dengan fasilitas limit sesuai persetujuan dan ketentuan.</p><a class="slide-cta" href="limit.html">Lihat Limit →</a></div>
     </article>
     <article class="slide">
      <img src="fixzy-promo-4.jpg" alt="Top up saldo">
-     <div class="slide-copy"><div class="slide-kicker">SALDO & TRANSAKSI</div><h3>Top Up Praktis, Transaksi Tercatat</h3><p>Pantau saldo dan riwayat transaksi dalam satu tempat.</p><a class="slide-cta" href="topup.html">Top Up Saldo →</a></div>
     </article>
     <article class="slide">
      <img src="fixzy-promo-5.jpg" alt="Keuntungan member dan mitra">
-     <div class="slide-copy"><div class="slide-kicker">MEMBER & MITRA</div><h3>Tumbuh Bersama Komunitas</h3><p>Dapatkan informasi promo, layanan, dan peluang kerja sama bisnis.</p><a class="slide-cta" href="register.html">Gabung Sekarang →</a></div>
     </article>
    </div>
    <button class="carousel-arrow prev" id="promoPrev" aria-label="Slide sebelumnya">‹</button>
