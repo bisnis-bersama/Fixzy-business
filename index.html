@@ -60,7 +60,7 @@ button,input{font:inherit}
 .slide{position:relative;flex:0 0 100%;aspect-ratio:16/9;min-height:0;background:#111;overflow:hidden}
 .slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;display:block}
 .slide:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.84) 0%,rgba(0,0,0,.58) 42%,rgba(0,0,0,.04) 100%);pointer-events:none}
-.slide-copy{position:absolute;z-index:2;left:clamp(16px,4vw,44px);top:50%;transform:translateY(-50%);width:min(56%,530px);color:#fff}
+.slide-copy{position:absolute;z-index:2;left:clamp(16px,4vw,44px);top:50%;transform:translateY(-50%);width:min(56%,530px);color:#fff;background:rgba(8,8,8,.88);padding:clamp(10px,2vw,20px);border:1px solid rgba(255,193,7,.24);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .slide-kicker{color:var(--yellow);font-size:clamp(9px,1.2vw,13px);font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
 .slide-copy h3{font-size:clamp(19px,4vw,43px);line-height:1.04;margin:8px 0 10px;font-weight:900}
 .slide-copy p{font-size:clamp(10px,1.6vw,16px);line-height:1.45;color:#f3f4f6;margin:0;max-width:440px}
@@ -113,7 +113,7 @@ button,input{font:inherit}
  .landing{padding:18px 0 22px}.landing-inner{width:100%}
  .landing-brand{padding:0 3px}.landing-logo{width:56px;height:56px;flex-basis:56px}
  .carousel{border-radius:15px}
- .slide-copy{left:15px;width:66%}
+ .slide-copy{left:12px;width:calc(100% - 64px);max-width:390px;padding:10px 11px;border-radius:11px}
  .slide-copy h3{font-size:clamp(17px,4.4vw,28px);margin:5px 0 6px}
  .slide-copy p{font-size:clamp(9px,2.2vw,12px)}
  .slide-cta{margin-top:8px;padding:7px 10px}
@@ -129,7 +129,7 @@ button,input{font:inherit}
  .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
 }
 @media(max-width:390px){
- .slide-copy{width:70%}.slide-copy p{max-width:210px}
+ .slide-copy{width:calc(100% - 62px);max-width:360px}.slide-copy p{max-width:210px}
  .slide-cta{font-size:9px}.promo-list{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){.slides{transition:none}}
@@ -140,14 +140,14 @@ button,input{font:inherit}
 <section class="landing" id="landingPage">
  <div class="landing-inner">
   <div class="landing-brand">
-   <div class="landing-logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+   <div class="landing-logo"><img src="yudifixzy.png" alt="FIXZY BUSINESS"></div>
    <div><div class="landing-title">FIXZY BUSINESS</div><div class="landing-subtitle">Platform bisnis dan E-Wallet</div></div>
   </div>
   <div class="promo-heading"><h2>Promosi Unggulan</h2><span>5 SLIDE • LANDSCAPE</span></div>
   <div class="carousel" id="promoCarousel" aria-label="Promosi unggulan FIXZY BUSINESS">
    <div class="slides" id="promoSlides">
     <article class="slide">
-     <img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama">
+     <img src="yudifixzy.png" alt="FIXZY BUSINESS - promosi utama">
      <div class="slide-copy"><div class="slide-kicker">FIXZY BUSINESS</div><h3>Solusi Lengkap untuk Bisnis Anda</h3><p>Belanja, limit, tagihan, dan transaksi bisnis dalam satu platform.</p><a class="slide-cta" href="register.html">Mulai Sekarang →</a></div>
     </article>
     <article class="slide">
