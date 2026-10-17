@@ -46,14 +46,14 @@ button,input{font:inherit}
 
 /* Halaman promosi: carousel landscape 16:9 */
 .landing{padding:0 14px 24px}
-.landing-brand{background:#111;margin:0 -14px 18px;padding:14px 14px;border-radius:0;color:#fff}
+.landing-brand{background:#111;margin:0 -14px 18px;padding:12px 14px;border-radius:0;color:#fff;width:calc(100% + 28px)}
 .landing-subtitle{color:#d1d5db}
 .landing-inner{max-width:1000px;margin:auto}
 .landing-brand{display:flex;align-items:center;gap:12px;margin:0 0 16px;min-width:0}
-.landing-logo{width:50px;height:50px;border-radius:13px;background:#111;border:1px solid var(--yellow);overflow:hidden;flex:0 0 50px}
+.landing-logo{width:46px;height:46px;border-radius:12px;background:#111;border:1px solid var(--yellow);overflow:hidden;flex:0 0 46px}
 .landing-logo img{width:100%;height:100%;object-fit:contain;display:block}
-.landing-title{font-size:clamp(20px,3vw,30px);font-weight:900;color:var(--yellow)}
-.landing-subtitle{color:var(--muted);font-size:13px;margin-top:3px}
+.landing-title{font-size:clamp(19px,3vw,28px);line-height:1.1;font-weight:900;color:var(--yellow)}
+.landing-subtitle{color:#d1d5db;font-size:12px;margin-top:3px}
 .promo-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 2px 10px}
 .promo-heading h2{font-size:17px;margin:0;font-weight:900}
 .promo-heading span{font-size:11px;color:var(--muted);font-weight:800}
@@ -83,7 +83,7 @@ button,input{font:inherit}
 .promo-item span{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}
 .promo-note{font-size:10px;color:var(--muted);margin:12px 2px}
 .landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
-.landing-actions .landing-btn{width:100%;min-width:0;min-height:44px;height:44px;padding:9px 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:14px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+.landing-actions .landing-btn{width:100%;min-width:0;height:40px;min-height:40px;padding:7px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
 .landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
 .landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
 .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
@@ -114,8 +114,8 @@ button,input{font:inherit}
 .order-status-btn{width:100%;margin-top:10px}
 @media(max-width:700px){
  .top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}
- .landing{padding:18px 0 22px}.landing-inner{width:100%}
- .landing-brand{padding:0 3px;min-width:0}.landing-logo{width:48px;height:48px;flex:0 0 48px;overflow:hidden}.landing-logo img{width:100%;height:100%;object-fit:contain;object-position:center}
+ .landing{padding:0 0 22px}.landing-inner{width:100%}
+ .landing-brand{padding:12px 14px;min-width:0;width:calc(100% + 28px);margin:0 -14px 18px;border-radius:0}.landing-logo{width:44px;height:44px;flex:0 0 44px;overflow:hidden}.landing-logo img{width:100%;height:100%;object-fit:contain;object-position:center}
  .carousel{border-radius:15px}
  .slide-copy{left:12px;width:calc(100% - 64px);max-width:390px;padding:10px 11px;border-radius:11px}
  .slide-copy h3{font-size:clamp(17px,4.4vw,28px);margin:5px 0 6px}
@@ -127,12 +127,12 @@ button,input{font:inherit}
  .promo-icon{width:32px;height:32px;flex-basis:32px}
  .promo-caption{padding:0 3px}
  .landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
- .landing-actions .landing-btn{width:100%;min-width:0;min-height:44px;height:44px;padding:9px 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:14px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+ .landing-actions .landing-btn{width:100%;min-width:0;height:40px;min-height:40px;padding:7px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
  .landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
  .landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
  .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
 }
-@media(max-width:390px){
+@media(max-width:390px){.landing{padding-top:0}
  .slide-copy{width:calc(100% - 62px);max-width:360px}.slide-copy p{max-width:210px}
  .slide-cta{font-size:9px}.promo-list{grid-template-columns:1fr}
 }
