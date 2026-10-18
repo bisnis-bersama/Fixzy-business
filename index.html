@@ -183,7 +183,23 @@ button,input{font:inherit}
    <div class="promo-item"><div class="promo-icon">⚡</div><div><b>Transaksi Mudah</b><span>Saldo dan riwayat transaksi terpantau.</span></div></div>
    <div class="promo-item"><div class="promo-icon">🤝</div><div><b>Member & Mitra</b><span>Peluang promo dan kerja sama komunitas.</span></div></div>
 
-<div class="menu">
+
+
+  </div>
+  <div class="promo-note">* Limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
+ </div>
+</section>
+
+<header class="top">
+ <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
+</header>
+<main class="content">
+ <section class="card">
+  <div class="balance-head"><div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp0</div></div><button class="topup" data-page="topup.html">+ Top Up</button></div>
+  <div class="divider"></div><div class="stats"><div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp0</b></div><div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp0</b></div></div>
+ </section>
+ <section class="section"><div class="section-title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
+  <div class="menu">
   <button class="menu-btn" data-page="produk.html">
     <div class="icon">🛒</div>
     <span>Belanja</span>
@@ -239,29 +255,6 @@ button,input{font:inherit}
     <span>Gojeg Elit</span>
   </button>
 </div>
-
-  </div>
-  <div class="promo-note">* Limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
- </div>
-</section>
-
-<header class="top">
- <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
-</header>
-<main class="content">
- <section class="card">
-  <div class="balance-head"><div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp0</div></div><button class="topup" data-page="topup.html">+ Top Up</button></div>
-  <div class="divider"></div><div class="stats"><div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp0</b></div><div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp0</b></div></div>
- </section>
- <section class="section"><div class="section-title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
-  <div class="menu">
-   <button class="menu-btn" data-page="produk.html"><div class="icon">🛒</div><span>Belanja</span></button>
-   <button class="menu-btn" data-page="topup.html"><div class="icon">💰</div><span>Top Up</span></button>
-   <button class="menu-btn" data-page="limit.html"><div class="icon">💳</div><span>Limit</span></button>
-   <button class="menu-btn" data-page="tagihan.html"><div class="icon">🧾</div><span>Tagihan</span></button>
-   <button class="menu-btn" data-page="riwayat.html"><div class="icon">↔️</div><span>Riwayat</span></button>
-   <button class="menu-btn" data-page="profil.html"><div class="icon">👤</div><span>Profil</span></button>
-  </div>
  </section>
  <section class="section"><div class="section-title"><h2>Tagihan Terdekat</h2><span id="invoiceCount">0 tagihan</span></div><div id="nearestInvoiceBox"><div class="nearest-card"><div class="nearest-empty">Memuat tagihan...</div></div></div></section>
  <section class="section"><div class="section-title"><h2>Status Pesanan</h2><span id="orderStatusCount">0 pesanan</span></div><div id="orderStatusBox"><div class="nearest-card"><div class="nearest-empty">Memuat status pesanan...</div></div></div></section>
