@@ -230,7 +230,7 @@ button,input{font:inherit}
  <section class="section"><div class="section-title"><h2>Status Pesanan</h2><span id="orderStatusCount">0 pesanan</span></div><div id="orderStatusBox"><div class="nearest-card"><div class="nearest-empty">Memuat status pesanan...</div></div></div></section>
 </main>
 </div>
-<nav class="bottom"><button class="nav" data-page="index.html"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
+<nav class="bottom"><button class="nav" id="homeNav" type="button"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
 
 
 <script>
@@ -266,6 +266,17 @@ const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomai
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>location.href=x.dataset.page);
+// Tombol Beranda tidak memuat ulang index.html, agar pengguna yang sudah login
+// langsung tetap berada di dashboard dan tidak melihat halaman promo lagi.
+document.getElementById("homeNav")?.addEventListener("click",()=>{
+ if(auth.currentUser){
+  document.body.className="auth-logged-in";
+  window.scrollTo({top:0,behavior:"smooth"});
+ }else{
+  document.body.className="auth-logged-out";
+  window.scrollTo({top:0,behavior:"smooth"});
+ }
+});
 document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.")}));
 const loginToggle=document.getElementById("landingLoginBtn"),registerToggle=document.getElementById("landingRegisterBtn");
 const loginDropdown=document.getElementById("loginDropdown"),registerDropdown=document.getElementById("registerDropdown");
