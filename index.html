@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>FIXZY BUSINESS</title>
+<title>FIXZY BUSINESS - Dashboard</title>
 <style>
 *{box-sizing:border-box}
 :root{--black:#111;--yellow:#FFC107;--bg:#f3f4f6;--text:#171717;--muted:#667085;--line:#e5e7eb}
@@ -87,8 +87,6 @@ button,input{font:inherit}
 .landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
 .landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
 .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
-.auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}
-.auth-logged-in .landing{display:none}
 .auth-dropdown{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:10px;box-shadow:0 8px 22px rgba(0,0,0,.07)}
 .auth-dropdown.open{display:block}.auth-dropdown h3{margin:0 0 6px;font-size:17px}.auth-dropdown p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
 .auth-dropdown .field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
@@ -142,67 +140,10 @@ button,input{font:inherit}
 }
 @media(prefers-reduced-motion:reduce){.slides{transition:none}}
 </style>
+<style>body{visibility:hidden}</style>
 </head>
-<body class="auth-logged-out">
+<body>
 <div class="app">
-<section class="landing" id="landingPage">
- <div class="landing-inner">
-  <div class="landing-brand">
-   <div class="landing-logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
-   <div><div class="landing-title">FIXZY BUSINESS</div><div class="landing-subtitle">Platform bisnis dan E-Wallet</div></div>
-  </div>
-  <div class="promo-heading"><h2>Promosi Unggulan</h2><span>5 SLIDE • LANDSCAPE</span></div>
-  <div class="carousel" id="promoCarousel" aria-label="Promosi unggulan FIXZY BUSINESS">
-   <div class="slides" id="promoSlides">
-    <article class="slide">
-     <img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama">
-    </article>
-    <article class="slide">
-     <img src="fixzy-promo-2.jpg" alt="Belanja produk lebih mudah">
-    </article>
-    <article class="slide">
-     <img src="fixzy-promo-3.jpg" alt="Limit bisnis">
-    </article>
-    <article class="slide">
-     <img src="fixzy-promo-4.jpg" alt="Top up saldo">
-    </article>
-    <article class="slide">
-     <img src="fixzy-promo-5.jpg" alt="Keuntungan member dan mitra">
-    </article>
-   </div>
-   <button class="carousel-arrow prev" id="promoPrev" aria-label="Slide sebelumnya">‹</button>
-   <button class="carousel-arrow next" id="promoNext" aria-label="Slide berikutnya">›</button>
-  </div>
-  <div class="carousel-dots" id="promoDots" aria-label="Pilih slide">
-   <button class="carousel-dot active" aria-label="Slide 1"></button><button class="carousel-dot" aria-label="Slide 2"></button><button class="carousel-dot" aria-label="Slide 3"></button><button class="carousel-dot" aria-label="Slide 4"></button><button class="carousel-dot" aria-label="Slide 5"></button>
-  </div>
-  <div class="promo-caption"><span><strong id="promoSlideTitle">FIXZY BUSINESS</strong> · <span id="promoSlideNumber">1 dari 5</span></span><span>Geser untuk melihat promo lainnya</span></div>
-  <div class="landing-actions">
-   <button class="landing-btn primary" id="landingLoginBtn" type="button" aria-expanded="false" aria-controls="loginDropdown">Masuk</button>
-   <button class="landing-btn secondary" id="landingRegisterBtn" type="button" aria-expanded="false" aria-controls="registerDropdown">Daftar</button>
-  </div>
-  <section class="auth-dropdown" id="loginDropdown">
-   <h3>Masuk FIXZY BUSINESS</h3><p>Masukkan email dan password akun Anda.</p>
-   <form id="loginForm">
-    <div class="field"><input id="email" type="email" placeholder="Email" autocomplete="username" required></div>
-    <div class="field"><input id="password" type="password" placeholder="Password" autocomplete="current-password" required></div>
-    <button class="primary" type="submit">Masuk</button><div class="err" id="loginError" role="status"></div>
-   </form>
-  </section>
-  <section class="auth-dropdown" id="registerDropdown">
-   <h3>Registrasi FIXZY BUSINESS</h3><p>Untuk membuat akun baru, lanjutkan ke halaman registrasi. Setelah selesai, kembali ke halaman ini untuk masuk.</p>
-   <button class="primary" id="openRegisterPage" type="button">Lanjut Registrasi</button>
-  </section>
-  <div class="promo-list">
-   <div class="promo-item"><div class="promo-icon">🛒</div><div><b>Belanja Produk</b><span>Akses kebutuhan produk bisnis lebih praktis.</span></div></div>
-   <div class="promo-item"><div class="promo-icon">💳</div><div><b>Limit Bisnis</b><span>Fasilitas limit mengikuti hasil persetujuan.</span></div></div>
-   <div class="promo-item"><div class="promo-icon">⚡</div><div><b>Transaksi Mudah</b><span>Saldo dan riwayat transaksi terpantau.</span></div></div>
-   <div class="promo-item"><div class="promo-icon">🤝</div><div><b>Member & Mitra</b><span>Peluang promo dan kerja sama komunitas.</span></div></div>
-  </div>
-  <div class="promo-note">* Limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
- </div>
-</section>
-
 <header class="top">
  <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
 </header>
@@ -233,66 +174,24 @@ button,input{font:inherit}
 <nav class="bottom"><button class="nav" id="homeNav" type="button"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
 
 
-<script>
-(function(){
- const track=document.getElementById('promoSlides');
- const slides=[...track.querySelectorAll('.slide')];
- const dots=[...document.querySelectorAll('.carousel-dot')];
- const title=document.getElementById('promoSlideTitle');
- const number=document.getElementById('promoSlideNumber');
- const names=['FIXZY BUSINESS','Belanja Produk Lebih Mudah','Peluang Limit Bisnis','Top Up & Transaksi','Member & Mitra'];
- let index=0,timer=null,startX=0,deltaX=0;
- function show(i){index=(i+slides.length)%slides.length;track.style.transform='translateX(-'+(index*100)+'%)';dots.forEach((d,n)=>d.classList.toggle('active',n===index));title.textContent=names[index];number.textContent=(index+1)+' dari '+slides.length;}
- function start(){stop();if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(index+1),4500)}
- function stop(){if(timer)clearInterval(timer);timer=null}
- document.getElementById('promoPrev').addEventListener('click',()=>{show(index-1);start()});
- document.getElementById('promoNext').addEventListener('click',()=>{show(index+1);start()});
- dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);start()}));
- const carousel=document.getElementById('promoCarousel');
- carousel.addEventListener('mouseenter',stop);carousel.addEventListener('mouseleave',start);
- carousel.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;deltaX=0;stop()},{passive:true});
- carousel.addEventListener('touchmove',e=>{deltaX=e.changedTouches[0].clientX-startX},{passive:true});
- carousel.addEventListener('touchend',()=>{if(Math.abs(deltaX)>45)show(index+(deltaX<0?1:-1));start()},{passive:true});
- document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
- show(0);start();
-})();
-</script>
-
+</div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import{getFirestore,doc,getDoc,collection,query,where,getDocs}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>location.href=x.dataset.page);
-// Tombol Beranda tidak memuat ulang index.html, agar pengguna yang sudah login
-// langsung tetap berada di dashboard dan tidak melihat halaman promo lagi.
-document.getElementById("homeNav")?.addEventListener("click",()=>{
- if(auth.currentUser){
-  document.body.className="auth-logged-in";
-  window.scrollTo({top:0,behavior:"smooth"});
- }else{
-  document.body.className="auth-logged-out";
-  window.scrollTo({top:0,behavior:"smooth"});
- }
-});
+document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>{if(x.dataset.page==="index.html"){window.scrollTo({top:0,behavior:"smooth"});return}location.href=x.dataset.page});
 document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.")}));
-const loginToggle=document.getElementById("landingLoginBtn"),registerToggle=document.getElementById("landingRegisterBtn");
-const loginDropdown=document.getElementById("loginDropdown"),registerDropdown=document.getElementById("registerDropdown");
-function toggleAuthDropdown(which){const isLogin=which==="login",panel=isLogin?loginDropdown:registerDropdown,other=isLogin?registerDropdown:loginDropdown,btn=isLogin?loginToggle:registerToggle,otherBtn=isLogin?registerToggle:loginToggle;const open=!panel.classList.contains("open");panel.classList.toggle("open",open);other.classList.remove("open");btn.setAttribute("aria-expanded",String(open));otherBtn.setAttribute("aria-expanded","false");if(open)panel.scrollIntoView({behavior:"smooth",block:"nearest"})}
-loginToggle.addEventListener("click",()=>toggleAuthDropdown("login"));registerToggle.addEventListener("click",()=>toggleAuthDropdown("register"));
-document.getElementById("openRegisterPage").addEventListener("click",()=>location.href="register.html");
-document.getElementById("logoutBtn").onclick=()=>signOut(auth);
-document.getElementById("loginForm").onsubmit=async e=>{e.preventDefault();const error=document.getElementById("loginError");error.textContent="";try{await signInWithEmailAndPassword(auth,document.getElementById("email").value.trim(),document.getElementById("password").value)}catch{error.textContent="Login gagal. Periksa email dan password."}};
+document.getElementById("logoutBtn").onclick=async()=>{await signOut(auth);location.replace("login.html")};
 onAuthStateChanged(auth,async user=>{
- const error=document.getElementById("loginError");
- if(!user){document.body.className="auth-logged-out";return}
+ if(!user){location.replace("login.html");return}
  try{
-  const s=await getDoc(doc(db,"users",user.uid));if(!s.exists())throw Error();
+  const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()){location.replace("login.html?error=akses");return}
   const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
-  if(p.role!=="owner"||p.ownerUid!==user.uid)throw Error();
-  document.body.className="auth-logged-in";document.getElementById("greeting").textContent=p.namaUsaha||p.nama||"Owner";
+  if(p.role!=="owner"||p.ownerUid!==user.uid){location.replace("login.html?error=akses");return}
+  document.getElementById("greeting").textContent=p.namaUsaha||p.nama||"Owner";
   const w=await getDoc(doc(db,"wallets",user.uid));document.getElementById("personalBalance").textContent=rupiah(w.exists()?w.data().saldoPribadi||0:0);
   const l=await getDoc(doc(db,"limits",user.uid));document.getElementById("availableLimit").textContent=rupiah(l.exists()?l.data().limitTersedia||0:0);
   let total=0,invoices=[];
@@ -312,7 +211,6 @@ onAuthStateChanged(auth,async user=>{
   const invoiceCount=document.getElementById("invoiceCount"),nearestBox=document.getElementById("nearestInvoiceBox");invoiceCount.textContent=invoices.length+" tagihan";
   if(!invoices.length)nearestBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada tagihan yang belum lunas.</div></div>';
   else{
-   const toDate=v=>{if(v&&typeof v.toDate==="function")return v.toDate();if(!v)return null;const d=new Date(v);return isNaN(d.getTime())?null:d};
    invoices.sort((a,b)=>{const da=toDate(a.jatuhTempo),db=toDate(b.jatuhTempo);return(da?da.getTime():Number.MAX_SAFE_INTEGER)-(db?db.getTime():Number.MAX_SAFE_INTEGER)});
    const x=invoices[0],due=toDate(x.jatuhTempo),today=new Date();today.setHours(0,0,0,0);let jatuhTempo=false;
    if(due){const d=new Date(due);d.setHours(0,0,0,0);jatuhTempo=d<=today}
@@ -320,7 +218,8 @@ onAuthStateChanged(auth,async user=>{
    nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
    document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
   }
- }catch(e){document.body.className="auth-logged-out";error.textContent="Akses Owner tidak tersedia.";loginDropdown.classList.add("open");loginToggle.setAttribute("aria-expanded","true")}
+  document.body.style.visibility="visible";
+ }catch(e){console.error("Akses dashboard gagal:",e);location.replace("login.html?error=akses")}
 });
 </script>
 </body>
