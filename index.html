@@ -199,8 +199,10 @@ document.getElementById("logoutBtn").onclick=async()=>{await signOut(auth);locat
 onAuthStateChanged(auth,async user=>{
  if(!user){location.replace("login.html");return}
  try{
-  const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()){location.replace("login.html?error=akses");return}
-  const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
+  const s=await getDoc(doc(db,"users",user.uid));
+  if(!s.exists()){location.replace("login.html?error=dokumen");return}
+  const p=s.data();
+  if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
   if(p.role!=="owner"||p.ownerUid!==user.uid){location.replace("login.html?error=akses");return}
   // Tampilkan dashboard segera setelah akses Owner terverifikasi, jangan menunggu semua laporan selesai dimuat.
   hideDashboardLoader();
@@ -231,7 +233,7 @@ onAuthStateChanged(auth,async user=>{
    nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
    document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
   }
- }catch(e){console.error("Akses dashboard gagal:",e);location.replace("login.html?error=akses")}
+ }catch(e){console.error("Akses/dashboard gagal:",e);location.replace("login.html?error=firestore")}
 });
 </script>
 </body>
