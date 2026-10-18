@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>FIXZY BUSINESS - Masuk</title>
+<style>
+*{box-sizing:border-box}
+:root{--black:#111;--yellow:#FFC107;--bg:#f3f4f6;--text:#171717;--muted:#667085;--line:#e5e7eb}
+html,body{margin:0;padding:0}
+body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input{font:inherit}
+.app{width:100%;max-width:1180px;min-height:100vh;margin:auto;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.brand h1{font-size:17px;margin:0;font-weight:900;color:var(--yellow)}
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.logout{border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 10px 28px rgba(0,0,0,.08)}
+.label{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:5px}
+.amount{font-size:26px;font-weight:900}
+.balance-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.topup{border:0;border-radius:12px;background:#111;color:var(--yellow);padding:11px 14px;font-weight:900;font-size:12px}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#f8f8f8;border:1px solid #ededed;border-radius:15px;padding:13px}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px;font-weight:700}
+.stat b{font-size:15px}
+.section{margin-top:18px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:0 3px 8px}
+.section-title h2{font-size:15px;margin:0;font-weight:900}
+.section-title span{color:var(--muted);font-size:10px;font-weight:800}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:2px 0}
+.menu-btn{min-height:78px;border:0;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;color:var(--text)}
+.menu-btn:active{background:#fff}
+.icon{width:42px;height:42px;border-radius:13px;background:#111;color:var(--yellow);display:grid;place-items:center;font-size:20px}
+.menu-btn span{font-size:12px;font-weight:900;text-align:center}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800}
+.nav i{display:block;font-style:normal;font-size:21px;line-height:22px;margin-bottom:3px}
+
+/* Halaman promosi: carousel landscape 16:9 */
+.landing{padding:0 14px 24px}
+.landing-brand{background:#111;margin:0 -14px 18px;padding:14px 14px;border-radius:0;color:#fff}
+.landing-subtitle{color:#d1d5db}
+.landing-inner{max-width:1000px;margin:auto}
+.landing-brand{display:flex;align-items:center;gap:12px;margin:0 0 16px;min-width:0}
+.landing-logo{width:50px;height:50px;border-radius:13px;background:#111;border:1px solid var(--yellow);overflow:hidden;flex:0 0 50px}
+.landing-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.landing-title{font-size:clamp(20px,3vw,30px);font-weight:900;color:var(--yellow)}
+.landing-subtitle{color:var(--muted);font-size:13px;margin-top:3px}
+.promo-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 2px 10px}
+.promo-heading h2{font-size:17px;margin:0;font-weight:900}
+.promo-heading span{font-size:11px;color:var(--muted);font-weight:800}
+.carousel{position:relative;overflow:hidden;border-radius:22px;background:#111;box-shadow:0 12px 30px rgba(0,0,0,.16);isolation:isolate}
+.slides{display:flex;width:100%;transition:transform .65s cubic-bezier(.22,.75,.25,1);will-change:transform}
+.slide{width:100%;min-width:100%;flex:0 0 100%;}
+.slide img{object-fit:cover;object-position:center;max-width:100%}
+.slide{position:relative;flex:0 0 100%;aspect-ratio:16/9;min-height:0;background:#111;overflow:hidden}
+.slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:contain;object-position:center;display:block;background:#111}
+.slide:after{content:none}
+
+/* Slide promosi cadangan berbasis HTML: tetap tampil walau hanya banner utama tersedia. */
+.slide-fallback{display:flex;align-items:center;justify-content:flex-start;padding:clamp(20px,5vw,54px);color:#fff;background-color:#111;background-image:radial-gradient(circle at 82% 25%,rgba(255,193,7,.28),transparent 30%),linear-gradient(125deg,#090909 0%,#1b1b1b 55%,#332400 100%)}
+.slide-fallback:before{content:"";position:absolute;inset:12px;border:1px solid rgba(255,193,7,.3);border-radius:14px;pointer-events:none}
+.banner-content{position:relative;z-index:2;max-width:68%;text-align:left}
+.banner-kicker{font-size:clamp(9px,1.5vw,14px);font-weight:900;letter-spacing:2px;color:var(--yellow)}
+.banner-icon{font-size:clamp(34px,7vw,70px);margin:8px 0}
+.banner-content h3{font-size:clamp(24px,5vw,54px);line-height:1.02;margin:0 0 10px;font-weight:900}
+.banner-content p{font-size:clamp(11px,1.8vw,17px);line-height:1.45;max-width:440px;color:#e5e7eb;margin:0}
+.banner-pill{display:inline-block;margin-top:16px;padding:8px 14px;border-radius:999px;background:var(--yellow);color:#111;font-size:clamp(9px,1.3vw,13px);font-weight:900}
+.fallback-limit{background-image:radial-gradient(circle at 78% 28%,rgba(255,193,7,.35),transparent 28%),linear-gradient(125deg,#080808,#171717 55%,#463200)}
+.fallback-topup{background-image:radial-gradient(circle at 78% 28%,rgba(255,193,7,.3),transparent 28%),linear-gradient(125deg,#090909,#1b1b1b 55%,#3a2a00)}
+.fallback-member{background-image:radial-gradient(circle at 78% 28%,rgba(255,193,7,.32),transparent 28%),linear-gradient(125deg,#080808,#202020 55%,#473300)}
+.fallback-main{background:#111}
+.fallback-main img{display:none}
+
+.slide-copy{position:absolute;z-index:2;left:clamp(16px,4vw,44px);top:50%;transform:translateY(-50%);width:min(56%,530px);color:#fff;background:rgba(8,8,8,.88);padding:clamp(10px,2vw,20px);border:1px solid rgba(255,193,7,.24);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.slide-kicker{color:var(--yellow);font-size:clamp(9px,1.2vw,13px);font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
+.slide-copy h3{font-size:clamp(19px,4vw,43px);line-height:1.04;margin:8px 0 10px;font-weight:900}
+.slide-copy p{font-size:clamp(10px,1.6vw,16px);line-height:1.45;color:#f3f4f6;margin:0;max-width:440px}
+.slide-cta{display:inline-flex;margin-top:14px;padding:10px 15px;border-radius:999px;background:var(--yellow);color:#111;text-decoration:none;font-weight:900;font-size:clamp(10px,1.3vw,13px)}
+.carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border:1px solid #ffffff70;border-radius:50%;background:#111b;color:#fff;font-size:24px;display:grid;place-items:center;cursor:pointer}
+.carousel-arrow.prev{left:10px}.carousel-arrow.next{right:10px}
+.carousel-dots{display:flex;justify-content:center;gap:8px;padding:12px 0 0}
+.carousel-dot{width:9px;height:9px;border:0;border-radius:50%;background:#c6c8cc;padding:0;cursor:pointer}
+.carousel-dot.active{background:var(--yellow);width:24px;border-radius:9px}
+.promo-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;color:var(--muted);font-size:11px}
+.promo-caption strong{color:#222}
+.promo-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.promo-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.promo-icon{width:38px;height:38px;border-radius:11px;background:#111;color:var(--yellow);display:grid;place-items:center;flex:0 0 38px;font-size:18px}
+.promo-item b{display:block;font-size:13px}
+.promo-item span{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}
+.promo-note{font-size:10px;color:var(--muted);margin:12px 2px}
+.landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+.landing-actions .landing-btn{width:100%;min-width:0;min-height:44px;height:44px;padding:9px 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:14px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+.landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
+.landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
+.landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
+.auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}
+.auth-logged-in .landing{display:none}
+.auth-dropdown{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:10px;box-shadow:0 8px 22px rgba(0,0,0,.07)}
+.auth-dropdown.open{display:block}.auth-dropdown h3{margin:0 0 6px;font-size:17px}.auth-dropdown p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+.auth-dropdown .field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
+.auth-dropdown .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900;cursor:pointer}
+.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.auth-switch .landing-btn{width:100%;min-height:40px;padding:9px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;cursor:pointer}
+.auth-switch .primary-toggle{background:#111;color:var(--yellow);border:1px solid #111}
+.auth-switch .secondary-toggle{background:var(--yellow);color:#111;border:1px solid var(--yellow)}
+.field{margin:10px 0}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
+.primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900}
+.err{color:#b42318;font-size:12px;min-height:18px}
+.nearest-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+.nearest-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.nearest-label{color:var(--muted);font-size:10px;font-weight:800}
+.nearest-amount{font-size:20px;font-weight:900;margin-top:4px}
+.nearest-info{color:var(--muted);font-size:11px;margin-top:5px;line-height:1.5}
+.nearest-status{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.nearest-normal{background:#fef3c7;color:#92400e}.nearest-due{background:#fee2e2;color:#991b1b}
+.nearest-btn{width:100%;margin-top:12px}.nearest-empty{color:var(--muted);font-size:12px}
+.order-status-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);margin-bottom:10px}
+.order-status-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.order-status-number{font-size:11px;color:var(--muted);font-weight:800}
+.order-status-total{font-size:16px;font-weight:900;margin-top:3px}
+.order-status-badge{padding:7px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.status-approved{background:#dbeafe;color:#1d4ed8}.status-packed{background:#fef3c7;color:#92400e}.status-shipped{background:#e0e7ff;color:#4338ca}.status-delivery{background:#cffafe;color:#0e7490}.status-done{background:#dcfce7;color:#166534}
+.order-status-info{font-size:11px;color:var(--muted);line-height:1.5;margin-top:7px}
+.order-status-btn{width:100%;margin-top:10px}
+@media(max-width:700px){
+ .top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}
+ .landing{padding:18px 0 22px}.landing-inner{width:100%}
+ .landing-brand{padding:0 3px;min-width:0}.landing-logo{width:48px;height:48px;flex:0 0 48px;overflow:hidden}.landing-logo img{width:100%;height:100%;object-fit:contain;object-position:center}
+ .carousel{border-radius:15px}
+ .slide-copy{left:12px;width:calc(100% - 64px);max-width:390px;padding:10px 11px;border-radius:11px}
+ .slide-copy h3{font-size:clamp(17px,4.4vw,28px);margin:5px 0 6px}
+ .slide-copy p{font-size:clamp(9px,2.2vw,12px)}
+ .slide-cta{margin-top:8px;padding:7px 10px}
+ .carousel-arrow{width:30px;height:30px;font-size:19px}
+ .promo-list{grid-template-columns:1fr 1fr;gap:8px}
+ .promo-item{padding:10px;gap:8px}.promo-item b{font-size:12px}.promo-item span{font-size:10px}
+ .promo-icon{width:32px;height:32px;flex-basis:32px}
+ .promo-caption{padding:0 3px}
+ .landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+ .landing-actions .landing-btn{width:100%;min-width:0;min-height:44px;height:44px;padding:9px 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:14px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+ .landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
+ .landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
+ .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
+}
+@media(max-width:390px){
+ .slide-copy{width:calc(100% - 62px);max-width:360px}.slide-copy p{max-width:210px}
+ .slide-cta{font-size:9px}.promo-list{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.slides{transition:none}}
+</style>
+<style>
+/* Header login mengikuti dashboard: hitam, sudut bawah membulat, promo menimpa sebagian header */
+.app{padding-bottom:24px}
+.auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}
+.landing{position:relative;padding:0 14px 24px;isolation:isolate}
+.landing:before{content:"";position:absolute;z-index:-1;top:0;left:0;right:0;height:300px;background:#111;border-radius:0 0 32px 32px}
+.landing-brand{background:transparent;margin:0 -14px 0;padding:22px 14px 54px;border-radius:0;color:#fff;min-height:112px}
+.landing-title{color:var(--yellow)}
+.landing-subtitle{color:#d1d5db}
+.promo-heading{margin-top:-35px;position:relative;color:#fff;margin-bottom:10px}
+.promo-heading h2{color:#fff}
+.promo-heading span{color:#d1d5db}
+.carousel{position:relative;margin-top:0;border-radius:22px;box-shadow:0 12px 30px rgba(0,0,0,.2)}
+.carousel-dots,.promo-caption{position:relative}
+.promo-caption{color:var(--muted)}
+.promo-caption strong{color:#222}
+@media(max-width:700px){
+ .landing{padding:0 0 22px}
+ .landing:before{height:278px;border-radius:0 0 28px 28px}
+ .landing-brand{padding:20px 14px 52px;margin:0 -14px 0;width:calc(100% + 28px);border-radius:0}
+ .promo-heading{margin-top:-34px;padding:0 4px}
+ .carousel{border-radius:16px}
+}
+
+.services-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 14px 0;color:#171717}
+.services-heading h2{font-size:16px;font-weight:900;margin:0}
+.services-heading span{font-size:9px;color:#667085;font-weight:800;white-space:nowrap}
+@media(max-width:700px){.services-heading{margin:18px 14px 0}.services-heading h2{font-size:15px}}
+</style>
+
+<style id="fixzy-login-header-match-index">
+/* Pola header mengikuti index admin: hitam, lengkung bawah, panel putih menimpa header */
+html,body{background:#f3f4f6!important}
+.app{max-width:1180px!important;padding-bottom:24px!important;overflow:visible!important}
+.landing{position:relative!important;isolation:isolate!important;padding:0 14px 24px!important;overflow:visible!important}
+.landing:before{content:""!important;position:absolute!important;z-index:0!important;top:0!important;left:0!important;right:0!important;height:223px!important;background:#111111!important;border-radius:0 0 58px 58px!important}
+.landing-inner{position:relative!important;z-index:1!important;max-width:1100px!important;margin:0 auto!important}
+.landing-brand{position:relative!important;z-index:1!important;display:flex!important;align-items:center!important;gap:16px!important;min-height:126px!important;margin:0 -14px 0!important;padding:28px 28px 38px!important;background:transparent!important;border-radius:0!important;color:#fff!important}
+.landing-logo{width:82px!important;height:82px!important;min-width:82px!important;flex:0 0 82px!important;border-radius:18px!important;background:#111!important;border:1px solid #FFC107!important;overflow:hidden!important}
+.landing-title{font-size:30px!important;line-height:1.1!important;font-weight:800!important;letter-spacing:-.4px!important;color:#FFC107!important;white-space:nowrap!important}
+.landing-subtitle{font-size:18px!important;margin-top:6px!important;color:#d5d8df!important}
+.promo-panel{position:relative!important;z-index:3!important;width:100%!important;margin:-8px auto 0!important;padding:18px!important;background:#fff!important;color:#111827!important;border:1px solid #e5e7eb!important;border-radius:34px!important;box-shadow:0 12px 30px rgba(15,23,42,.10)!important;overflow:hidden!important}
+.promo-heading{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:12px!important;margin:0 2px 12px!important;padding:0!important;color:#111827!important}
+.promo-heading h2{font-size:22px!important;color:#111827!important;margin:0!important;font-weight:800!important}
+.promo-heading span{font-size:12px!important;color:#667085!important;font-weight:800!important;white-space:nowrap!important}
+.carousel{margin:0!important;border-radius:22px!important;background:#111!important;overflow:hidden!important}
+.slide{aspect-ratio:16/9!important;min-height:0!important}
+.carousel-dots{padding-top:14px!important}
+.promo-caption{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:10px!important;margin-top:10px!important;padding:0 2px!important;color:#667085!important;font-size:13px!important}
+.promo-caption strong{color:#222!important}
+.landing-actions{position:relative!important;z-index:2!important;margin-top:18px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}
+.landing-actions .landing-btn{min-height:58px!important;height:58px!important;border-radius:22px!important;font-size:20px!important;font-weight:900!important}
+.promo-list{margin-top:18px!important}
+.promo-note{margin-top:14px!important}
+@media(max-width:700px){
+ .landing{padding:0 0 22px!important}
+ .landing:before{height:205px!important;border-radius:0 0 52px 52px!important}
+ .landing-brand{min-height:126px!important;padding:24px 20px 34px!important;margin:0!important;width:100%!important;gap:13px!important}
+ .landing-logo{width:76px!important;height:76px!important;min-width:76px!important;flex-basis:76px!important;border-radius:17px!important}
+ .landing-title{font-size:25px!important}
+ .landing-subtitle{font-size:16px!important}
+ .promo-panel{width:calc(100% - 28px)!important;margin:-4px auto 0!important;padding:14px!important;border-radius:30px!important}
+ .promo-heading h2{font-size:19px!important}
+ .promo-heading span{font-size:10px!important}
+ .carousel{border-radius:16px!important}
+ .carousel-dots{padding-top:12px!important}
+ .promo-caption{font-size:12px!important;align-items:flex-start!important}
+ .landing-actions{margin:16px 14px 0!important;gap:10px!important}
+ .landing-actions .landing-btn{min-height:54px!important;height:54px!important;border-radius:18px!important;font-size:18px!important}
+ .promo-list{margin:16px 14px 0!important;gap:8px!important}
+ .promo-note{margin:14px 14px 0!important}
+}
+@media(max-width:430px){
+ .landing:before{height:190px!important;border-radius:0 0 52px 52px!important}
+ .landing-brand{min-height:116px!important;padding:22px 16px 30px!important;gap:13px!important}
+ .landing-logo{width:68px!important;height:68px!important;min-width:68px!important;flex-basis:68px!important}
+ .landing-title{font-size:21px!important}
+ .landing-subtitle{font-size:14px!important}
+ .promo-panel{width:calc(100% - 28px)!important;margin:0 auto 0!important;padding:12px!important;border-radius:28px!important}
+ .promo-heading h2{font-size:17px!important}
+ .promo-heading span{font-size:9px!important}
+ .promo-caption{font-size:11px!important}
+ .landing-actions .landing-btn{font-size:16px!important}
+}
+</style>
+
+
+
+
+<style id="fixzy-login-final-match">
+/* Samakan header dan panel promo dengan acuan index: header hitam melengkung, panel putih menimpa bagian bawahnya. */
+.landing{position:relative!important;isolation:isolate!important;padding:0 0 22px!important;overflow:visible!important}
+.landing:before{content:""!important;position:absolute!important;z-index:0!important;top:0!important;left:0!important;right:0!important;height:210px!important;background:#111!important;border-radius:0 0 52px 52px!important}
+.landing-inner{position:relative!important;z-index:1!important}
+.landing-brand{display:flex!important;align-items:center!important;gap:13px!important;min-height:126px!important;margin:0!important;padding:22px 16px 32px!important;background:transparent!important;border-radius:0!important;color:#fff!important}
+.landing-logo{width:68px!important;height:68px!important;min-width:68px!important;flex:0 0 68px!important;border-radius:17px!important;border:1px solid #FFC107!important;background:#111!important;overflow:hidden!important}
+.landing-logo img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important}
+.landing-title{font-size:22px!important;line-height:1.1!important;font-weight:800!important;letter-spacing:-.2px!important;color:#FFC107!important;white-space:nowrap!important}
+.landing-subtitle{font-size:14px!important;line-height:1.3!important;margin-top:5px!important;color:#d1d5db!important}
+.promo-panel{position:relative!important;z-index:3!important;width:calc(100% - 28px)!important;max-width:1080px!important;margin:-1px auto 0!important;padding:13px!important;background:#fff!important;color:#111827!important;border:1px solid #e5e7eb!important;border-radius:30px!important;box-shadow:0 12px 30px rgba(15,23,42,.10)!important;overflow:hidden!important}
+.promo-heading{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:0 2px 10px!important;padding:0!important}
+.promo-heading h2{font-size:18px!important;color:#111827!important;margin:0!important;font-weight:800!important}
+.promo-heading span{font-size:10px!important;color:#667085!important;font-weight:800!important;white-space:nowrap!important}
+.carousel{margin:0!important;border-radius:17px!important;background:#111!important;overflow:hidden!important;box-shadow:none!important}
+.slide{aspect-ratio:16/9!important;min-height:0!important}
+.slide img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;background:#111!important}
+.carousel-dots{padding-top:11px!important}
+.promo-caption{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin-top:9px!important;padding:0 2px!important;color:#667085!important;font-size:11px!important}
+.landing-actions{position:relative!important;z-index:2!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin:16px 14px 0!important}
+.landing-actions .landing-btn{min-height:52px!important;height:52px!important;border-radius:17px!important;font-size:17px!important;font-weight:900!important}
+.services-heading{margin:18px 14px 0!important}
+.promo-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin:14px 14px 0!important}
+.promo-item{display:flex!important;align-items:flex-start!important;gap:8px!important;min-width:0!important;padding:10px!important;border:1px solid #e5e7eb!important;border-radius:17px!important;background:#fff!important}
+.promo-icon{width:34px!important;height:34px!important;flex:0 0 34px!important;border-radius:11px!important;font-size:17px!important}
+.promo-item b{font-size:12px!important;line-height:1.3!important}
+.promo-item span{font-size:10px!important;line-height:1.4!important;margin-top:3px!important}
+.promo-note{font-size:10px!important;line-height:1.4!important;margin:12px 14px 0!important}
+@media(min-width:701px){.landing-brand{padding-left:28px!important}.promo-panel{padding:20px!important}.landing-actions{max-width:1080px;margin-left:auto!important;margin-right:auto!important}.promo-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;max-width:1080px;margin-left:auto!important;margin-right:auto!important}}
+@media(max-width:430px){
+ .landing:before{height:198px!important;border-radius:0 0 48px 48px!important}
+ .landing-brand{min-height:118px!important;padding:20px 16px 30px!important;gap:11px!important}
+ .landing-logo{width:64px!important;height:64px!important;min-width:64px!important;flex-basis:64px!important;border-radius:15px!important}
+ .landing-title{font-size:20px!important}
+ .landing-subtitle{font-size:13px!important}
+ .promo-panel{padding:11px!important;border-radius:27px!important}
+ .promo-heading h2{font-size:16px!important}
+ .promo-heading span{font-size:9px!important}
+ .promo-caption{font-size:10px!important}
+ .landing-actions .landing-btn{min-height:50px!important;height:50px!important;font-size:16px!important;border-radius:16px!important}
+ .promo-item{padding:9px!important;gap:7px!important}
+ .promo-icon{width:31px!important;height:31px!important;flex-basis:31px!important;font-size:15px!important}
+ .promo-item b{font-size:11px!important}
+ .promo-item span{font-size:9px!important}
+}
+</style>
+</head>
+<body class="auth-logged-out">
+<div class="app">
+<section class="landing" id="landingPage">
+ <div class="landing-inner">
+  <div class="landing-brand">
+   <div class="landing-logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+   <div><div class="landing-title">FIXZY BUSINESS</div><div class="landing-subtitle">Platform bisnis dan E-Wallet</div></div>
+  </div>
+  <div class="promo-panel" id="promoPanel">
+  <div class="promo-heading"><h2>Promosi Unggulan</h2><span>6 SLIDE • LANDSCAPE</span></div>
+  <div class="carousel" id="promoCarousel" aria-label="Promosi unggulan FIXZY BUSINESS">
+   <div class="slides" id="promoSlides">
+    <article class="slide"><img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama" loading="eager" decoding="async"></article>
+    <article class="slide"><img src="fixzy1.png" alt="FIXZY BUSINESS - promosi 1" loading="lazy" decoding="async"></article>
+    <article class="slide"><img src="fixzy2.png" alt="FIXZY BUSINESS - promosi 2" loading="lazy" decoding="async"></article>
+    <article class="slide"><img src="fixzy3.png" alt="FIXZY BUSINESS - promosi 3" loading="lazy" decoding="async"></article>
+    <article class="slide"><img src="fixzy4.png" alt="FIXZY BUSINESS - promosi 4" loading="lazy" decoding="async"></article>
+    <article class="slide"><img src="fixzy5.png" alt="FIXZY BUSINESS - promosi 5" loading="lazy" decoding="async"></article>
+   </div>
+   <button class="carousel-arrow prev" id="promoPrev" aria-label="Slide sebelumnya">‹</button>
+   <button class="carousel-arrow next" id="promoNext" aria-label="Slide berikutnya">›</button>
+  </div>
+  <div class="carousel-dots" id="promoDots" aria-label="Pilih slide">
+   <button class="carousel-dot active" aria-label="Slide 1"></button><button class="carousel-dot" aria-label="Slide 2"></button><button class="carousel-dot" aria-label="Slide 3"></button><button class="carousel-dot" aria-label="Slide 4"></button><button class="carousel-dot" aria-label="Slide 5"></button><button class="carousel-dot" aria-label="Slide 6"></button>
+  </div>
+  <div class="promo-caption"><span><strong id="promoSlideTitle">FIXZY BUSINESS</strong> · <span id="promoSlideNumber">1 dari 6</span></span><span>Geser untuk melihat promo lainnya</span></div>
+  </div><!-- /promo-panel -->
+  <div class="landing-actions">
+   <button class="landing-btn primary" id="landingLoginBtn" type="button" aria-expanded="false" aria-controls="loginDropdown">Masuk</button>
+   <button class="landing-btn secondary" id="landingRegisterBtn" type="button" aria-expanded="false" aria-controls="registerDropdown">Daftar</button>
+  </div>
+  <section class="auth-dropdown" id="loginDropdown">
+   <h3>Masuk FIXZY BUSINESS</h3><p>Masukkan email dan password akun Anda.</p>
+   <form id="loginForm">
+    <div class="field"><input id="email" type="email" placeholder="Email" autocomplete="username" required></div>
+    <div class="field"><input id="password" type="password" placeholder="Password" autocomplete="current-password" required></div>
+    <button class="primary" type="submit">Masuk</button><div class="err" id="loginError" role="status"></div>
+   </form>
+  </section>
+  <section class="auth-dropdown" id="registerDropdown">
+   <h3>Registrasi FIXZY BUSINESS</h3><p>Untuk membuat akun baru, lanjutkan ke halaman registrasi. Setelah selesai, kembali ke halaman ini untuk masuk.</p>
+   <button class="primary" id="openRegisterPage" type="button">Lanjut Registrasi</button>
+  </section>
+  <div class="services-heading">
+   <h2>Layanan & Keunggulan FIXZY</h2>
+   <span>LAYANAN BISNIS DIGITAL</span>
+  </div>
+  <div class="promo-list">
+   <div class="promo-item"><div class="promo-icon">🏦</div><div><b>Transfer Antar Bank</b><span>Informasi layanan transfer untuk kebutuhan transaksi bisnis.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">📱</div><div><b>Isi Pulsa & Kuota</b><span>Kebutuhan pulsa dan paket internet dalam satu platform.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">📶</div><div><b>Voucher WiFi</b><span>Dukungan voucher internet untuk pelanggan dan usaha.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🛵</div><div><b>Pesan Antar</b><span>Informasi layanan pemesanan dan pengantaran.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🚕</div><div><b>Gojek Elit</b><span>Peluang layanan dan kemitraan transportasi.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🛒</div><div><b>Belanja Produk</b><span>Akses kebutuhan produk bisnis lebih praktis.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">💳</div><div><b>Limit Bisnis</b><span>Fasilitas limit mengikuti hasil persetujuan.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">💰</div><div><b>Top Up Saldo</b><span>Kelola kebutuhan saldo untuk transaksi.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🧾</div><div><b>Tagihan & Riwayat</b><span>Pantau tagihan dan riwayat transaksi dengan rapi.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🤝</div><div><b>Member & Mitra</b><span>Peluang promo dan kerja sama komunitas.</span></div></div>
+  </div>
+  <div class="promo-note">* Ketersediaan layanan, limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
+ </div>
+</section>
+</div>
+<script>
+(function(){
+ const track=document.getElementById('promoSlides');
+ const slides=[...track.querySelectorAll('.slide')];
+ const dots=[...document.querySelectorAll('.carousel-dot')];
+ const title=document.getElementById('promoSlideTitle');
+ const number=document.getElementById('promoSlideNumber');
+ const names=['FIXZY BUSINESS','Promo Fixzy 1','Promo Fixzy 2','Promo Fixzy 3','Promo Fixzy 4','Promo Fixzy 5'];
+ let index=0,timer=null,startX=0,deltaX=0;
+ function show(i){index=(i+slides.length)%slides.length;track.style.transform='translateX(-'+(index*100)+'%)';dots.forEach((d,n)=>d.classList.toggle('active',n===index));title.textContent=names[index];number.textContent=(index+1)+' dari '+slides.length;}
+ function start(){stop();if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(index+1),4500)}
+ function stop(){if(timer)clearInterval(timer);timer=null}
+ document.getElementById('promoPrev').addEventListener('click',()=>{show(index-1);start()});
+ document.getElementById('promoNext').addEventListener('click',()=>{show(index+1);start()});
+ dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);start()}));
+ const carousel=document.getElementById('promoCarousel');
+ carousel.addEventListener('mouseenter',stop);carousel.addEventListener('mouseleave',start);
+ carousel.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;deltaX=0;stop()},{passive:true});
+ carousel.addEventListener('touchmove',e=>{deltaX=e.changedTouches[0].clientX-startX},{passive:true});
+ carousel.addEventListener('touchend',()=>{if(Math.abs(deltaX)>45)show(index+(deltaX<0?1:-1));start()},{passive:true});
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ show(0);start();
+})();
+</script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const loginToggle=document.getElementById("landingLoginBtn"),registerToggle=document.getElementById("landingRegisterBtn");
+const loginDropdown=document.getElementById("loginDropdown"),registerDropdown=document.getElementById("registerDropdown");
+function toggleAuthDropdown(which){const isLogin=which==="login",panel=isLogin?loginDropdown:registerDropdown,other=isLogin?registerDropdown:loginDropdown,btn=isLogin?loginToggle:registerToggle,otherBtn=isLogin?registerToggle:loginToggle;const open=!panel.classList.contains("open");panel.classList.toggle("open",open);other.classList.remove("open");btn.setAttribute("aria-expanded",String(open));otherBtn.setAttribute("aria-expanded","false");if(open)panel.scrollIntoView({behavior:"smooth",block:"nearest"})}
+loginToggle.addEventListener("click",()=>toggleAuthDropdown("login"));registerToggle.addEventListener("click",()=>toggleAuthDropdown("register"));
+document.getElementById("openRegisterPage").addEventListener("click",()=>location.href="register.html");
+document.getElementById("loginForm").onsubmit=async e=>{e.preventDefault();const error=document.getElementById("loginError");error.textContent="";try{await signInWithEmailAndPassword(auth,document.getElementById("email").value.trim(),document.getElementById("password").value)}catch(err){console.error(err);error.textContent="Login gagal. Periksa email dan password."}};
+const params=new URLSearchParams(location.search);if(params.get("error")==="akses"){document.getElementById("loginError").textContent="Akun ini belum memiliki akses Owner. Periksa akun atau hubungi admin.";loginDropdown.classList.add("open");loginToggle.setAttribute("aria-expanded","true")}
+onAuthStateChanged(auth,async user=>{if(!user)return;try{const s=await getDoc(doc(db,"users",user.uid));if(!s.exists())return;const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}if(p.role==="owner"&&p.ownerUid===user.uid){location.replace("index.html");return}}catch(e){console.error("Gagal memeriksa akses:",e)}});
+</script>
+</body>
+</html>
