@@ -140,9 +140,17 @@ button,input{font:inherit}
 }
 @media(prefers-reduced-motion:reduce){.slides{transition:none}}
 </style>
-<style>body{visibility:hidden}</style>
+<style>
+/* Loader hanya muncul saat memeriksa sesi; dashboard tidak dibuat putih/kosong. */
+#dashboardLoader{position:fixed;inset:0;z-index:9999;background:#f3f4f6;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:24px;transition:opacity .18s ease}
+#dashboardLoader.hide{opacity:0;pointer-events:none}
+#dashboardLoader .loader-logo{width:58px;height:58px;border-radius:16px;background:#111;color:#ffc107;display:grid;place-items:center;font-weight:900;font-size:24px;border:1px solid #ffc107}
+#dashboardLoader .loader-spin{width:25px;height:25px;border:3px solid #ddd;border-top-color:#ffc107;border-radius:50%;animation:fixzySpin .7s linear infinite}
+@keyframes fixzySpin{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body>
+<div id="dashboardLoader" role="status" aria-live="polite"><div class="loader-logo">F</div><strong>FIXZY BUSINESS</strong><div class="loader-spin"></div><small>Menyiapkan dashboard…</small></div>
 <div class="app">
 <header class="top">
  <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
@@ -183,6 +191,9 @@ const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomai
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>{if(x.dataset.page==="index.html"){window.scrollTo({top:0,behavior:"smooth"});return}location.href=x.dataset.page});
+// Tombol Beranda cukup kembali ke bagian atas; jangan reload index.html.
+document.getElementById("homeNav")?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+function hideDashboardLoader(){const el=document.getElementById("dashboardLoader");if(!el)return;el.classList.add("hide");setTimeout(()=>el.remove(),220)}
 document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.")}));
 document.getElementById("logoutBtn").onclick=async()=>{await signOut(auth);location.replace("login.html")};
 onAuthStateChanged(auth,async user=>{
@@ -191,6 +202,8 @@ onAuthStateChanged(auth,async user=>{
   const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()){location.replace("login.html?error=akses");return}
   const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
   if(p.role!=="owner"||p.ownerUid!==user.uid){location.replace("login.html?error=akses");return}
+  // Tampilkan dashboard segera setelah akses Owner terverifikasi, jangan menunggu semua laporan selesai dimuat.
+  hideDashboardLoader();
   document.getElementById("greeting").textContent=p.namaUsaha||p.nama||"Owner";
   const w=await getDoc(doc(db,"wallets",user.uid));document.getElementById("personalBalance").textContent=rupiah(w.exists()?w.data().saldoPribadi||0:0);
   const l=await getDoc(doc(db,"limits",user.uid));document.getElementById("availableLimit").textContent=rupiah(l.exists()?l.data().limitTersedia||0:0);
@@ -218,7 +231,6 @@ onAuthStateChanged(auth,async user=>{
    nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
    document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
   }
-  document.body.style.visibility="visible";
  }catch(e){console.error("Akses dashboard gagal:",e);location.replace("login.html?error=akses")}
 });
 </script>
