@@ -89,10 +89,14 @@ button,input{font:inherit}
 .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
 .auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}
 .auth-logged-in .landing{display:none}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;z-index:100}
-.overlay.show{display:flex}
-.login{width:min(520px,100%);background:#fff;border-radius:24px 24px 0 0;padding:24px 20px}
-.login h2{margin:0 0 6px}.login p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.auth-dropdown{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:10px;box-shadow:0 8px 22px rgba(0,0,0,.07)}
+.auth-dropdown.open{display:block}.auth-dropdown h3{margin:0 0 6px;font-size:17px}.auth-dropdown p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.5}
+.auth-dropdown .field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
+.auth-dropdown .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900;cursor:pointer}
+.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.auth-switch .landing-btn{width:100%;min-height:40px;padding:9px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;cursor:pointer}
+.auth-switch .primary-toggle{background:#111;color:var(--yellow);border:1px solid #111}
+.auth-switch .secondary-toggle{background:var(--yellow);color:#111;border:1px solid var(--yellow)}
 .field{margin:10px 0}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
 .primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900}
 .err{color:#b42318;font-size:12px;min-height:18px}
@@ -174,9 +178,21 @@ button,input{font:inherit}
   </div>
   <div class="promo-caption"><span><strong id="promoSlideTitle">FIXZY BUSINESS</strong> · <span id="promoSlideNumber">1 dari 5</span></span><span>Geser untuk melihat promo lainnya</span></div>
   <div class="landing-actions">
-   <button class="landing-btn primary" id="landingLoginBtn" type="button">Masuk</button>
-   <a class="landing-btn secondary" href="register.html">Daftar</a>
+   <button class="landing-btn primary" id="landingLoginBtn" type="button" aria-expanded="false" aria-controls="loginDropdown">Masuk</button>
+   <button class="landing-btn secondary" id="landingRegisterBtn" type="button" aria-expanded="false" aria-controls="registerDropdown">Daftar</button>
   </div>
+  <section class="auth-dropdown" id="loginDropdown">
+   <h3>Masuk FIXZY BUSINESS</h3><p>Masukkan email dan password akun Anda.</p>
+   <form id="loginForm">
+    <div class="field"><input id="email" type="email" placeholder="Email" autocomplete="username" required></div>
+    <div class="field"><input id="password" type="password" placeholder="Password" autocomplete="current-password" required></div>
+    <button class="primary" type="submit">Masuk</button><div class="err" id="loginError" role="status"></div>
+   </form>
+  </section>
+  <section class="auth-dropdown" id="registerDropdown">
+   <h3>Registrasi FIXZY BUSINESS</h3><p>Untuk membuat akun baru, lanjutkan ke halaman registrasi. Setelah selesai, kembali ke halaman ini untuk masuk.</p>
+   <button class="primary" id="openRegisterPage" type="button">Lanjut Registrasi</button>
+  </section>
   <div class="promo-list">
    <div class="promo-item"><div class="promo-icon">🛒</div><div><b>Belanja Produk</b><span>Akses kebutuhan produk bisnis lebih praktis.</span></div></div>
    <div class="promo-item"><div class="promo-icon">💳</div><div><b>Limit Bisnis</b><span>Fasilitas limit mengikuti hasil persetujuan.</span></div></div>
@@ -215,7 +231,7 @@ button,input{font:inherit}
 </main>
 </div>
 <nav class="bottom"><button class="nav" data-page="index.html"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
-<div class="overlay" id="loginOverlay"><div class="login"><h2>Masuk FIXZY BUSINESS</h2><p>Gunakan akun Owner.</p><form id="loginForm"><div class="field"><input id="email" type="email" placeholder="Email" required></div><div class="field"><input id="password" type="password" placeholder="Password" required></div><button class="primary" type="submit">Masuk</button><div class="err" id="loginError"></div></form></div></div>
+
 
 <script>
 (function(){
@@ -251,12 +267,16 @@ const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>location.href=x.dataset.page);
 document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.")}));
-document.getElementById("landingLoginBtn")?.addEventListener("click",()=>document.getElementById("loginOverlay").classList.add("show"));
+const loginToggle=document.getElementById("landingLoginBtn"),registerToggle=document.getElementById("landingRegisterBtn");
+const loginDropdown=document.getElementById("loginDropdown"),registerDropdown=document.getElementById("registerDropdown");
+function toggleAuthDropdown(which){const isLogin=which==="login",panel=isLogin?loginDropdown:registerDropdown,other=isLogin?registerDropdown:loginDropdown,btn=isLogin?loginToggle:registerToggle,otherBtn=isLogin?registerToggle:loginToggle;const open=!panel.classList.contains("open");panel.classList.toggle("open",open);other.classList.remove("open");btn.setAttribute("aria-expanded",String(open));otherBtn.setAttribute("aria-expanded","false");if(open)panel.scrollIntoView({behavior:"smooth",block:"nearest"})}
+loginToggle.addEventListener("click",()=>toggleAuthDropdown("login"));registerToggle.addEventListener("click",()=>toggleAuthDropdown("register"));
+document.getElementById("openRegisterPage").addEventListener("click",()=>location.href="register.html");
 document.getElementById("logoutBtn").onclick=()=>signOut(auth);
 document.getElementById("loginForm").onsubmit=async e=>{e.preventDefault();const error=document.getElementById("loginError");error.textContent="";try{await signInWithEmailAndPassword(auth,document.getElementById("email").value.trim(),document.getElementById("password").value)}catch{error.textContent="Login gagal. Periksa email dan password."}};
 onAuthStateChanged(auth,async user=>{
  const error=document.getElementById("loginError");
- if(!user){document.body.className="auth-logged-out";document.getElementById("loginOverlay").classList.remove("show");return}
+ if(!user){document.body.className="auth-logged-out";return}
  try{
   const s=await getDoc(doc(db,"users",user.uid));if(!s.exists())throw Error();
   const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
@@ -289,7 +309,7 @@ onAuthStateChanged(auth,async user=>{
    nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
    document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
   }
- }catch(e){document.body.className="auth-logged-out";document.getElementById("loginOverlay").classList.add("show");error.textContent="Akses Owner tidak tersedia."}
+ }catch(e){document.body.className="auth-logged-out";error.textContent="Akses Owner tidak tersedia.";loginDropdown.classList.add("open");loginToggle.setAttribute("aria-expanded","true")}
 });
 </script>
 </body>
