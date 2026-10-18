@@ -1,10 +1,27 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
-<title>FIXZY BUSINESS - Dashboard</title>
+<!doctype html><html lang="id"><head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111"><title>FIXZY BUSINESS - Unified</title>
 <style>
 *{box-sizing:border-box}
 :root{--black:#111;--yellow:#FFC107;--bg:#f3f4f6;--text:#171717;--muted:#667085;--line:#e5e7eb}
@@ -140,99 +157,240 @@ button,input{font:inherit}
 }
 @media(prefers-reduced-motion:reduce){.slides{transition:none}}
 </style>
+
 <style>
-/* Loader hanya muncul saat memeriksa sesi; dashboard tidak dibuat putih/kosong. */
-#dashboardLoader{position:fixed;inset:0;z-index:9999;background:#f3f4f6;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:24px;transition:opacity .18s ease}
-#dashboardLoader.hide{opacity:0;pointer-events:none}
-#dashboardLoader .loader-logo{width:58px;height:58px;border-radius:16px;background:#111;color:#ffc107;display:grid;place-items:center;font-weight:900;font-size:24px;border:1px solid #ffc107}
-#dashboardLoader .loader-spin{width:25px;height:25px;border:3px solid #ddd;border-top-color:#ffc107;border-radius:50%;animation:fixzySpin .7s linear infinite}
-@keyframes fixzySpin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+.role-badge{font-size:9px;font-weight:900;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:middle}
+.role-badge.super{background:#FFC107;color:#111}
+.role-badge.owner{background:#222;color:#fff;border:1px solid #333}
+.pending-dot{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#ef4444;color:#fff;font-size:10px;font-weight:900;display:none;place-items:center;border:2px solid #fff}
+.pending-dot.show{display:grid}
+.icon{position:relative}
+.tab-bar{display:none;gap:8px;padding:0 3px 12px;margin-top:4px}
+.tab-bar.show{display:flex}
+.tab{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;color:var(--muted)}
+.tab.active{background:#111;color:var(--yellow);border-color:#111}
+#roleSwitcher{display:none;position:fixed;right:12px;bottom:82px;z-index:30;gap:6px;background:#111;padding:5px;border-radius:999px;border:1px solid #2a2a2a}
+#roleSwitcher.show{display:flex}
 </style>
-</head>
-<body>
-<div id="dashboardLoader" role="status" aria-live="polite"><div class="loader-logo">F</div><strong>FIXZY BUSINESS</strong><div class="loader-spin"></div><small>Menyiapkan dashboard…</small></div>
+
+</head><body>
+
+<div id="dashboardLoader" style="position:fixed;inset:0;background:#f3f4f6;z-index:50;display:grid;place-items:center;text-align:center;padding:24px"><div><div style="width:54px;height:54px;border-radius:14px;background:#111;color:#FFC107;display:grid;place-items:center;font-weight:900;font-size:22px;margin:0 auto 12px">F</div><div style="font-weight:900">FIXZY BUSINESS</div><div style="font-size:12px;color:#667085;margin-top:6px">Memverifikasi akses...</div></div></div>
+
 <div class="app">
-<header class="top">
- <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
-</header>
-<main class="content">
- <section class="card">
-  <div class="balance-head"><div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp0</div></div><button class="topup" data-page="topup.html">+ Top Up</button></div>
-  <div class="divider"></div><div class="stats"><div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp0</b></div><div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp0</b></div></div>
- </section>
- <section class="section"><div class="section-title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
-  <div class="menu">
-   <button class="menu-btn" data-page="produk.html"><div class="icon">🛒</div><span>Belanja</span></button>
-   <button class="menu-btn" data-page="topup.html"><div class="icon">💰</div><span>Top Up</span></button>
-   <button class="menu-btn" data-page="limit.html"><div class="icon">💳</div><span>Limit</span></button>
-   <button class="menu-btn" data-page="tagihan.html"><div class="icon">🧾</div><span>Tagihan</span></button>
-   <button class="menu-btn" data-page="riwayat.html"><div class="icon">↔️</div><span>Riwayat</span></button>
-   <button class="menu-btn" data-page="profil.html"><div class="icon">👤</div><span>Profil</span></button>
-   <button class="menu-btn" data-service="transfer"><div class="icon">🏦</div><span>Transfer Antar Bank</span></button>
-   <button class="menu-btn" data-service="pulsa"><div class="icon">📱</div><span>Isi Pulsa &amp; Kuota</span></button>
-   <button class="menu-btn" data-service="wifi"><div class="icon">📶</div><span>Voucher WiFi</span></button>
-   <button class="menu-btn" data-service="antar"><div class="icon">🛵</div><span>Pesan Antar</span></button>
-   <button class="menu-btn" data-service="gojeg"><div class="icon">🚕</div><span>Gojeg Elit</span></button>
+  <div class="top">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo"><img src="" alt="F" onerror="this.style.display='none';this.parentElement.textContent='F';this.parentElement.style.color='#FFC107';this.parentElement.style.fontWeight='900'"></div>
+        <div>
+          <h1 style="display:flex;align-items:center">FIXZY BUSINESS <span id="roleBadge" class="role-badge owner">OWNER</span></h1>
+          <small id="greeting">Memuat...</small>
+        </div>
+      </div>
+      <button class="logout" id="logoutBtn">Keluar</button>
+    </div>
   </div>
- </section>
- <section class="section"><div class="section-title"><h2>Tagihan Terdekat</h2><span id="invoiceCount">0 tagihan</span></div><div id="nearestInvoiceBox"><div class="nearest-card"><div class="nearest-empty">Memuat tagihan...</div></div></div></section>
- <section class="section"><div class="section-title"><h2>Status Pesanan</h2><span id="orderStatusCount">0 pesanan</span></div><div id="orderStatusBox"><div class="nearest-card"><div class="nearest-empty">Memuat status pesanan...</div></div></div></section>
-</main>
+
+  <div class="content">
+    <div id="ownerDashboard">
+      <section class="card">
+        <div class="balance-head">
+          <div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp 0</div></div>
+          <button class="topup" data-page="topup.html">Top Up</button>
+        </div>
+        <div class="divider"></div>
+        <div class="stats">
+          <div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp 0</b></div>
+          <div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp 0</b><small id="invoiceCount" style="margin-top:6px;display:block;color:var(--muted);font-size:11px">0 tagihan</small></div>
+        </div>
+        <div id="nearestInvoiceBox" style="margin-top:14px"></div>
+      </section>
+    </div>
+
+    <div id="superadminDashboard" class="hidden">
+      <section class="card">
+        <div class="label">Dashboard</div><div class="amount">Superadmin</div>
+        <div class="divider"></div>
+        <div class="stats">
+          <div class="stat"><small>Total Owner</small><b id="ownerCount">0</b></div>
+          <div class="stat"><small>Top Up Menunggu</small><b id="topupCount">0</b></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="superTabBar" class="tab-bar">
+      <button id="tabKelola" class="tab active">Kelola Sistem</button>
+      <button id="tabOwner" class="tab">Akses Owner</button>
+    </div>
+
+    <div class="section" id="kelolaSection">
+      <div class="section-title"><h2 id="menuTitle">Menu Layanan</h2><span id="menuSubtitle"></span></div>
+      <div id="menuContainer" class="menu"></div>
+    </div>
+
+    <div class="section hidden" id="ownerAccessSection">
+      <div class="section-title"><h2>Akses Menu Owner</h2><span>SUPERADMIN BISA PAKAI</span></div>
+      <div id="ownerMenuForSuper" class="menu"></div>
+    </div>
+  </div>
 </div>
-<nav class="bottom"><button class="nav" id="homeNav" type="button"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
+
+<nav class="bottom" id="bottomNav"></nav>
+<div id="roleSwitcher"><button id="switchOwner" style="background:#fff;color:#111;padding:7px 12px;border-radius:999px;border:0;font-size:11px;font-weight:900">Owner View</button><button id="switchSuper" style="background:transparent;color:#9ca3af;border:1px solid #333;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:900">Super Admin View</button></div>
 
 
-</div>
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import{getFirestore,doc,getDoc,collection,query,where,getDocs}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import{initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,collection,query,where,getDocs} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let app,auth,db; try{app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app);}catch(e){}
 const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
-document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>{if(x.dataset.page==="index.html"){window.scrollTo({top:0,behavior:"smooth"});return}location.href=x.dataset.page});
-// Tombol Beranda cukup kembali ke bagian atas; jangan reload index.html.
-document.getElementById("homeNav")?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
-function hideDashboardLoader(){const el=document.getElementById("dashboardLoader");if(!el)return;el.classList.add("hide");setTimeout(()=>el.remove(),220)}
-document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.")}));
-document.getElementById("logoutBtn").onclick=async()=>{await signOut(auth);location.replace("login.html")};
-onAuthStateChanged(auth,async user=>{
- if(!user){location.replace("login.html");return}
- try{
-  const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()){location.replace("login.html?error=akses");return}
-  const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
-  if(p.role!=="owner"||p.ownerUid!==user.uid){location.replace("login.html?error=akses");return}
-  // Tampilkan dashboard segera setelah akses Owner terverifikasi, jangan menunggu semua laporan selesai dimuat.
-  hideDashboardLoader();
-  document.getElementById("greeting").textContent=p.namaUsaha||p.nama||"Owner";
-  const w=await getDoc(doc(db,"wallets",user.uid));document.getElementById("personalBalance").textContent=rupiah(w.exists()?w.data().saldoPribadi||0:0);
-  const l=await getDoc(doc(db,"limits",user.uid));document.getElementById("availableLimit").textContent=rupiah(l.exists()?l.data().limitTersedia||0:0);
-  let total=0,invoices=[];
-  try{const q=await getDocs(query(collection(db,"invoices"),where("ownerUid","==",user.uid)));q.forEach(s=>{const x=s.data(),sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);if(sisa>0){total+=sisa;invoices.push({id:s.id,...x,sisaTagihan:sisa})}})}catch(e){console.error("Gagal membaca tagihan:",e)}
-  document.getElementById("totalInvoice").textContent=rupiah(total);
-  const orderStatusCount=document.getElementById("orderStatusCount"),orderStatusBox=document.getElementById("orderStatusBox");
-  try{
-   const oq=await getDocs(query(collection(db,"orders"),where("ownerUid","==",user.uid))),active=[];
-   oq.forEach(os=>{const o=os.data(),st=String(o.status||o.orderStatus||"").trim().toUpperCase().replace(/[\s-]+/g,"_");if(["DISETUJUI","DIKEMAS","DIKIRIM","DIANTAR"].includes(st))active.push({id:os.id,...o,status:st})});
-   const statusMap={DISETUJUI:{label:"PESANAN DISETUJUI",cls:"status-approved"},DIKEMAS:{label:"SEDANG DIKEMAS",cls:"status-packed"},DIKIRIM:{label:"SUDAH DIKIRIM",cls:"status-shipped"},DIANTAR:{label:"SEDANG DIANTAR",cls:"status-delivery"}};
-   const toDate=v=>{if(v&&typeof v.toDate==="function")return v.toDate();if(!v)return null;const d=new Date(v);return isNaN(d.getTime())?null:d};
-   active.sort((a,b)=>{const da=toDate(a.updatedAt||a.diperbaruiAt||a.createdAt),db=toDate(b.updatedAt||b.diperbaruiAt||b.createdAt);return(db?db.getTime():0)-(da?da.getTime():0)});
-   orderStatusCount.textContent=active.length+" pesanan";
-   if(!active.length)orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada pesanan yang sedang diproses.</div></div>';
-   else{orderStatusBox.innerHTML=active.slice(0,5).map(o=>{const m=statusMap[o.status]||statusMap.DISETUJUI,nomor=o.orderNo||o.nomorPesanan||o.invoiceNo||o.id,totalPesanan=Number(o.total||o.grandTotal||o.totalHarga||0);return `<div class="order-status-card"><div class="order-status-head"><div><div class="order-status-number">${nomor}</div><div class="order-status-total">${rupiah(totalPesanan)}</div></div><div class="order-status-badge ${m.cls}">${m.label}</div></div><div class="order-status-info">Owner akan mendapat informasi saat pesanan berubah status.</div><button class="topup order-status-btn" data-page="riwayat.html">Lihat Pesanan</button></div>`}).join('');orderStatusBox.querySelectorAll('[data-page="riwayat.html"]').forEach(btn=>btn.onclick=()=>location.href='riwayat.html')}
-  }catch(e){console.error("Gagal membaca status pesanan:",e);orderStatusCount.textContent="-";orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Status pesanan belum dapat dimuat.</div></div>'}
-  const invoiceCount=document.getElementById("invoiceCount"),nearestBox=document.getElementById("nearestInvoiceBox");invoiceCount.textContent=invoices.length+" tagihan";
-  if(!invoices.length)nearestBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada tagihan yang belum lunas.</div></div>';
-  else{
-   invoices.sort((a,b)=>{const da=toDate(a.jatuhTempo),db=toDate(b.jatuhTempo);return(da?da.getTime():Number.MAX_SAFE_INTEGER)-(db?db.getTime():Number.MAX_SAFE_INTEGER)});
-   const x=invoices[0],due=toDate(x.jatuhTempo),today=new Date();today.setHours(0,0,0,0);let jatuhTempo=false;
-   if(due){const d=new Date(due);d.setHours(0,0,0,0);jatuhTempo=d<=today}
-   const tanggal=due?due.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"}):"-",nomor=x.nomorPesanan||x.nomorInvoice||x.invoiceNo||x.id||"-";
-   nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
-   document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
+
+const OWNER_MENUS=[
+  {icon:"🛒",label:"Belanja",page:"produk.html"},
+  {icon:"💰",label:"Top Up",page:"topup.html"},
+  {icon:"💳",label:"Limit",page:"limit.html"},
+  {icon:"🧾",label:"Tagihan",page:"tagihan.html"},
+  {icon:"↔️",label:"Riwayat",page:"riwayat.html"},
+  {icon:"👤",label:"Profil",page:"profil.html"},
+  {icon:"🏦",label:"Transfer Antar Bank",service:"transfer"},
+  {icon:"📱",label:"Isi Pulsa & Kuota",service:"pulsa"},
+  {icon:"📶",label:"Voucher WiFi",service:"wifi"},
+  {icon:"🛵",label:"Pesan Antar",service:"antar"},
+  {icon:"🚕",label:"Gojeg Elit",service:"gojeg"},
+];
+const SUPER_MENUS=[
+  {icon:"💰",label:"Approval Top Up",page:"admin-topup-fixzy-business.html",badgeId:"pendingTopup"},
+  {icon:"👥",label:"Data Owner",page:"data-owner.html"},
+  {icon:"💳",label:"Kelola Limit",page:"approval-limit-fixzy-business-superadmin.html",badgeId:"pendingLimit"},
+  {icon:"📦",label:"Data Pesanan",page:"data-pesanan.html",badgeId:"pendingOrder"},
+  {icon:"🛒",label:"Produk",page:"produk.html"},
+  {icon:"🧾",label:"Tagihan",page:"data-tagihan.html"},
+  {icon:"📊",label:"Laporan Sistem",page:"laporan.html"},
+  {icon:"⚙️",label:"Pengaturan",page:"pengaturan.html"},
+];
+const BOTTOM_OWNER=[
+  {icon:"⌂",label:"Beranda",action:"home"},
+  {icon:"🛒",label:"Belanja",page:"produk.html"},
+  {icon:"🧾",label:"Tagihan",page:"tagihan.html"},
+  {icon:"↔️",label:"Riwayat",page:"riwayat.html"},
+  {icon:"👤",label:"Profil",page:"profil.html"},
+];
+const BOTTOM_SUPER=[
+  {icon:"⌂",label:"Beranda",action:"home"},
+  {icon:"💰",label:"Top Up",page:"admin-topup-fixzy-business.html"},
+  {icon:"💳",label:"Limit",page:"approval-limit-fixzy-business-superadmin.html"},
+  {icon:"📦",label:"Pesanan",page:"data-pesanan.html"},
+  {icon:"⚙",label:"Profil",page:"pengaturan.html"},
+];
+
+function createMenuBtn(item){
+  const btn=document.createElement("button");btn.className="menu-btn";
+  if(item.page) btn.dataset.page=item.page; if(item.service) btn.dataset.service=item.service;
+  btn.innerHTML='<div class="icon">'+item.icon+(item.badgeId?'<b class="pending-dot" id="'+item.badgeId+'"></b>':'')+'</div><span>'+item.label+'</span>';
+  return btn;
+}
+function renderBottom(items){
+  const nav=document.getElementById("bottomNav");nav.innerHTML="";
+  items.forEach(it=>{
+    const b=document.createElement("button");b.className="nav";b.dataset.page=it.page||"";
+    if(it.action==="home") b.id="homeNav";
+    b.innerHTML='<i>'+it.icon+'</i>'+it.label;nav.appendChild(b);
+  });
+}
+function attachEvents(){
+  document.querySelectorAll("[data-page]").forEach(x=>{x.onclick=()=>{
+    const p=x.dataset.page; if(!p||p==="index.html"){window.scrollTo({top:0,behavior:"smooth"});return}
+    if(!auth||!auth.currentUser){alert("Navigasi ke: "+p);return} location.href=p;
+  }});
+  document.querySelectorAll("[data-service]").forEach(x=>x.addEventListener("click",()=>{
+    const labels={transfer:"Transfer Antar Bank",pulsa:"Isi Pulsa & Kuota",wifi:"Voucher WiFi",antar:"Pesan Antar",gojeg:"Gojeg Elit"};
+    alert("Menu "+(labels[x.dataset.service]||"layanan")+" ditambahkan. Halaman transaksi layanan ini belum tersedia.");
+  }));
+}
+function hideLoader(){const el=document.getElementById("dashboardLoader");if(!el) return; el.style.opacity="0"; setTimeout(()=>el.remove(),220)}
+
+let activeTab="kelola";
+function switchTab(tab){
+  activeTab=tab;
+  const kelola=document.getElementById("kelolaSection");
+  const ownerSec=document.getElementById("ownerAccessSection");
+  const tK=document.getElementById("tabKelola"), tO=document.getElementById("tabOwner");
+  if(tab==="kelola"){kelola.classList.remove("hidden"); ownerSec.classList.add("hidden"); tK.classList.add("active"); tO.classList.remove("active");}
+  else{kelola.classList.add("hidden"); ownerSec.classList.remove("hidden"); tO.classList.add("active"); tK.classList.remove("active");}
+}
+document.getElementById("tabKelola").onclick=()=>switchTab("kelola");
+document.getElementById("tabOwner").onclick=()=>switchTab("owner");
+
+function renderMenus(role){
+  const menuContainer=document.getElementById("menuContainer");
+  const ownerForSuper=document.getElementById("ownerMenuForSuper");
+  const tabBar=document.getElementById("superTabBar");
+  menuContainer.innerHTML=""; ownerForSuper.innerHTML="";
+  const badge=document.getElementById("roleBadge");
+  if(role==="superadmin"){
+    document.getElementById("superadminDashboard").classList.remove("hidden");
+    document.getElementById("ownerDashboard").classList.add("hidden");
+    badge.textContent="SUPER ADMIN"; badge.className="role-badge super";
+    document.getElementById("menuTitle").textContent="Kelola Sistem";
+    document.getElementById("menuSubtitle").textContent="FULL ACCESS";
+    SUPER_MENUS.forEach(m=>menuContainer.appendChild(createMenuBtn(m)));
+    OWNER_MENUS.forEach(m=>ownerForSuper.appendChild(createMenuBtn(m)));
+    tabBar.classList.add("show");
+    switchTab("kelola");
+    renderBottom(BOTTOM_SUPER);
+  }else{
+    document.getElementById("superadminDashboard").classList.add("hidden");
+    document.getElementById("ownerDashboard").classList.remove("hidden");
+    badge.textContent="OWNER"; badge.className="role-badge owner";
+    document.getElementById("menuTitle").textContent="Menu Layanan";
+    document.getElementById("menuSubtitle").textContent="";
+    OWNER_MENUS.forEach(m=>menuContainer.appendChild(createMenuBtn(m)));
+    tabBar.classList.remove("show");
+    document.getElementById("kelolaSection").classList.remove("hidden");
+    document.getElementById("ownerAccessSection").classList.add("hidden");
+    renderBottom(BOTTOM_OWNER);
   }
- }catch(e){console.error("Akses dashboard gagal:",e);location.replace("login.html?error=akses")}
-});
+  attachEvents();
+}
+
+let currentRole = new URLSearchParams(location.search).get("role") || localStorage.getItem("fixzy_preview_role") || "owner";
+function setPreviewRole(r,save=true){currentRole=r; if(save) localStorage.setItem("fixzy_preview_role",r); renderMenus(r);
+  const o=document.getElementById("switchOwner"), s=document.getElementById("switchSuper");
+  if(o&&s){o.style.background=r==="owner"?"#fff":"transparent"; o.style.color=r==="owner"?"#111":"#9ca3af"; s.style.background=r==="superadmin"?"#FFC107":"transparent"; s.style.color=r==="superadmin"?"#111":"#9ca3af";}
+  document.getElementById("greeting").textContent=r==="owner"?"Toko Fixzy • Owner":"Administrator • Super Admin";
+}
+if(location.search.includes("demo")||location.search.includes("role")) document.getElementById("roleSwitcher").classList.add("show");
+document.getElementById("switchOwner").onclick=()=>setPreviewRole("owner");
+document.getElementById("switchSuper").onclick=()=>setPreviewRole("superadmin");
+setPreviewRole(currentRole==="superadmin"?"superadmin":"owner",false);
+setTimeout(hideLoader,600);
+
+if(auth){
+  document.getElementById("logoutBtn").onclick=async()=>{try{await signOut(auth)}catch{} location.replace("login.html")};
+  onAuthStateChanged(auth,async user=>{
+    if(!user) return;
+    try{
+      const snap=await getDoc(doc(db,"users",user.uid)); if(!snap.exists()) return;
+      const profile=snap.data()||{}; const role=profile.role==="superadmin"?"superadmin":"owner";
+      setPreviewRole(role); document.getElementById("greeting").textContent=profile.namaUsaha||profile.nama|| (role==="superadmin"?"Super Admin":"Owner"); hideLoader();
+      if(role==="owner"){
+        try{const w=await getDoc(doc(db,"wallets",user.uid)); document.getElementById("personalBalance").textContent=rupiah(w.exists()?(w.data().saldoPribadi||0):0);}catch{}
+        try{const l=await getDoc(doc(db,"limits",user.uid)); document.getElementById("availableLimit").textContent=rupiah(l.exists()?(l.data().limitTersedia||0):0);}catch{}
+        try{let total=0,inv=[]; const q=await getDocs(query(collection(db,"invoices"),where("ownerUid","==",user.uid))); q.forEach(i=>{const x=i.data(),s=Number(x.sisaTagihan??x.totalTagihan??x.total??0); if(s>0){total+=s; inv.push(x)}}); document.getElementById("totalInvoice").textContent=rupiah(total); document.getElementById("invoiceCount").textContent=inv.length+" tagihan";}catch{}
+      }else{
+        try{const owners=await getDocs(query(collection(db,"users"),where("role","==","owner"))); document.getElementById("ownerCount").textContent=owners.size;}catch{}
+        const badge=(id,n)=>{const b=document.getElementById(id); if(!b) return; b.textContent=n>99?"99+":String(n); b.classList.toggle("show",n>0)};
+        try{
+          const [topups,limits,orders]=await Promise.all([getDocs(query(collection(db,"walletTransactions"),where("type","==","TOPUP"),where("status","==","MENUNGGU"))),getDocs(query(collection(db,"limitApplications"),where("status","==","MENUNGGU"))),getDocs(query(collection(db,"orders"),where("status","==","MENUNGGU_PERSETUJUAN")))]); 
+          document.getElementById("topupCount").textContent=topups.size; badge("pendingTopup",topups.size); badge("pendingLimit",limits.size); badge("pendingOrder",orders.size);
+        }catch{}
+      }
+    }catch(e){console.error(e); hideLoader()}
+  });
+}
 </script>
-</body>
-</html>
+
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
