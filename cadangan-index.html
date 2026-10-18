@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box}
+:root{--black:#111;--yellow:#FFC107;--bg:#f3f4f6;--text:#171717;--muted:#667085;--line:#e5e7eb}
+html,body{margin:0;padding:0}
+body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input{font:inherit}
+.app{width:100%;max-width:1180px;min-height:100vh;margin:auto;padding-bottom:82px}
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.brand h1{font-size:17px;margin:0;font-weight:900;color:var(--yellow)}
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}
+.logout{border:1px solid #333;background:#1b1b1b;color:#fff;border-radius:11px;padding:9px 13px;font-size:12px;font-weight:800}
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 10px 28px rgba(0,0,0,.08)}
+.label{color:var(--muted);font-size:12px;font-weight:700;margin-bottom:5px}
+.amount{font-size:26px;font-weight:900}
+.balance-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.topup{border:0;border-radius:12px;background:#111;color:var(--yellow);padding:11px 14px;font-weight:900;font-size:12px}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#f8f8f8;border:1px solid #ededed;border-radius:15px;padding:13px}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px;font-weight:700}
+.stat b{font-size:15px}
+.section{margin-top:18px}
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:0 3px 8px}
+.section-title h2{font-size:15px;margin:0;font-weight:900}
+.section-title span{color:var(--muted);font-size:10px;font-weight:800}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:2px 0}
+.menu-btn{min-height:78px;border:0;background:transparent;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;color:var(--text)}
+.menu-btn:active{background:#fff}
+.icon{width:42px;height:42px;border-radius:13px;background:#111;color:var(--yellow);display:grid;place-items:center;font-size:20px}
+.menu-btn span{font-size:12px;font-weight:900;text-align:center}
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:20}
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800}
+.nav i{display:block;font-style:normal;font-size:21px;line-height:22px;margin-bottom:3px}
+
+/* Halaman promosi: carousel landscape 16:9 */
+.landing{padding:0 14px 24px}
+.landing-brand{background:#111;margin:0 -14px 18px;padding:12px 14px;border-radius:0;color:#fff;width:calc(100% + 28px)}
+.landing-subtitle{color:#d1d5db}
+.landing-inner{max-width:1000px;margin:auto}
+.landing-brand{display:flex;align-items:center;gap:12px;margin:0 0 16px;min-width:0}
+.landing-logo{width:46px;height:46px;border-radius:12px;background:#111;border:1px solid var(--yellow);overflow:hidden;flex:0 0 46px}
+.landing-logo img{width:100%;height:100%;object-fit:contain;display:block}
+.landing-title{font-size:clamp(19px,3vw,28px);line-height:1.1;font-weight:900;color:var(--yellow)}
+.landing-subtitle{color:#d1d5db;font-size:12px;margin-top:3px}
+.promo-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 2px 10px}
+.promo-heading h2{font-size:17px;margin:0;font-weight:900}
+.promo-heading span{font-size:11px;color:var(--muted);font-weight:800}
+.carousel{position:relative;overflow:hidden;border-radius:22px;background:#111;box-shadow:0 12px 30px rgba(0,0,0,.16);isolation:isolate}
+.slides{display:flex;width:100%;transition:transform .65s cubic-bezier(.22,.75,.25,1);will-change:transform}
+.slide{width:100%;min-width:100%;flex:0 0 100%;}
+.slide img{object-fit:cover;object-position:center;max-width:100%}
+.slide{position:relative;flex:0 0 100%;aspect-ratio:16/9;min-height:0;background:#111;overflow:hidden}
+.slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:contain;object-position:center;display:block;background:#111}
+.slide:after{content:none}
+.slide-copy{position:absolute;z-index:2;left:clamp(16px,4vw,44px);top:50%;transform:translateY(-50%);width:min(56%,530px);color:#fff;background:rgba(8,8,8,.88);padding:clamp(10px,2vw,20px);border:1px solid rgba(255,193,7,.24);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.slide-kicker{color:var(--yellow);font-size:clamp(9px,1.2vw,13px);font-weight:900;letter-spacing:1.5px;text-transform:uppercase}
+.slide-copy h3{font-size:clamp(19px,4vw,43px);line-height:1.04;margin:8px 0 10px;font-weight:900}
+.slide-copy p{font-size:clamp(10px,1.6vw,16px);line-height:1.45;color:#f3f4f6;margin:0;max-width:440px}
+.slide-cta{display:inline-flex;margin-top:14px;padding:10px 15px;border-radius:999px;background:var(--yellow);color:#111;text-decoration:none;font-weight:900;font-size:clamp(10px,1.3vw,13px)}
+.carousel-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:38px;height:38px;border:1px solid #ffffff70;border-radius:50%;background:#111b;color:#fff;font-size:24px;display:grid;place-items:center;cursor:pointer}
+.carousel-arrow.prev{left:10px}.carousel-arrow.next{right:10px}
+.carousel-dots{display:flex;justify-content:center;gap:8px;padding:12px 0 0}
+.carousel-dot{width:9px;height:9px;border:0;border-radius:50%;background:#c6c8cc;padding:0;cursor:pointer}
+.carousel-dot.active{background:var(--yellow);width:24px;border-radius:9px}
+.promo-caption{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;color:var(--muted);font-size:11px}
+.promo-caption strong{color:#222}
+.promo-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.promo-item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.promo-icon{width:38px;height:38px;border-radius:11px;background:#111;color:var(--yellow);display:grid;place-items:center;flex:0 0 38px;font-size:18px}
+.promo-item b{display:block;font-size:13px}
+.promo-item span{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}
+.promo-note{font-size:10px;color:var(--muted);margin:12px 2px}
+.landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+.landing-actions .landing-btn{width:100%;min-width:0;height:40px;min-height:40px;padding:7px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+.landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
+.landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
+.landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
+.auth-logged-out .top,.auth-logged-out .bottom,.auth-logged-out .content{display:none}
+.auth-logged-in .landing{display:none}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:flex-end;justify-content:center;z-index:100}
+.overlay.show{display:flex}
+.login{width:min(520px,100%);background:#fff;border-radius:24px 24px 0 0;padding:24px 20px}
+.login h2{margin:0 0 6px}.login p{margin:0 0 16px;color:var(--muted);font-size:13px}
+.field{margin:10px 0}.field input{width:100%;border:1px solid #d0d5dd;border-radius:13px;padding:13px}
+.primary{width:100%;border:0;border-radius:13px;padding:14px;background:#111;color:var(--yellow);font-weight:900}
+.err{color:#b42318;font-size:12px;min-height:18px}
+.nearest-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+.nearest-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.nearest-label{color:var(--muted);font-size:10px;font-weight:800}
+.nearest-amount{font-size:20px;font-weight:900;margin-top:4px}
+.nearest-info{color:var(--muted);font-size:11px;margin-top:5px;line-height:1.5}
+.nearest-status{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.nearest-normal{background:#fef3c7;color:#92400e}.nearest-due{background:#fee2e2;color:#991b1b}
+.nearest-btn{width:100%;margin-top:12px}.nearest-empty{color:var(--muted);font-size:12px}
+.order-status-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);margin-bottom:10px}
+.order-status-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.order-status-number{font-size:11px;color:var(--muted);font-weight:800}
+.order-status-total{font-size:16px;font-weight:900;margin-top:3px}
+.order-status-badge{padding:7px 9px;border-radius:999px;font-size:10px;font-weight:900;white-space:nowrap}
+.status-approved{background:#dbeafe;color:#1d4ed8}.status-packed{background:#fef3c7;color:#92400e}.status-shipped{background:#e0e7ff;color:#4338ca}.status-delivery{background:#cffafe;color:#0e7490}.status-done{background:#dcfce7;color:#166534}
+.order-status-info{font-size:11px;color:var(--muted);line-height:1.5;margin-top:7px}
+.order-status-btn{width:100%;margin-top:10px}
+@media(max-width:700px){
+ .top{padding:16px 15px 66px}.content{padding:0 14px;margin-top:-42px}
+ .landing{padding:0 0 22px}.landing-inner{width:100%}
+ .landing-brand{padding:12px 14px;min-width:0;width:calc(100% + 28px);margin:0 -14px 18px;border-radius:0}.landing-logo{width:44px;height:44px;flex:0 0 44px;overflow:hidden}.landing-logo img{width:100%;height:100%;object-fit:contain;object-position:center}
+ .carousel{border-radius:15px}
+ .slide-copy{left:12px;width:calc(100% - 64px);max-width:390px;padding:10px 11px;border-radius:11px}
+ .slide-copy h3{font-size:clamp(17px,4.4vw,28px);margin:5px 0 6px}
+ .slide-copy p{font-size:clamp(9px,2.2vw,12px)}
+ .slide-cta{margin-top:8px;padding:7px 10px}
+ .carousel-arrow{width:30px;height:30px;font-size:19px}
+ .promo-list{grid-template-columns:1fr 1fr;gap:8px}
+ .promo-item{padding:10px;gap:8px}.promo-item b{font-size:12px}.promo-item span{font-size:10px}
+ .promo-icon{width:32px;height:32px;flex-basis:32px}
+ .promo-caption{padding:0 3px}
+ .landing-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+ .landing-actions .landing-btn{width:100%;min-width:0;height:40px;min-height:40px;padding:7px 8px;border-radius:11px;display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;font-family:inherit;font-size:13px;font-weight:900;line-height:1.2;white-space:nowrap;cursor:pointer;-webkit-appearance:none;appearance:none}
+ .landing-actions .landing-btn.primary{background:#111;color:var(--yellow);border:1px solid #111}
+ .landing-actions .landing-btn.secondary,.landing-actions a.landing-btn.secondary:link,.landing-actions a.landing-btn.secondary:visited{background:var(--yellow);color:#111;border:1px solid var(--yellow);text-decoration:none}
+ .landing-actions .landing-btn.secondary:hover,.landing-actions .landing-btn.secondary:active{background:#e5ac00;color:#111}
+}
+@media(max-width:390px){.landing{padding-top:0}
+ .slide-copy{width:calc(100% - 62px);max-width:360px}.slide-copy p{max-width:210px}
+ .slide-cta{font-size:9px}.promo-list{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){.slides{transition:none}}
+</style>
+</head>
+<body class="auth-logged-out">
+<div class="app">
+<section class="landing" id="landingPage">
+ <div class="landing-inner">
+  <div class="landing-brand">
+   <div class="landing-logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+   <div><div class="landing-title">FIXZY BUSINESS</div><div class="landing-subtitle">Platform bisnis dan E-Wallet</div></div>
+  </div>
+  <div class="promo-heading"><h2>Web Unggulan</h2><span></span></div>
+  <div class="carousel" id="promoCarousel" aria-label="Promosi unggulan FIXZY BUSINESS">
+   <div class="slides" id="promoSlides">
+    <article class="slide">
+     <img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama">
+    </article>
+    <article class="slide">
+     <img src="fixzy1.png" alt="Belanja produk lebih mudah">
+    </article>
+    <article class="slide">
+     <img src="fixzy2.png" alt="Limit bisnis">
+    </article>
+    <article class="slide">
+     <img src="fixzy3.png" alt="Top up saldo">
+    </article>
+    <article class="slide">
+     <img src="fixzy4.png" alt="Keuntungan member dan mitra">
+    </article>
+   </div>
+   <button class="carousel-arrow prev" id="promoPrev" aria-label="Slide sebelumnya">‹</button>
+   <button class="carousel-arrow next" id="promoNext" aria-label="Slide berikutnya">›</button>
+  </div>
+  <div class="carousel-dots" id="promoDots" aria-label="Pilih slide">
+   <button class="carousel-dot active" aria-label="Slide 1"></button><button class="carousel-dot" aria-label="Slide 2"></button><button class="carousel-dot" aria-label="Slide 3"></button><button class="carousel-dot" aria-label="Slide 4"></button><button class="carousel-dot" aria-label="Slide 5"></button>
+  </div>
+  <div class="promo-caption"><span><strong id="promoSlideTitle">FIXZY BUSINESS</strong> · <span id="promoSlideNumber">1 dari 5</span></span><span>Geser untuk melihat promo lainnya</span></div>
+  <div class="landing-actions">
+   <button class="landing-btn primary" id="landingLoginBtn" type="button">Masuk</button>
+   <a class="landing-btn secondary" href="register.html">Daftar</a>
+  </div>
+  <div class="promo-list">
+   <div class="promo-item"><div class="promo-icon">🛒</div><div><b>Belanja Produk</b><span>Akses kebutuhan produk bisnis lebih praktis.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">💳</div><div><b>Limit Bisnis</b><span>Fasilitas limit mengikuti hasil persetujuan.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">⚡</div><div><b>Transaksi Mudah</b><span>Saldo dan riwayat transaksi terpantau.</span></div></div>
+   <div class="promo-item"><div class="promo-icon">🤝</div><div><b>Member & Mitra</b><span>Peluang promo dan kerja sama komunitas.</span></div></div>
+
+
+
+  </div>
+  <div class="promo-note">* Limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
+ </div>
+</section>
+
+<header class="top">
+ <div class="brand"><div class="brand-left"><div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div><div><h1>FIXZY BUSINESS</h1><small id="greeting">Dashboard bisnis</small></div></div><button class="logout" id="logoutBtn">Keluar</button></div>
+</header>
+<main class="content">
+ <section class="card">
+  <div class="balance-head"><div><div class="label">Saldo Pribadi</div><div class="amount" id="personalBalance">Rp0</div></div><button class="topup" data-page="topup.html">+ Top Up</button></div>
+  <div class="divider"></div><div class="stats"><div class="stat"><small>Limit Tersedia</small><b id="availableLimit">Rp0</b></div><div class="stat"><small>Total Tagihan</small><b id="totalInvoice">Rp0</b></div></div>
+ </section>
+ <section class="section"><div class="section-title"><h2>Menu Utama</h2><span>FIXZY BUSINESS</span></div>
+  <div class="menu">
+  <button class="menu-btn" data-page="produk.html">
+    <div class="icon">🛒</div>
+    <span>Belanja</span>
+  </button>
+
+  <button class="menu-btn" data-page="topup.html">
+    <div class="icon">💰</div>
+    <span>Top Up</span>
+  </button>
+
+  <button class="menu-btn" data-page="limit.html">
+    <div class="icon">💳</div>
+    <span>Limit</span>
+  </button>
+
+  <button class="menu-btn" data-page="tagihan.html">
+    <div class="icon">🧾</div>
+    <span>Tagihan</span>
+  </button>
+
+  <button class="menu-btn" data-page="riwayat.html">
+    <div class="icon">↔️</div>
+    <span>Riwayat</span>
+  </button>
+
+  <button class="menu-btn" data-page="profil.html">
+    <div class="icon">👤</div>
+    <span>Profil</span>
+  </button>
+
+  <button class="menu-btn" data-page="transfer.html">
+    <div class="icon">🏦</div>
+    <span>Transfer Antar Bank</span>
+  </button>
+
+  <button class="menu-btn" data-page="pulsa-kuota.html">
+    <div class="icon">📱</div>
+    <span>Isi Pulsa & Kuota</span>
+  </button>
+
+  <button class="menu-btn" data-page="voucher-wifi.html">
+    <div class="icon">📶</div>
+    <span>Voucher WiFi</span>
+  </button>
+
+  <button class="menu-btn" data-page="pesan-antar.html">
+    <div class="icon">🛵</div>
+    <span>Pesan Antar</span>
+  </button>
+
+  <button class="menu-btn" data-page="gojeg-elit.html">
+    <div class="icon">🚘</div>
+    <span>Gojeg Elit</span>
+  </button>
+</div>
+ </section>
+ <section class="section"><div class="section-title"><h2>Tagihan Terdekat</h2><span id="invoiceCount">0 tagihan</span></div><div id="nearestInvoiceBox"><div class="nearest-card"><div class="nearest-empty">Memuat tagihan...</div></div></div></section>
+ <section class="section"><div class="section-title"><h2>Status Pesanan</h2><span id="orderStatusCount">0 pesanan</span></div><div id="orderStatusBox"><div class="nearest-card"><div class="nearest-empty">Memuat status pesanan...</div></div></div></section>
+</main>
+</div>
+<nav class="bottom"><button class="nav" data-page="index.html"><i>⌂</i>Beranda</button><button class="nav" data-page="produk.html"><i>🛒</i>Belanja</button><button class="nav" data-page="tagihan.html"><i>🧾</i>Tagihan</button><button class="nav" data-page="riwayat.html"><i>↔️</i>Riwayat</button><button class="nav" data-page="profil.html"><i>👤</i>Profil</button></nav>
+<div class="overlay" id="loginOverlay"><div class="login"><h2>Masuk FIXZY BUSINESS</h2><p>Gunakan akun Owner.</p><form id="loginForm"><div class="field"><input id="email" type="email" placeholder="Email" required></div><div class="field"><input id="password" type="password" placeholder="Password" required></div><button class="primary" type="submit">Masuk</button><div class="err" id="loginError"></div></form></div></div>
+
+<script>
+(function(){
+ const track=document.getElementById('promoSlides');
+ const slides=[...track.querySelectorAll('.slide')];
+ const dots=[...document.querySelectorAll('.carousel-dot')];
+ const title=document.getElementById('promoSlideTitle');
+ const number=document.getElementById('promoSlideNumber');
+ const names=['FIXZY BUSINESS','Belanja Produk Lebih Mudah','Peluang Limit Bisnis','Top Up & Transaksi','Member & Mitra'];
+ let index=0,timer=null,startX=0,deltaX=0;
+ function show(i){index=(i+slides.length)%slides.length;track.style.transform='translateX(-'+(index*100)+'%)';dots.forEach((d,n)=>d.classList.toggle('active',n===index));title.textContent=names[index];number.textContent=(index+1)+' dari '+slides.length;}
+ function start(){stop();if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(index+1),4500)}
+ function stop(){if(timer)clearInterval(timer);timer=null}
+ document.getElementById('promoPrev').addEventListener('click',()=>{show(index-1);start()});
+ document.getElementById('promoNext').addEventListener('click',()=>{show(index+1);start()});
+ dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);start()}));
+ const carousel=document.getElementById('promoCarousel');
+ carousel.addEventListener('mouseenter',stop);carousel.addEventListener('mouseleave',start);
+ carousel.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;deltaX=0;stop()},{passive:true});
+ carousel.addEventListener('touchmove',e=>{deltaX=e.changedTouches[0].clientX-startX},{passive:true});
+ carousel.addEventListener('touchend',()=>{if(Math.abs(deltaX)>45)show(index+(deltaX<0?1:-1));start()},{passive:true});
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ show(0);start();
+})();
+</script>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,collection,query,where,getDocs}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const rupiah=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
+document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>location.href=x.dataset.page);
+document.getElementById("landingLoginBtn")?.addEventListener("click",()=>document.getElementById("loginOverlay").classList.add("show"));
+document.getElementById("logoutBtn").onclick=()=>signOut(auth);
+document.getElementById("loginForm").onsubmit=async e=>{e.preventDefault();const error=document.getElementById("loginError");error.textContent="";try{await signInWithEmailAndPassword(auth,document.getElementById("email").value.trim(),document.getElementById("password").value)}catch{error.textContent="Login gagal. Periksa email dan password."}};
+onAuthStateChanged(auth,async user=>{
+ const error=document.getElementById("loginError");
+ if(!user){document.body.className="auth-logged-out";document.getElementById("loginOverlay").classList.remove("show");return}
+ try{
+  const s=await getDoc(doc(db,"users",user.uid));if(!s.exists())throw Error();
+  const p=s.data();if(p.role==="superadmin"){location.replace("index-superadmin.html");return}
+  if(p.role!=="owner"||p.ownerUid!==user.uid)throw Error();
+  document.body.className="auth-logged-in";document.getElementById("greeting").textContent=p.namaUsaha||p.nama||"Owner";
+  const w=await getDoc(doc(db,"wallets",user.uid));document.getElementById("personalBalance").textContent=rupiah(w.exists()?w.data().saldoPribadi||0:0);
+  const l=await getDoc(doc(db,"limits",user.uid));document.getElementById("availableLimit").textContent=rupiah(l.exists()?l.data().limitTersedia||0:0);
+  let total=0,invoices=[];
+  try{const q=await getDocs(query(collection(db,"invoices"),where("ownerUid","==",user.uid)));q.forEach(s=>{const x=s.data(),sisa=Number(x.sisaTagihan??x.totalTagihan??x.total??0);if(sisa>0){total+=sisa;invoices.push({id:s.id,...x,sisaTagihan:sisa})}})}catch(e){console.error("Gagal membaca tagihan:",e)}
+  document.getElementById("totalInvoice").textContent=rupiah(total);
+  const orderStatusCount=document.getElementById("orderStatusCount"),orderStatusBox=document.getElementById("orderStatusBox");
+  try{
+   const oq=await getDocs(query(collection(db,"orders"),where("ownerUid","==",user.uid))),active=[];
+   oq.forEach(os=>{const o=os.data(),st=String(o.status||o.orderStatus||"").trim().toUpperCase().replace(/[\s-]+/g,"_");if(["DISETUJUI","DIKEMAS","DIKIRIM","DIANTAR"].includes(st))active.push({id:os.id,...o,status:st})});
+   const statusMap={DISETUJUI:{label:"PESANAN DISETUJUI",cls:"status-approved"},DIKEMAS:{label:"SEDANG DIKEMAS",cls:"status-packed"},DIKIRIM:{label:"SUDAH DIKIRIM",cls:"status-shipped"},DIANTAR:{label:"SEDANG DIANTAR",cls:"status-delivery"}};
+   const toDate=v=>{if(v&&typeof v.toDate==="function")return v.toDate();if(!v)return null;const d=new Date(v);return isNaN(d.getTime())?null:d};
+   active.sort((a,b)=>{const da=toDate(a.updatedAt||a.diperbaruiAt||a.createdAt),db=toDate(b.updatedAt||b.diperbaruiAt||b.createdAt);return(db?db.getTime():0)-(da?da.getTime():0)});
+   orderStatusCount.textContent=active.length+" pesanan";
+   if(!active.length)orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada pesanan yang sedang diproses.</div></div>';
+   else{orderStatusBox.innerHTML=active.slice(0,5).map(o=>{const m=statusMap[o.status]||statusMap.DISETUJUI,nomor=o.orderNo||o.nomorPesanan||o.invoiceNo||o.id,totalPesanan=Number(o.total||o.grandTotal||o.totalHarga||0);return `<div class="order-status-card"><div class="order-status-head"><div><div class="order-status-number">${nomor}</div><div class="order-status-total">${rupiah(totalPesanan)}</div></div><div class="order-status-badge ${m.cls}">${m.label}</div></div><div class="order-status-info">Owner akan mendapat informasi saat pesanan berubah status.</div><button class="topup order-status-btn" data-page="riwayat.html">Lihat Pesanan</button></div>`}).join('');orderStatusBox.querySelectorAll('[data-page="riwayat.html"]').forEach(btn=>btn.onclick=()=>location.href='riwayat.html')}
+  }catch(e){console.error("Gagal membaca status pesanan:",e);orderStatusCount.textContent="-";orderStatusBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Status pesanan belum dapat dimuat.</div></div>'}
+  const invoiceCount=document.getElementById("invoiceCount"),nearestBox=document.getElementById("nearestInvoiceBox");invoiceCount.textContent=invoices.length+" tagihan";
+  if(!invoices.length)nearestBox.innerHTML='<div class="nearest-card"><div class="nearest-empty">Belum ada tagihan yang belum lunas.</div></div>';
+  else{
+   const toDate=v=>{if(v&&typeof v.toDate==="function")return v.toDate();if(!v)return null;const d=new Date(v);return isNaN(d.getTime())?null:d};
+   invoices.sort((a,b)=>{const da=toDate(a.jatuhTempo),db=toDate(b.jatuhTempo);return(da?da.getTime():Number.MAX_SAFE_INTEGER)-(db?db.getTime():Number.MAX_SAFE_INTEGER)});
+   const x=invoices[0],due=toDate(x.jatuhTempo),today=new Date();today.setHours(0,0,0,0);let jatuhTempo=false;
+   if(due){const d=new Date(due);d.setHours(0,0,0,0);jatuhTempo=d<=today}
+   const tanggal=due?due.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"}):"-",nomor=x.nomorPesanan||x.nomorInvoice||x.invoiceNo||x.id||"-";
+   nearestBox.innerHTML=`<div class="nearest-card"><div class="nearest-head"><div><div class="nearest-label">SISA TAGIHAN</div><div class="nearest-amount">${rupiah(x.sisaTagihan)}</div><div class="nearest-info">${nomor}<br>Jatuh tempo: ${tanggal}</div></div><div class="nearest-status ${jatuhTempo?"nearest-due":"nearest-normal"}">${jatuhTempo?"JATUH TEMPO":"BELUM LUNAS"}</div></div><button class="topup nearest-btn" id="nearestInvoiceBtn">Lihat & Bayar Tagihan</button></div>`;
+   document.getElementById("nearestInvoiceBtn").onclick=()=>location.href="tagihan.html";
+  }
+ }catch(e){document.body.className="auth-logged-out";document.getElementById("loginOverlay").classList.add("show");error.textContent="Akses Owner tidak tersedia."}
+});
+</script>
+</body>
+</html>
