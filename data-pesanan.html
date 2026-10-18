@@ -100,6 +100,11 @@ body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}
 .replace-item b{display:block;font-size:12px}
 .replace-item small{display:block;color:#6b7280;font-size:10px;margin-top:3px;line-height:1.4}
 .replace-empty{padding:9px;color:#6b7280;font-size:11px}
+
+.status-control{display:flex;flex-direction:column;gap:7px;width:100%;min-width:0}
+.status-control label{font-size:11px;font-weight:900;color:#6b7280}
+.status-select{width:100%;min-height:44px;padding:11px 36px 11px 12px;border:1px solid #d1d5db;border-radius:11px;background:#fff;color:#111;font-size:13px;font-weight:800}
+.status-select:focus{outline:2px solid #ffc107;border-color:#ffc107}
 </style>
 </head>
 <body>
@@ -396,18 +401,25 @@ function render(){
       const ready=procurementReady(order);
       actions=`
         ${ready
-          ? '<button class="btn green" data-action="approve" data-id="'+esc(order.id)+'">✓ SETUJUI</button>'
+          ? `<button class="btn green" data-action="approve" data-id="${esc(order.id)}">✓ SETUJUI</button>`
           : '<button class="btn light" disabled>⏳ Belum tersedia</button>'}
         <a class="btn yellow" href="supplier.html" style="text-decoration:none">🏭 Supplier</a>
         <button class="btn red" data-action="reject" data-id="${esc(order.id)}">✕ TOLAK</button>`;
-    }else if(s==="DISETUJUI"){
-      actions=`<button class="btn yellow" data-action="pack" data-id="${esc(order.id)}">📦 DIKEMAS</button>`;
-    }else if(s==="DIKEMAS"){
-      actions=`<button class="btn blue" data-action="ship" data-id="${esc(order.id)}">🚚 DIKIRIM</button>`;
-    }else if(s==="DIKIRIM"){
-      actions=`<button class="btn blue" data-action="deliver" data-id="${esc(order.id)}">🛵 DIANTAR</button>`;
-    }else if(s==="DIANTAR"){
-      actions=`<button class="btn green" data-action="done" data-id="${esc(order.id)}">✓ SELESAI</button>`;
+    }else if(!["SELESAI","DITOLAK"].includes(s)){
+      const statusOptions=[
+        ["DISETUJUI","Disetujui"],["DIKEMAS","Dikemas"],
+        ["DIKIRIM","Dikirim"],["DIANTAR","Diantar"],
+        ["SELESAI","Selesai"],["DITOLAK","Ditolak"]
+      ];
+      actions=`<div class="status-control">
+        <label for="status-${esc(order.id)}">UBAH STATUS PESANAN</label>
+        <select class="status-select" id="status-${esc(order.id)}"
+          data-action="change-status" data-id="${esc(order.id)}">
+          ${statusOptions.map(([value,label])=>`<option value="${value}" ${s===value?"selected":""}>${label}</option>`).join("")}
+        </select>
+      </div>`;
+    }else{
+      actions=`<span class="note">Pesanan ${s==="SELESAI"?"sudah selesai":"ditolak"}.</span>`;
     }
 
     return `
@@ -1068,15 +1080,26 @@ $("orders").addEventListener("click",async e=>{
   if(!btn) return;
   const order=allOrders.find(x=>x.id===btn.dataset.id);
   if(!order) return;
-
   const action=btn.dataset.action;
   if(action==="edit-product") openEditProduct(order,Number(btn.dataset.index));
   else if(action==="approve") await approveOrder(order);
   else if(action==="reject") await rejectOrder(order);
-  else if(action==="pack") await changeStatus(order,"DIKEMAS");
-  else if(action==="ship") await changeStatus(order,"DIKIRIM");
-  else if(action==="deliver") await changeStatus(order,"DIANTAR");
-  else if(action==="done") await changeStatus(order,"SELESAI");
+});
+
+$("orders").addEventListener("change",async e=>{
+  const select=e.target.closest('select[data-action="change-status"]');
+  if(!select) return;
+  const order=allOrders.find(x=>x.id===select.dataset.id);
+  if(!order) return;
+  const next=select.value;
+  const current=normalizeStatus(order.status);
+  if(next===current) return;
+  if(!confirm(`Ubah status ${order.nomorPesanan||order.id} menjadi ${statusLabel(next)}?`)){
+    render();
+    return;
+  }
+  select.disabled=true;
+  await changeStatus(order,next);
 });
 
 
