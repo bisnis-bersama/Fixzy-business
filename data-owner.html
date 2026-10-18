@@ -23,7 +23,7 @@ h2{font-size:19px;margin:0 0 6px}h3{font-size:16px;margin:0 0 8px}
 .badge{display:inline-block;padding:5px 8px;border-radius:99px;background:#eee;font-size:11px;font-weight:700}
 .ok{background:#dcfce7;color:#166534}.wait{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
 .btn{display:inline-block;padding:9px 12px;border:0;border-radius:10px;background:#111;color:#fff;text-decoration:none;text-align:center;font-weight:700;cursor:pointer;font-size:12px}
-.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}
+.btn.yellow{background:var(--yellow);color:#111}.btn.light{background:#eee;color:#111}.btn.green{background:#15803d;color:#fff}.btn.red{background:#b91c1c;color:#fff}.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.action-note{font-size:11px;color:var(--muted);margin-top:8px}.notice{padding:10px;border-radius:10px;margin:10px 0;font-size:12px;display:none}.notice.okay{display:block;background:#dcfce7;color:#166534}.notice.error{display:block;background:#fee2e2;color:#991b1b}
 .empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed #d1d5db;border-radius:12px}
 .loading{padding:20px;text-align:center;color:var(--muted)}
 .detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
@@ -82,7 +82,7 @@ import {
   getAuth, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import {
-  getFirestore, collection, getDocs, query, where
+  getFirestore, collection, getDocs, query, where, doc, getDoc, runTransaction, setDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -101,6 +101,8 @@ const db = getFirestore(app);
 const statusEl = document.getElementById("status");
 const listEl = document.getElementById("list");
 const jumlahEl = document.getElementById("jumlah");
+let currentAdmin = null;
+const rupiah = n => new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(n)||0);
 
 function esc(v){
   return String(v ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
@@ -142,7 +144,12 @@ function renderOwner(id,d){
     </div>
     <div style="margin-top:10px">
       <button class="btn yellow" data-detail="${esc(id)}">Lihat Detail</button>
+      <button class="btn green" data-action="saldoTambah" data-owner="${esc(id)}" data-name="${esc(nama)}">+ Tambah Saldo</button>
+      <button class="btn red" data-action="saldoKurang" data-owner="${esc(id)}" data-name="${esc(nama)}">− Kurangi Saldo</button>
+      <button class="btn green" data-action="limitTambah" data-owner="${esc(id)}" data-name="${esc(nama)}">+ Tambah Limit</button>
+      <button class="btn red" data-action="limitKurang" data-owner="${esc(id)}" data-name="${esc(nama)}">− Kurangi Limit</button>
     </div>
+    <div class="action-note">Perubahan saldo dan limit dicatat dengan UID Superadmin serta waktu transaksi.</div>
     <div class="detail" id="detail-${esc(id)}">
       <div class="detail-grid">
         <div class="field"><small>Owner UID</small><b>${esc(d.ownerUid||id)}</b></div>
@@ -175,32 +182,79 @@ function renderOwner(id,d){
   });
 }
 
-onAuthStateChanged(auth, async user=>{
-  if(!user){
-    statusEl.textContent="Silakan login sebagai Superadmin.";
-    return;
-  }
+async function verifySuperadmin(user){
+  try{const token=await user.getIdTokenResult(true);if(token.claims?.role==="superadmin")return true;}catch(e){}
+  const snap=await getDoc(doc(db,"users",user.uid));
+  return snap.exists() && String(snap.data().role||"").toLowerCase()==="superadmin";
+}
 
-  try{
-    const q=query(collection(db,"users"),where("role","==","owner"));
-    const snap=await getDocs(q);
+async function loadOwners(){
+  statusEl.className="loading";statusEl.style.display="block";statusEl.textContent="Memuat data Owner...";
+  const q=query(collection(db,"users"),where("role","==","owner"));
+  const snap=await getDocs(q);
+  listEl.innerHTML="";jumlahEl.textContent=`${snap.size} Owner`;
+  if(snap.empty){statusEl.className="empty";statusEl.textContent="Belum ada Owner terdaftar.";return;}
+  statusEl.style.display="none";snap.forEach(d=>renderOwner(d.id,d.data()));
+}
 
-    listEl.innerHTML="";
-    jumlahEl.textContent=`${snap.size} Owner`;
+async function adjustOwner(action,ownerUid,ownerName){
+  if(!currentAdmin)throw new Error("Sesi Superadmin tidak ditemukan.");
+  const isSaldo=action.startsWith("saldo");
+  const isTambah=action.endsWith("Tambah");
+  const label=(isSaldo?"Saldo":"Limit");
+  const nominalRaw=prompt(`${isTambah?"TAMBAH":"KURANGI"} ${label} untuk ${ownerName}
+Masukkan nominal (Rupiah, angka saja):`);
+  if(nominalRaw===null)return;
+  const nominal=Number(String(nominalRaw).replace(/[.\s]/g,"").replace(/,/g,"."));
+  if(!Number.isFinite(nominal)||nominal<=0||!Number.isSafeInteger(nominal))throw new Error("Nominal harus berupa bilangan bulat Rupiah lebih dari 0.");
+  const alasan=prompt("Catatan/alasan perubahan (wajib):");
+  if(alasan===null)return;
+  if(!alasan.trim())throw new Error("Catatan perubahan wajib diisi.");
+  const verb=isTambah?"menambahkan":"mengurangi";
+  if(!confirm(`Konfirmasi ${verb} ${label.toLowerCase()} ${rupiah(nominal)} untuk ${ownerName}?
 
-    if(snap.empty){
-      statusEl.className="empty";
-      statusEl.textContent="Belum ada Owner terdaftar.";
-      return;
+Catatan: ${alasan.trim()}`))return;
+
+  const walletRef=doc(db,"wallets",ownerUid);
+  const limitRef=doc(db,"limits",ownerUid);
+  const logRef=doc(collection(db,isSaldo?"walletTransactions":"limitTransactions"));
+  await runTransaction(db,async tx=>{
+    if(isSaldo){
+      const ws=await tx.get(walletRef);const old=ws.exists()?ws.data():{};
+      const before=Number(old.saldoPribadi)||0;
+      const after=before+(isTambah?nominal:-nominal);
+      if(after<0)throw new Error(`Saldo tidak cukup. Saldo saat ini ${rupiah(before)}.`);
+      tx.set(walletRef,{ownerUid,saldoPribadi:after,status:old.status||"AKTIF",updatedAt:serverTimestamp(),...(ws.exists()?{}:{createdAt:serverTimestamp()})},{merge:true});
+      tx.set(logRef,{ownerUid,type:"ADMIN_ADJUSTMENT",action:isTambah?"TAMBAH_SALDO":"KURANGI_SALDO",nominal,amount:nominal,saldoSebelum:before,saldoSesudah:after,status:"DISETUJUI",catatan:alasan.trim(),processedBy:currentAdmin.uid,createdAt:serverTimestamp(),verifiedAt:serverTimestamp()});
+    }else{
+      const ls=await tx.get(limitRef);const old=ls.exists()?ls.data():{};
+      const approved=Number(old.limitDisetujui)||0;const used=Number(old.limitTerpakai)||0;
+      const after=approved+(isTambah?nominal:-nominal);
+      if(after<used)throw new Error(`Limit tidak bisa dikurangi di bawah limit terpakai ${rupiah(used)}. Limit disetujui saat ini ${rupiah(approved)}.`);
+      if(after<0)throw new Error("Limit tidak boleh negatif.");
+      const available=after-used;
+      tx.set(limitRef,{ownerUid,limitDisetujui:after,limitTerpakai:used,limitTersedia:available,status:"DISETUJUI",updatedAt:serverTimestamp()},{merge:true});
+      tx.set(logRef,{ownerUid,type:"ADMIN_ADJUSTMENT",action:isTambah?"TAMBAH_LIMIT":"KURANGI_LIMIT",nominal,limitSebelum:approved,limitSesudah:after,limitTerpakai:used,limitTersediaSesudah:available,status:"DISETUJUI",catatan:alasan.trim(),processedBy:currentAdmin.uid,createdAt:serverTimestamp(),processedAt:serverTimestamp()});
     }
+  });
+  alert(`${label} berhasil ${isTambah?"ditambahkan":"dikurangi"} sebesar ${rupiah(nominal)} untuk ${ownerName}.`);
+}
 
-    statusEl.style.display="none";
-    snap.forEach(doc=>renderOwner(doc.id,doc.data()));
-  }catch(err){
-    console.error(err);
-    statusEl.className="empty";
-    statusEl.innerHTML="Gagal membaca data Owner.<br><small>"+esc(err.message||err)+"</small>";
-  }
+listEl.addEventListener("click",async e=>{
+  const b=e.target.closest("button[data-action]");if(!b)return;
+  const buttons=b.closest(".item").querySelectorAll("button");buttons.forEach(x=>x.disabled=true);
+  const oldText=b.textContent;b.textContent="Memproses...";
+  try{await adjustOwner(b.dataset.action,b.dataset.owner,b.dataset.name);}
+  catch(err){console.error(err);alert("Gagal mengubah data: "+(err.message||err)+"\nPastikan Firestore Rules mengizinkan Superadmin mengubah wallets, limits, walletTransactions, dan limitTransactions.");}
+  finally{buttons.forEach(x=>x.disabled=false);b.textContent=oldText;}
+});
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){statusEl.className="empty";statusEl.textContent="Silakan login sebagai Superadmin.";return;}
+  try{
+    if(!(await verifySuperadmin(user))){statusEl.className="empty";statusEl.textContent="Akses ditolak. Halaman ini khusus Superadmin.";return;}
+    currentAdmin=user;await loadOwners();
+  }catch(err){console.error(err);statusEl.className="empty";statusEl.innerHTML="Gagal membaca data Owner.<br><small>"+esc(err.message||err)+"</small>";}
 });
 </script>
 </body>
