@@ -79,16 +79,14 @@ button,input{font:inherit}.app{width:100%;max-width:1180px;min-height:100vh;marg
 </div>    
 <nav class="bottom"><button class="nav" data-page="index-superadmin.html"><i>⌂</i>Beranda</button><button class="nav" data-page="admin-topup-fixzy-business.html"><i>💰</i>Top Up</button><button class="nav" data-page="approval-limit-fixzy-business-superadmin.html"><i>💳</i>Limit</button><button class="nav" data-page="data-pesanan.html"><i>📦</i>Pesanan</button><button class="nav" data-page="pengaturan.html"><i>⚙</i>Profil</button></nav>  <div class="overlay" id="loginOverlay"><div class="login"><h2>Masuk FIXZY BUSINESS</h2><p>Gunakan akun Owner.</p><form id="loginForm"><div class="field"><input id="email" type="email" placeholder="Email" required></div><div class="field"><input id="password" type="password" placeholder="Password" required></div><button class="primary" type="submit">Masuk</button><div class="err" id="loginError"></div></form></div></div>  <script type="module">    
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";    
-import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";    
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";    
 import{getFirestore,doc,getDoc,collection,query,where,getDocs}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";    
 const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};    
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);    
 document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>location.href=x.dataset.page);    
-landingLoginBtn.onclick=()=>loginOverlay.classList.add("show");    
 logoutBtn.onclick=()=>signOut(auth);    
-loginForm.onsubmit=async e=>{e.preventDefault();loginError.textContent="";try{await signInWithEmailAndPassword(auth,email.value.trim(),password.value)}catch{loginError.textContent="Login gagal. Periksa email dan password."}};    
 onAuthStateChanged(auth,async user=>{    
- if(!user){document.body.className="auth-logged-out";return}    
+ if(!user){location.replace("login.html");return}    
  try{    
   const s=await getDoc(doc(db,"users",user.uid));if(!s.exists()||s.data().role!=="superadmin"){location.replace("index.html");return}    
   document.body.className="auth-logged-in";    
@@ -112,6 +110,6 @@ onAuthStateChanged(auth,async user=>{
   }    
   await loadPending();    
   setInterval(loadPending,15000);    
- }catch(e){console.error(e);document.body.className="auth-logged-out";loginOverlay.classList.add("show");loginError.textContent="Akses Superadmin tidak tersedia."}    
+ }catch(e){console.error("Gagal memverifikasi akses Superadmin:",e);location.replace("login.html?error=akses")}    
 });    
 </script>  </body></html>
