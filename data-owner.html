@@ -124,7 +124,18 @@ function statusBadge(v){
   return '<span class="badge wait">'+esc(v||"MENUNGGU")+'</span>';
 }
 
-function renderOwner(id,d){
+async function renderOwner(id,d){
+  // Ambil saldo dan limit yang sudah tersimpan untuk Owner ini.
+  const [walletSnap,limitSnap]=await Promise.all([
+    getDoc(doc(db,"wallets",id)),
+    getDoc(doc(db,"limits",id))
+  ]);
+  const wallet=walletSnap.exists()?walletSnap.data():{};
+  const limit=limitSnap.exists()?limitSnap.data():{};
+  const saldoSaatIni=Number(wallet.saldoPribadi)||0;
+  const limitDisetujui=Number(limit.limitDisetujui)||0;
+  const limitTerpakai=Number(limit.limitTerpakai)||0;
+  const limitTersedia=Number.isFinite(Number(limit.limitTersedia))?Number(limit.limitTersedia):Math.max(0,limitDisetujui-limitTerpakai);
   const ktp=d.dataKtp||{};
   const nama=d.namaLengkap||d.nama||ktp.nama||d.name||"Tanpa Nama";
   const usaha=d.namaUsaha||d.business||d.usaha||"-";
@@ -141,6 +152,12 @@ function renderOwner(id,d){
         <div class="sub">${esc(usaha)} · ${esc(wa)}</div>
       </div>
       <div>${statusBadge(status)}</div>
+    </div>
+    <div class="detail-grid" style="margin-top:12px">
+      <div class="field"><small>Saldo Pribadi Saat Ini</small><b style="color:#15803d">${esc(rupiah(saldoSaatIni))}</b></div>
+      <div class="field"><small>Limit Disetujui</small><b style="color:#111">${esc(rupiah(limitDisetujui))}</b></div>
+      <div class="field"><small>Limit Terpakai</small><b style="color:#b91c1c">${esc(rupiah(limitTerpakai))}</b></div>
+      <div class="field"><small>Limit Tersedia</small><b style="color:#15803d">${esc(rupiah(limitTersedia))}</b></div>
     </div>
     <div style="margin-top:10px">
       <button class="btn yellow" data-detail="${esc(id)}">Lihat Detail</button>
@@ -194,7 +211,8 @@ async function loadOwners(){
   const snap=await getDocs(q);
   listEl.innerHTML="";jumlahEl.textContent=`${snap.size} Owner`;
   if(snap.empty){statusEl.className="empty";statusEl.textContent="Belum ada Owner terdaftar.";return;}
-  statusEl.style.display="none";snap.forEach(d=>renderOwner(d.id,d.data()));
+  statusEl.style.display="none";
+  await Promise.all(snap.docs.map(d=>renderOwner(d.id,d.data())));
 }
 
 async function adjustOwner(action,ownerUid,ownerName){
@@ -238,6 +256,7 @@ Catatan: ${alasan.trim()}`))return;
     }
   });
   alert(`${label} berhasil ${isTambah?"ditambahkan":"dikurangi"} sebesar ${rupiah(nominal)} untuk ${ownerName}.`);
+  await loadOwners();
 }
 
 listEl.addEventListener("click",async e=>{
