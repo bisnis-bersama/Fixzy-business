@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Masuk | FIXZY BUSINESS</title>
+<style>
+*{box-sizing:border-box} :root{--black:#111;--yellow:#FFC107;--bg:#f3f4f6;--text:#171717;--muted:#667085;--line:#e5e7eb}
+html,body{margin:0;padding:0}body{min-height:100vh;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input{font:inherit}.page{max-width:1000px;margin:auto;padding:0 14px 28px}
+.brand{display:flex;align-items:center;gap:12px;background:#111;color:#fff;margin:0 -14px 18px;padding:14px}
+.logo{width:46px;height:46px;border-radius:12px;border:1px solid var(--yellow);overflow:hidden;flex:0 0 46px}
+.logo img{width:100%;height:100%;object-fit:contain;display:block}
+.brand-title{font-size:clamp(20px,3vw,28px);font-weight:900;color:var(--yellow)}.brand-sub{font-size:12px;color:#d1d5db;margin-top:3px}
+.heading{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px}.heading h2{font-size:17px;margin:0}.heading span{font-size:11px;color:var(--muted);font-weight:800}
+.carousel{position:relative;overflow:hidden;border-radius:18px;background:#111;box-shadow:0 12px 30px #0002}
+.slides{display:flex;transition:transform .6s cubic-bezier(.22,.75,.25,1);will-change:transform}
+.slide{position:relative;flex:0 0 100%;width:100%;aspect-ratio:16/9;background:#111;overflow:hidden}
+.slide img{width:100%;height:100%;position:absolute;inset:0;object-fit:contain;display:block;background:#111}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border:1px solid #ffffff70;border-radius:50%;background:#111b;color:white;font-size:24px;cursor:pointer}
+.prev{left:10px}.next{right:10px}.dots{display:flex;justify-content:center;gap:8px;padding:12px 0 0}
+.dot{width:9px;height:9px;border:0;border-radius:50%;background:#c6c8cc;padding:0;cursor:pointer}.dot.active{background:var(--yellow);width:24px;border-radius:9px}
+.caption{display:flex;justify-content:space-between;gap:10px;margin-top:10px;color:var(--muted);font-size:11px}.caption strong{color:#222}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.action{width:100%;border:1px solid #111;border-radius:11px;padding:12px 8px;font-size:14px;font-weight:900;cursor:pointer}
+.action.login{background:#111;color:var(--yellow)}.action.register{background:var(--yellow);color:#111;border-color:var(--yellow)}
+.dropdown{display:none;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:10px;box-shadow:0 8px 22px #0000000d}
+.dropdown.open{display:block}.dropdown h3{margin:0 0 5px;font-size:17px}.dropdown p{margin:0 0 13px;color:var(--muted);font-size:12px;line-height:1.5}
+.field{margin:10px 0}.field input{width:100%;padding:13px;border:1px solid #d0d5dd;border-radius:12px;background:#fff}
+.submit{width:100%;padding:13px;border:0;border-radius:12px;background:#111;color:var(--yellow);font-weight:900;cursor:pointer}
+.err{min-height:18px;margin-top:8px;font-size:12px;color:#b42318}.features{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.feature{display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px;min-width:0}
+.fi{width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:#111;color:var(--yellow);display:grid;place-items:center;font-size:18px}
+.feature b{font-size:12px;display:block}.feature span{font-size:10px;line-height:1.45;color:var(--muted);display:block;margin-top:3px}
+.note{font-size:10px;color:var(--muted);margin:12px 2px}
+@media(max-width:700px){.features{grid-template-columns:1fr 1fr}.carousel{border-radius:14px}.arrow{width:30px;height:30px;font-size:20px}}
+@media(max-width:390px){.features{grid-template-columns:1fr}.caption span:last-child{display:none}}
+@media(prefers-reduced-motion:reduce){.slides{transition:none}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="brand">
+    <div class="logo"><img src="logofixzy.png" alt="FIXZY BUSINESS"></div>
+    <div><div class="brand-title">FIXZY BUSINESS</div><div class="brand-sub">Platform bisnis dan E-Wallet</div></div>
+  </header>
+
+  <div class="heading"><h2>Web Unggulan</h2><span>PROMO FIXZY</span></div>
+  <section class="carousel" id="promoCarousel" aria-label="Promosi unggulan FIXZY BUSINESS">
+    <div class="slides" id="promoSlides">
+      <article class="slide"><img src="fixzyyudi.png" alt="FIXZY BUSINESS - promosi utama"></article>
+      <article class="slide"><img src="fixzy1.png" alt="Belanja produk lebih mudah"></article>
+      <article class="slide"><img src="fixzy2.png" alt="Limit bisnis"></article>
+      <article class="slide"><img src="fixzy3.png" alt="Top up saldo"></article>
+      <article class="slide"><img src="fixzy4.png" alt="Keuntungan member dan mitra"></article>
+    </div>
+    <button class="arrow prev" id="promoPrev" aria-label="Slide sebelumnya">‹</button>
+    <button class="arrow next" id="promoNext" aria-label="Slide berikutnya">›</button>
+  </section>
+  <div class="dots" id="promoDots" aria-label="Pilih slide">
+    <button class="dot active" aria-label="Slide 1"></button><button class="dot" aria-label="Slide 2"></button><button class="dot" aria-label="Slide 3"></button><button class="dot" aria-label="Slide 4"></button><button class="dot" aria-label="Slide 5"></button>
+  </div>
+  <div class="caption"><span><strong id="promoSlideTitle">FIXZY BUSINESS</strong> · <span id="promoSlideNumber">1 dari 5</span></span><span>Geser untuk melihat promo lainnya</span></div>
+
+  <div class="actions">
+    <button class="action login" id="toggleLogin" type="button" aria-expanded="false">Masuk</button>
+    <button class="action register" id="toggleRegister" type="button" aria-expanded="false">Daftar</button>
+  </div>
+
+  <section class="dropdown" id="loginPanel">
+    <h3>Masuk FIXZY BUSINESS</h3><p>Gunakan email dan password akun Anda.</p>
+    <form id="loginForm">
+      <div class="field"><input id="email" type="email" placeholder="Email" autocomplete="username" required></div>
+      <div class="field"><input id="password" type="password" placeholder="Password" autocomplete="current-password" required></div>
+      <button class="submit" type="submit">Masuk</button><div class="err" id="loginError" role="status"></div>
+    </form>
+  </section>
+
+  <section class="dropdown" id="registerPanel">
+    <h3>Daftar Akun Baru</h3>
+    <p>Untuk menjaga agar proses registrasi mengikuti aturan akun dan data yang sudah dipakai FIXZY BUSINESS, lanjutkan ke formulir registrasi resmi.</p>
+    <button class="submit" id="goRegister" type="button">Lanjut Registrasi</button>
+  </section>
+
+  <section class="features">
+    <div class="feature"><div class="fi">🛒</div><div><b>Belanja Produk</b><span>Akses kebutuhan produk bisnis lebih praktis.</span></div></div>
+    <div class="feature"><div class="fi">💳</div><div><b>Limit Bisnis</b><span>Fasilitas limit mengikuti hasil persetujuan.</span></div></div>
+    <div class="feature"><div class="fi">⚡</div><div><b>Transaksi Mudah</b><span>Saldo dan riwayat transaksi terpantau.</span></div></div>
+    <div class="feature"><div class="fi">🤝</div><div><b>Member & Mitra</b><span>Peluang promo dan kerja sama komunitas.</span></div></div>
+  </section>
+  <div class="note">* Limit, produk, dan fasilitas transaksi mengikuti proses verifikasi serta ketentuan FIXZY BUSINESS.</div>
+</main>
+
+<script>
+(function(){
+ const track=document.getElementById('promoSlides');
+ const slides=[...track.querySelectorAll('.slide')];
+ const dots=[...document.querySelectorAll('.dot')];
+ const title=document.getElementById('promoSlideTitle');
+ const number=document.getElementById('promoSlideNumber');
+ const names=['FIXZY BUSINESS','Belanja Produk Lebih Mudah','Peluang Limit Bisnis','Top Up & Transaksi','Member & Mitra'];
+ let index=0,timer=null,startX=0,deltaX=0;
+ function show(i){index=(i+slides.length)%slides.length;track.style.transform='translateX(-'+(index*100)+'%)';dots.forEach((d,n)=>d.classList.toggle('active',n===index));title.textContent=names[index];number.textContent=(index+1)+' dari '+slides.length;}
+ function start(){stop();if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)timer=setInterval(()=>show(index+1),4500)}
+ function stop(){if(timer)clearInterval(timer);timer=null}
+ document.getElementById('promoPrev').addEventListener('click',()=>{show(index-1);start()});
+ document.getElementById('promoNext').addEventListener('click',()=>{show(index+1);start()});
+ dots.forEach((d,n)=>d.addEventListener('click',()=>{show(n);start()}));
+ const carousel=document.getElementById('promoCarousel');
+ carousel.addEventListener('mouseenter',stop);carousel.addEventListener('mouseleave',start);
+ carousel.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX;deltaX=0;stop()},{passive:true});
+ carousel.addEventListener('touchmove',e=>{deltaX=e.changedTouches[0].clientX-startX},{passive:true});
+ carousel.addEventListener('touchend',()=>{if(Math.abs(deltaX)>45)show(index+(deltaX<0?1:-1));start()},{passive:true});
+ document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+ show(0);start();
+})();
+const loginBtn=document.getElementById('toggleLogin'),registerBtn=document.getElementById('toggleRegister');
+const loginPanel=document.getElementById('loginPanel'),registerPanel=document.getElementById('registerPanel');
+function toggle(panel,other,btn,otherBtn){
+ const open=!panel.classList.contains('open');
+ panel.classList.toggle('open',open);other.classList.remove('open');
+ btn.setAttribute('aria-expanded',String(open));otherBtn.setAttribute('aria-expanded','false');
+ if(open)panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+loginBtn.addEventListener('click',()=>toggle(loginPanel,registerPanel,loginBtn,registerBtn));
+registerBtn.addEventListener('click',()=>toggle(registerPanel,loginPanel,registerBtn,loginBtn));
+document.getElementById('goRegister').addEventListener('click',()=>location.href='register.html');
+</script>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import{getFirestore,doc,getDoc}from"https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",authDomain:"teknisi-ponsel-maja.firebaseapp.com",projectId:"teknisi-ponsel-maja",storageBucket:"teknisi-ponsel-maja.firebasestorage.app",messagingSenderId:"835618012205",appId:"1:835618012205:web:95e41095d1a56c761d4ca4"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();const error=document.getElementById('loginError');error.textContent='Memeriksa akun...';
+ try{await signInWithEmailAndPassword(auth,document.getElementById('email').value.trim(),document.getElementById('password').value)}
+ catch(err){error.textContent='Login gagal. Periksa email dan password.'}
+});
+onAuthStateChanged(auth,async user=>{
+ if(!user)return;
+ try{
+  const s=await getDoc(doc(db,'users',user.uid));if(!s.exists())throw Error('Profil tidak ditemukan');
+  const p=s.data();
+  if(p.role==='superadmin'){location.replace('index-superadmin.html');return}
+  if(p.role==='owner'&&p.ownerUid===user.uid){location.replace('index.html');return}
+  document.getElementById('loginError').textContent='Akun tidak memiliki akses Owner.';
+ }catch(e){document.getElementById('loginError').textContent='Akses akun tidak tersedia. Periksa data profil Firebase.'}
+});
+</script>
+</body>
+</html>
