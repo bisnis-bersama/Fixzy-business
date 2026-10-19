@@ -423,6 +423,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-
 import {
   getAuth,
   onAuthStateChanged,
+  signOut,
   setPersistence,
   browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
@@ -430,12 +431,13 @@ import {
   getFirestore,
   doc,
   getDoc,
+  setDoc,
+  serverTimestamp,
   collection,
   query,
   where,
   getDocs,
-  addDoc,
-  serverTimestamp
+  addDoc
 } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 
 const firebaseConfig={
@@ -483,12 +485,6 @@ function statusClass(status){
   return "";
 }
 
-function escapeHtml(value){
-  return String(value ?? "").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
-}
-
 function renderLimit(data){
   const x=data||{};
   $("approved").textContent=rupiah(x.limitDisetujui||0);
@@ -517,16 +513,21 @@ function dateText(x){
 
 async function loadLimit(){
   const ref=doc(db,"limits",currentUser.uid);
-  const snap=await getDoc(ref);
+  let snap=await getDoc(ref);
 
-  // Halaman Owner hanya membaca limit. Dokumen limit dibuat/diubah
-  // melalui alur yang terkontrol agar tidak menimpa hasil approval.
-  renderLimit(snap.exists()?snap.data():{
-    limitDisetujui:0,
-    limitTerpakai:0,
-    limitTersedia:0,
-    status:"BELUM_DIAJUKAN"
-  });
+  if(!snap.exists()){
+    await setDoc(ref,{
+      ownerUid:currentUser.uid,
+      limitDisetujui:0,
+      limitTerpakai:0,
+      limitTersedia:0,
+      status:"BELUM_DIAJUKAN",
+      createdAt:serverTimestamp()
+    });
+    snap=await getDoc(ref);
+  }
+
+  renderLimit(snap.data()||{});
 }
 
 async function loadHistory(){
@@ -552,10 +553,17 @@ async function loadHistory(){
 
     const latest=rows[0]||null;
 
-    // Kunci pengajuan baru bila ADA pengajuan berstatus MENUNGGU,
-    // bukan hanya bila pengajuan paling baru berstatus MENUNGGU.
-    hasPendingApplication=rows.some(x=>x.status==="MENUNGGU");
+    // Jika pengajuan terakhir masih MENUNGGU,
+    // Owner tidak boleh membuat transaksi/pengajuan Limit baru.
+    hasPendingApplication=latest?.status==="MENUNGGU";
     setSubmitState();
+
+    if(latest?.status){
+      $("status").textContent=latest.status;
+      $("status").className="status "+
+        (latest.status==="DISETUJUI"?"ok":
+         latest.status==="DITOLAK"?"no":"");
+    }
 
     $("historyCount").textContent=
       `${rows.length} pengajuan`;
@@ -585,10 +593,10 @@ async function loadHistory(){
             <b>${rupiah(nominal)}</b>
             <div class="date">${dateText(x.createdAt)}</div>
           </div>
-          <span class="badge ${statusClass(s)}">${escapeHtml(s)}</span>
+          <span class="badge ${statusClass(s)}">${s}</span>
         </div>
         ${x.catatan
-          ? `<div class="date">Catatan: ${escapeHtml(x.catatan)}</div>`
+          ? `<div class="date">Catatan: ${x.catatan}</div>`
           : ""}
       `;
 
@@ -617,13 +625,9 @@ $("submitBtn").onclick=async()=>{
 
   const nominal=Number($("amount").value);
 
-  if(
-    !Number.isSafeInteger(nominal) ||
-    nominal<100000 ||
-    nominal%50000!==0
-  ){
+  if(!nominal || nominal<100000){
     message(
-      "Masukkan nominal minimal Rp100.000 dengan kelipatan Rp50.000.",
+      "Masukkan pengajuan minimal Rp100.000.",
       "error"
     );
     return;
@@ -640,13 +644,21 @@ $("submitBtn").onclick=async()=>{
       where("ownerUid","==",currentUser.uid)
     ));
 
-    let hasWaiting=false;
+    let latest=null;
 
     latestSnap.forEach(d=>{
-      if(d.data().status==="MENUNGGU") hasWaiting=true;
+      const x=d.data();
+      const t=x.createdAt?.toMillis?.()||0;
+
+      if(
+        !latest ||
+        t>(latest.createdAt?.toMillis?.()||0)
+      ){
+        latest={id:d.id,...x};
+      }
     });
 
-    if(hasWaiting){
+    if(latest?.status==="MENUNGGU"){
       hasPendingApplication=true;
       setSubmitState();
 
@@ -683,17 +695,7 @@ $("submitBtn").onclick=async()=>{
       "error"
     );
 
-    try{
-      const checkSnap=await getDocs(query(
-        collection(db,"limitApplications"),
-        where("ownerUid","==",currentUser.uid)
-      ));
-      hasPendingApplication=checkSnap.docs.some(d=>d.data().status==="MENUNGGU");
-    }catch(checkError){
-      console.error(checkError);
-      // Fail closed: jangan izinkan pengajuan baru jika status server tak bisa diverifikasi.
-      hasPendingApplication=true;
-    }
+    hasPendingApplication=false;
     setSubmitState();
   }
 };
@@ -723,7 +725,10 @@ onAuthStateChanged(auth,async user=>{
       ? snap.data()
       : {};
 
-    if(profile.role!=="owner"){
+    if(
+      profile.role!=="owner" ||
+      profile.ownerUid!==user.uid
+    ){
       $("identity").textContent="Akses Owner";
       $("applyCard").style.display="none";
 
@@ -754,11 +759,7 @@ onAuthStateChanged(auth,async user=>{
     // lalu fallback ke nama Owner.
     $("identity").textContent=
       profile.namaUsaha ||
-      profile.namaLengkap ||
       profile.nama ||
-      profile.dataKtp?.nama ||
-      profile.name ||
-      profile.email ||
       "Owner";
 
     await loadLimit();
