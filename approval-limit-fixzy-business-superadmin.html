@@ -1,778 +1,401 @@
 <!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
-<title>FIXZY BUSINESS | Limit</title>
 
-<style>
-*{box-sizing:border-box}
-:root{
-  --bg:#f4f6f8;
-  --card:#fff;
-  --ink:#101828;
-  --muted:#667085;
-  --gold:#FFC107;
-  --line:#e7eaf0;
-  --black:#111;
-}
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-}
-button,input{font:inherit}
-.app{
-  width:100%;
-  max-width:1180px;
-  min-height:100vh;
-  margin:auto;
-  padding-bottom:86px;
-}
-.top{
-  background:#111;
-  color:#fff;
-  padding:16px 15px 66px;
-  border-radius:0 0 28px 28px;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.brand-left{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  min-width:0;
-}
-.logo{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  overflow:hidden;
-  background:#111;
-  border:1px solid #FFC107;
-  display:grid;
-  place-items:center;
-  flex:0 0 48px;
-  box-shadow:0 4px 12px rgba(0,0,0,.25)
-}
-.logo img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-}
-.brand h1{
-  margin:0;
-  color:var(--gold);
-  font-size:17px;
-  font-weight:900;
-  letter-spacing:.2px;
-}
-.brand small{
-  display:block;
-  color:#d1d5db;
-  margin-top:3px;
-  font-size:12px;
-}
-.header-btn{
-  border:1px solid #3b3b3b;
-  background:#1a1a1a;
-  color:#fff;
-  border-radius:12px;
-  padding:10px 13px;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.content{
-  max-width:920px;
-  margin:-42px auto 0;
-  padding:0 15px;
-}
-.card{
-  background:var(--card);
-  border:1px solid rgba(255,255,255,.8);
-  border-radius:22px;
-  padding:18px;
-  margin-bottom:16px;
-  box-shadow:0 10px 26px rgba(15,23,42,.08);
-}
-.limit-card{
-  padding:18px;
-}
-.label{
-  color:var(--muted);
-  font-size:11px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.6px;
-}
-.amount{
-  margin-top:5px;
-  font-size:32px;
-  line-height:1.1;
-  font-weight:900;
-  letter-spacing:-1px;
-}
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  margin-top:17px;
-  border-top:1px solid var(--line);
-  padding-top:14px;
-}
-.stat{
-  padding:0 14px;
-  border-left:1px solid var(--line);
-}
-.stat:first-child{
-  border-left:0;
-  padding-left:0;
-}
-.stat:last-child{padding-right:0}
-.stat small{
-  display:block;
-  color:var(--muted);
-  font-size:11px;
-}
-.stat b{
-  display:block;
-  margin-top:5px;
-  font-size:16px;
-}
-.status{
-  display:inline-block;
-  margin-top:12px;
-  padding:7px 10px;
-  border-radius:999px;
-  background:#fff8d9;
-  border:1px solid #f1d34e;
-  color:#171717;
-  font-size:10px;
-  font-weight:900;
-}
-.status.ok{
-  background:#ecfdf3;
-  border-color:#a7e8c5;
-  color:#027a48;
-}
-.status.no{
-  background:#fef3f2;
-  border-color:#f4b8b2;
-  color:#b42318;
-}
-.title{
-  margin:0 0 14px;
-  font-size:18px;
-  font-weight:900;
-}
-label{
-  display:block;
-  margin:0 0 7px;
-  font-size:12px;
-  font-weight:800;
-}
-input{
-  width:100%;
-  border:1px solid #d0d5dd;
-  border-radius:13px;
-  padding:14px;
-  outline:none;
-  background:#fff;
-  color:var(--ink);
-  font-size:16px;
-}
-input:focus{border-color:#c79b00}
-.primary{
-  width:100%;
-  margin-top:13px;
-  border:0;
-  border-radius:13px;
-  padding:13px;
-  background:var(--gold);
-  color:#111;
-  font-weight:900;
-  cursor:pointer;
-}
-.primary:disabled{
-  cursor:not-allowed;
-  opacity:.55;
-}
-.note{
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.5;
-  margin-top:10px;
-}
-.msg{
-  display:none;
-  border-radius:12px;
-  padding:11px;
-  margin-bottom:12px;
-  font-size:12px;
-}
-.msg.show{display:block}
-.msg.error{
-  background:#fef3f2;
-  color:#b42318;
-}
-.msg.success{
-  background:#ecfdf3;
-  color:#027a48;
-}
-.history-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.history-title span{
-  color:var(--muted);
-  font-size:11px;
-}
-.history{
-  border-top:1px solid var(--line);
-  margin-top:12px;
-}
-.row{
-  padding:13px 0;
-  border-bottom:1px solid var(--line);
-}
-.row:last-child{border-bottom:0}
-.row-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-.row b{font-size:15px}
-.date{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:4px;
-}
-.badge{
-  flex:0 0 auto;
-  padding:7px 9px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-  background:#fff8d9;
-  border:1px solid #f1d34e;
-  color:#171717;
-}
-.badge.approved{
-  background:#ecfdf3;
-  border-color:#a7e8c5;
-  color:#027a48;
-}
-.badge.rejected{
-  background:#fef3f2;
-  border-color:#f4b8b2;
-  color:#b42318;
-}
-.empty{
-  padding:18px 4px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-}
-.bottom{
-  position:fixed;
-  left:50%;
-  bottom:0;
-  transform:translateX(-50%);
-  width:min(1180px,100%);
-  background:#111;
-  border-top:2px solid var(--gold);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  padding:8px 6px calc(8px + env(safe-area-inset-bottom));
-  z-index:20;
-}
-.nav{
-  border:0;
-  background:transparent;
-  color:var(--gold);
-  font-size:10px;
-  font-weight:800;
-  cursor:pointer;
-}
-.nav i{
-  display:block;
-  font-style:normal;
-  font-size:21px;
-  margin-bottom:3px;
-  color:var(--gold);
-}
-.nav.active{color:var(--gold)}
-@media(min-width:769px){
-  .top{padding-left:24px;padding-right:24px}
-  .content{padding-left:28px;padding-right:28px}
-}
-@media(max-width:390px){
-  .brand h1{font-size:16px}
-  .amount{font-size:29px}
-  .header-btn{padding:9px 11px}
-  .card{padding:17px}
-}
-</style>
-</head>
-
-<body>
-<div class="app">
-
-<header class="top">
-  <div class="brand">
-    <div class="brand-left">
-      <div class="logo">
-        <img src="logofixzy.png" alt="FIXZY BUSINESS">
-      </div>
-      <div>
-        <h1>FIXZY BUSINESS</h1>
-        <small id="identity">Owner</small>
-      </div>
-    </div>
-    <button class="header-btn" id="refreshBtn">↻ Refresh</button>
-  </div>
-</header>
-
-<main class="content">
-
-  <div id="message" class="msg"></div>
-
-  <section class="card limit-card">
-    <div class="label">Limit Tersedia</div>
-    <div class="amount" id="available">Rp0</div>
-
-    <div class="stats">
-      <div class="stat">
-        <small>Limit Disetujui</small>
-        <b id="approved">Rp0</b>
-      </div>
-      <div class="stat">
-        <small>Limit Terpakai</small>
-        <b id="used">Rp0</b>
-      </div>
-    </div>
-
-    <span id="status" class="status">BELUM DIAJUKAN</span>
-  </section>
-
-  <section class="card" id="applyCard">
-    <div class="title">Ajukan Limit</div>
-
-    <label for="amount">Nominal Limit yang Diajukan</label>
-    <input
-      id="amount"
-      type="number"
-      min="100000"
-      step="50000"
-      placeholder="Contoh: 5.000.000"
-    >
-
-    <button class="primary" id="submitBtn">Ajukan Limit</button>
-
-    <div class="note">
-      Pengajuan akan masuk ke Superadmin untuk diperiksa.
-      Limit tidak berubah sebelum pengajuan disetujui.
-      Selama masih ada pengajuan <b>MENUNGGU</b>, pengajuan baru tidak dapat dibuat.
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="history-title">
-      <div class="title" style="margin:0">Riwayat Pengajuan</div>
-      <span id="historyCount">0 pengajuan</span>
-    </div>
-    <div id="history" class="history">
-      <div class="empty">Memuat...</div>
-    </div>
-  </section>
-
-</main>
-</div>
-
-<nav class="bottom">
-  <button class="nav active" data-page="index.html">
-    <i>⌂</i>Beranda
-  </button>
-  <button class="nav" data-page="produk.html">
-    <i>🛒</i>Belanja
-  </button>
-  <button class="nav" data-page="tagihan.html">
-    <i>🧾</i>Tagihan
-  </button>
-  <button class="nav" data-page="riwayat.html">
-    <i>↔️</i>Riwayat
-  </button>
-  <button class="nav" data-page="profil.html">
-    <i>👤</i>Profil
-  </button>
-</nav>
-
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
-
-const firebaseConfig={
-  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",
-  authDomain:"teknisi-ponsel-maja.firebaseapp.com",
-  projectId:"teknisi-ponsel-maja",
-  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",
-  messagingSenderId:"835618012205",
-  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
-
-await setPersistence(auth,browserLocalPersistence);
-
-const $=id=>document.getElementById(id);
-const rupiah=n=>new Intl.NumberFormat("id-ID",{
-  style:"currency",
-  currency:"IDR",
-  maximumFractionDigits:0
-}).format(Number(n)||0);
-
-let currentUser=null;
-let hasPendingApplication=false;
-let identityReady=false;
-
-function message(text,type="success"){
-  $("message").textContent=text;
-  $("message").className="msg show "+type;
-}
-
-function setSubmitState(){
-  const btn=$("submitBtn");
-  btn.disabled=hasPendingApplication;
-  btn.textContent=hasPendingApplication
-    ? "Menunggu Persetujuan"
-    : "Ajukan Limit";
-}
-
-function statusClass(status){
-  if(status==="DISETUJUI") return "approved";
-  if(status==="DITOLAK") return "rejected";
-  return "";
-}
-
-function escapeHtml(value){
-  return String(value ?? "").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[c]));
-}
-
-function renderLimit(data){
-  const x=data||{};
-  $("approved").textContent=rupiah(x.limitDisetujui||0);
-  $("used").textContent=rupiah(x.limitTerpakai||0);
-  $("available").textContent=rupiah(x.limitTersedia||0);
-
-  const s=x.status||"BELUM_DIAJUKAN";
-  $("status").textContent=s;
-  $("status").className="status "+
-    (s==="DISETUJUI"?"ok":s==="DITOLAK"?"no":"");
-}
-
-function dateText(x){
-  if(!x) return "-";
-  if(x.toDate){
-    return x.toDate().toLocaleString("id-ID",{
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    });
-  }
-  return "-";
-}
-
-async function loadLimit(){
-  const ref=doc(db,"limits",currentUser.uid);
-  const snap=await getDoc(ref);
-
-  // Halaman Owner hanya membaca limit. Dokumen limit dibuat/diubah
-  // melalui alur yang terkontrol agar tidak menimpa hasil approval.
-  renderLimit(snap.exists()?snap.data():{
-    limitDisetujui:0,
-    limitTerpakai:0,
-    limitTersedia:0,
-    status:"BELUM_DIAJUKAN"
-  });
-}
-
-async function loadHistory(){
-  $("history").innerHTML='<div class="empty">Memuat...</div>';
-
-  try{
-    const q=query(
-      collection(db,"limitApplications"),
-      where("ownerUid","==",currentUser.uid)
-    );
-
-    const snap=await getDocs(q);
-    const rows=[];
-
-    snap.forEach(d=>{
-      rows.push({id:d.id,...d.data()});
-    });
-
-    rows.sort((a,b)=>
-      (b.createdAt?.toMillis?.()||0)-
-      (a.createdAt?.toMillis?.()||0)
-    );
-
-    const latest=rows[0]||null;
-
-    // Kunci pengajuan baru bila ADA pengajuan berstatus MENUNGGU,
-    // bukan hanya bila pengajuan paling baru berstatus MENUNGGU.
-    hasPendingApplication=rows.some(x=>x.status==="MENUNGGU");
-    setSubmitState();
-
-    $("historyCount").textContent=
-      `${rows.length} pengajuan`;
-
-    if(!rows.length){
-      $("history").innerHTML=
-        '<div class="empty">Belum ada pengajuan limit.</div>';
-      return;
-    }
-
-    $("history").innerHTML="";
-
-    rows.forEach(x=>{
-      const s=x.status||"MENUNGGU";
-      const nominal=
-        x.nominalPengajuan ??
-        x.nominal ??
-        x.limitDiminta ??
-        0;
-
-      const div=document.createElement("div");
-      div.className="row";
-
-      div.innerHTML=`
-        <div class="row-top">
-          <div>
-            <b>${rupiah(nominal)}</b>
-            <div class="date">${dateText(x.createdAt)}</div>
-          </div>
-          <span class="badge ${statusClass(s)}">${escapeHtml(s)}</span>
-        </div>
-        ${x.catatan
-          ? `<div class="date">Catatan: ${escapeHtml(x.catatan)}</div>`
-          : ""}
-      `;
-
-      $("history").appendChild(div);
-    });
-
-  }catch(e){
-    console.error(e);
-    $("history").innerHTML=
-      '<div class="empty">Riwayat belum dapat dimuat.</div>';
-  }
-}
-
-$("submitBtn").onclick=async()=>{
-  if(!identityReady){
-    location.href="data-identitas.html?from=limit";
-    return;
-  }
-  if(hasPendingApplication){
-    message(
-      "Masih ada pengajuan Limit yang sedang menunggu persetujuan.",
-      "error"
-    );
-    return;
-  }
-
-  const nominal=Number($("amount").value);
-
-  if(
-    !Number.isSafeInteger(nominal) ||
-    nominal<100000 ||
-    nominal%50000!==0
-  ){
-    message(
-      "Masukkan nominal minimal Rp100.000 dengan kelipatan Rp50.000.",
-      "error"
-    );
-    return;
-  }
-
-  // Kunci tombol sebelum pengecekan Firestore
-  // agar tap berulang tidak membuat pengajuan ganda.
-  $("submitBtn").disabled=true;
-  $("submitBtn").textContent="Memeriksa...";
-
-  try{
-    const latestSnap=await getDocs(query(
-      collection(db,"limitApplications"),
-      where("ownerUid","==",currentUser.uid)
-    ));
-
-    let hasWaiting=false;
-
-    latestSnap.forEach(d=>{
-      if(d.data().status==="MENUNGGU") hasWaiting=true;
-    });
-
-    if(hasWaiting){
-      hasPendingApplication=true;
-      setSubmitState();
-
-      message(
-        "Masih ada pengajuan Limit yang sedang menunggu persetujuan.",
-        "error"
-      );
-      return;
-    }
-
-    await addDoc(collection(db,"limitApplications"),{
-      ownerUid:currentUser.uid,
-      nominalPengajuan:nominal,
-      status:"MENUNGGU",
-      createdAt:serverTimestamp()
-    });
-
-    $("amount").value="";
-    hasPendingApplication=true;
-    setSubmitState();
-
-    message(
-      "Pengajuan Limit berhasil dikirim ke Superadmin."
-    );
-
-    await loadLimit();
-    await loadHistory();
-
-  }catch(e){
-    console.error(e);
-
-    message(
-      "Pengajuan gagal. Periksa Firestore Rules.",
-      "error"
-    );
-
-    try{
-      const checkSnap=await getDocs(query(
-        collection(db,"limitApplications"),
-        where("ownerUid","==",currentUser.uid)
-      ));
-      hasPendingApplication=checkSnap.docs.some(d=>d.data().status==="MENUNGGU");
-    }catch(checkError){
-      console.error(checkError);
-      // Fail closed: jangan izinkan pengajuan baru jika status server tak bisa diverifikasi.
-      hasPendingApplication=true;
-    }
-    setSubmitState();
-  }
-};
-
-$("refreshBtn").onclick=()=>{
-  location.reload();
-};
-
-document.querySelectorAll("[data-page]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    location.href=btn.dataset.page;
-  });
-});
-
-onAuthStateChanged(auth,async user=>{
-  if(!user){
-    location.href="index.html";
-    return;
-  }
-
-  try{
-    const snap=await getDoc(
-      doc(db,"users",user.uid)
-    );
-
-    const profile=snap.exists()
-      ? snap.data()
-      : {};
-
-    if(profile.role!=="owner"){
-      $("identity").textContent="Akses Owner";
-      $("applyCard").style.display="none";
-
-      message(
-        "Akses halaman Limit hanya untuk Owner.",
-        "error"
-      );
-      return;
-    }
-
-    currentUser=user;
-
-    identityReady=!!(
-      profile.dataKtp &&
-      profile.dataKtp.nik &&
-      profile.dataKtp.nama &&
-      profile.dataKtp.alamat &&
-      profile.dataKtp.rt &&
-      profile.dataKtp.rw &&
-      profile.dataKtp.desa &&
-      profile.dataKtp.kecamatan &&
-      profile.dataKtp.kabupaten &&
-      profile.dataKtp.provinsi &&
-      profile.dataKtp.whatsapp
-    );
-
-    // Sama seperti Index: tampilkan nama usaha,
-    // lalu fallback ke nama Owner.
-    $("identity").textContent=
-      profile.namaUsaha ||
-      profile.namaLengkap ||
-      profile.nama ||
-      profile.dataKtp?.nama ||
-      profile.name ||
-      profile.email ||
-      "Owner";
-
-    await loadLimit();
-    await loadHistory();
-
-  }catch(e){
-    console.error(e);
-
-    message(
-      "Gagal membaca data Owner.",
-      "error"
-    );
-  }
-});
-</script>
-</body>
-</html>
+<html lang="id">  
+<head>  
+<meta charset="utf-8">  
+<meta name="viewport" content="width=device-width,initial-scale=1">  
+<title>FIXZY BUSINESS | Approval Limit</title>  
+<style>  
+:root{--yellow:#FFC107;--black:#111;--bg:#f3f4f6;--white:#fff;--muted:#6b7280;--border:#e5e7eb;--green:#16a34a;--red:#dc2626}  
+*{box-sizing:border-box}  
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#111}  
+.app{width:100%;max-width:1180px;margin:auto;min-height:100vh;padding-bottom:82px}  
+.top{background:#111;color:#fff;padding:18px 18px 82px;border-radius:0 0 30px 30px}  
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px}  
+.brand-left{display:flex;align-items:center;gap:11px;min-width:0}  
+.logo{width:48px;height:48px;border-radius:14px;overflow:hidden;background:#111;border:1px solid var(--yellow);display:grid;place-items:center;flex:0 0 48px;box-shadow:0 4px 12px rgba(0,0,0,.25)}  
+.logo img{width:100%;height:100%;object-fit:contain;display:block}  
+.brand h1{font-size:17px;margin:0;font-weight:900;letter-spacing:.2px;color:var(--yellow)}  
+.brand small{display:block;color:#d1d5db;margin-top:3px;font-size:12px}  
+.home{color:#fff;text-decoration:none;font-size:23px;padding:6px}  
+.content{padding:0 clamp(14px,3vw,28px);margin-top:-60px}  
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 12px rgba(0,0,0,.05)}  
+.hero-title{font-size:20px;font-weight:900;margin:0}  
+.hero-note{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.5}  
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}  
+.stat{background:#f8f8f8;border-radius:14px;padding:13px}  
+.stat span{display:block;color:var(--muted);font-size:11px}  
+.stat b{display:block;margin-top:6px;font-size:20px}  
+.refresh{border:0;background:#111;color:var(--yellow);border-radius:11px;padding:11px 13px;font-weight:900;font-size:12px;cursor:pointer;width:100%;margin-top:12px}  
+.pending{border:1px solid var(--border);border-radius:16px;padding:14px;margin-top:12px;background:#fff}  
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}  
+.name{font-size:15px;font-weight:900}  
+.amount{font-size:21px;font-weight:900;margin-top:6px}  
+.meta{margin-top:7px;color:var(--muted);font-size:11px;line-height:1.6;word-break:break-word}  
+.badge{display:inline-block;padding:6px 9px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:10px;font-weight:900;white-space:nowrap}  
+.actions{display:flex;gap:8px;margin-top:12px}  
+button.action{flex:1;border:0;border-radius:11px;padding:11px 10px;font-weight:900;font-size:12px;cursor:pointer}  
+.approve{background:var(--green);color:#fff}  
+.reject{background:var(--red);color:#fff}  
+button:disabled{opacity:.55;cursor:not-allowed}  
+.empty{text-align:center;padding:25px 10px;color:var(--muted);font-size:13px}  
+.alert{display:none;padding:11px 13px;border-radius:11px;margin-bottom:12px;font-size:12px;font-weight:700}  
+.alert.ok{display:block;background:#dcfce7;color:#166534}  
+.alert.err{display:block;background:#fee2e2;color:#991b1b}  
+.bottom{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(1180px,100%);background:#111;border-top:1px solid #2b2b2b;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:10;backdrop-filter:blur(12px)}  
+.nav{border:0;background:transparent;color:var(--yellow);font-size:10px;font-weight:800;text-decoration:none;text-align:center;padding:3px}  
+.nav i{display:block;font-style:normal;font-size:21px;margin-bottom:3px;color:var(--yellow)}  
+.nav.active{color:var(--yellow)}  
+@media(max-width:700px){.top{padding:16px 15px 66px}.content{margin-top:-42px}.summary{grid-template-columns:repeat(3,1fr)}}  
+@media(max-width:480px){.summary{grid-template-columns:1fr 1fr 1fr}.row{flex-direction:column}.badge{align-self:flex-start}}  
+</style>  
+</head>  
+<body>  <div class="app">  
+<header class="top">  
+  <div class="brand">  
+    <div class="brand-left">  
+      <div class="logo"><img src="logofixzy.png" alt="FIXZY"></div>  
+      <div>  
+        <h1>FIXZY BUSINESS</h1>  
+        <small>Superadmin · Approval Limit</small>  
+      </div>  
+    </div>  
+    <a class="home" href="index.html" title="Dashboard">⌂</a>  
+  </div>  
+</header>  <main class="content">  
+  <div id="alert" class="alert"></div>    <section class="card">  
+    <h2 class="hero-title">Approval Limit</h2>  
+    <p class="hero-note">Setiap pengajuan yang disetujui akan menambah limit Owner.</p>  <div class="summary">  
+  <div class="stat">  
+    <span>Menunggu</span>  
+    <b id="totalPending">0</b>  
+  </div>  
+  <div class="stat">  
+    <span>Total Pengajuan</span>  
+    <b id="totalNominal">Rp 0</b>  
+  </div>  
+  <div class="stat">  
+    <span>Diproses</span>  
+    <b id="totalProcessed">0</b>  
+  </div>  
+</div>  
+
+<button class="refresh" id="refreshBtn">↻ Refresh Data</button>
+
+  </section>    <section class="card">  
+    <h2 class="hero-title">Pengajuan Menunggu</h2>  
+    <div id="list">  
+      <div class="empty">Memuat data...</div>  
+    </div>  
+  </section>  <a class="back" href="index.html">← Kembali ke Dashboard</a>
+
+</main>  
+<nav class="bottom">  
+  <a class="nav" href="index.html"><i>⌂</i>Beranda</a>  
+  <a class="nav" href="data-produk.html"><i>▦</i>Produk</a>  
+  <a class="nav" href="data-pesanan.html"><i>🛒</i>Pesanan</a>  
+  <a class="nav" href="data-tagihan.html"><i>▤</i>Tagihan</a>  
+  <a class="nav active" href="pengaturan.html"><i>⚙</i>Profil</a>  
+</nav>  
+</div>  <script type="module">  
+import {initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";  
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";  
+import {  
+  getFirestore,collection,query,where,getDocs,getDoc,doc,  
+  runTransaction,serverTimestamp  
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";  
+  
+const firebaseConfig={  
+  apiKey:"AIzaSyBwHjyapmcsvIff_HrGyHsxGrJTl-7CHTo",  
+  authDomain:"teknisi-ponsel-maja.firebaseapp.com",  
+  projectId:"teknisi-ponsel-maja",  
+  storageBucket:"teknisi-ponsel-maja.firebasestorage.app",  
+  messagingSenderId:"835618012205",  
+  appId:"1:835618012205:web:95e41095d1a56c761d4ca4"  
+};  
+  
+const app=initializeApp(firebaseConfig);  
+const auth=getAuth(app);  
+const db=getFirestore(app);  
+  
+const $=id=>document.getElementById(id);  
+  
+function rupiah(n){  
+  return "Rp "+new Intl.NumberFormat("id-ID").format(Number(n)||0);  
+}  
+function show(msg,type="ok"){  
+  const el=$("alert");  
+  el.textContent=msg;  
+  el.className="alert "+(type==="error"?"err":"ok");  
+}  
+function hide(){  
+  $("alert").className="alert";  
+}  
+function timeValue(v){  
+  return v?.toMillis?.() || 0;  
+}  
+function formatDate(v){  
+  if(!v?.toDate) return "-";  
+  return v.toDate().toLocaleString("id-ID",{  
+    day:"2-digit",month:"2-digit",year:"numeric",  
+    hour:"2-digit",minute:"2-digit"  
+  });  
+}  
+  
+let currentUser=null;  
+let pendingData=[];  
+  
+async function isSuperadmin(user){  
+  const snap=await getDoc(doc(db,"users",user.uid));  
+  const p=snap.exists()?snap.data():{};  
+  return p.role==="superadmin";  
+}  
+  
+async function load(){  
+  hide();  
+  $("list").innerHTML='<div class="empty">Memuat data...</div>';  
+  
+  try{  
+    const q=query(  
+      collection(db,"limitApplications"),  
+      where("status","==","MENUNGGU")  
+    );  
+    const snap=await getDocs(q);  
+  
+    pendingData=[];  
+    snap.forEach(d=>{  
+      pendingData.push({id:d.id,...d.data()});  
+    });  
+  
+    pendingData.sort((a,b)=>timeValue(b.createdAt)-timeValue(a.createdAt));  
+  
+    $("totalPending").textContent=pendingData.length;  
+    $("totalNominal").textContent=rupiah(  
+      pendingData.reduce((s,x)=>s+(Number(x.nominalPengajuan)||0),0)  
+    );  
+  
+    render();  
+    await loadProcessedCount();  
+  
+  }catch(err){  
+    console.error(err);  
+    $("list").innerHTML='<div class="empty">Data tidak dapat dimuat.</div>';  
+    show("Gagal membaca pengajuan. Periksa Firestore Rules dan akses Superadmin.","error");  
+  }  
+}  
+  
+async function loadProcessedCount(){  
+  try{  
+    const snap=await getDocs(collection(db,"limitApplications"));  
+    let count=0;  
+    snap.forEach(d=>{  
+      const s=d.data().status;  
+      if(s==="DISETUJUI" || s==="DITOLAK") count++;  
+    });  
+    $("totalProcessed").textContent=count;  
+  }catch(e){  
+    $("totalProcessed").textContent="-";  
+  }  
+}  
+  
+async function getOwnerName(uid){  
+  try{  
+    const snap=await getDoc(doc(db,"users",uid));  
+    if(!snap.exists()) return "Owner";  
+    const p=snap.data();  
+    return p.businessName || p.namaUsaha || p.name || p.nama || p.email || "Owner";  
+  }catch(e){  
+    return "Owner";  
+  }  
+}  
+  
+async function render(){  
+  const list=$("list");  
+  
+  if(!pendingData.length){  
+    list.innerHTML='<div class="empty">Tidak ada pengajuan limit yang menunggu.</div>';  
+    return;  
+  }  
+  
+  list.innerHTML="";  
+  for(const item of pendingData){  
+    const ownerName=await getOwnerName(item.ownerUid);  
+  
+    const card=document.createElement("div");  
+    card.className="pending";  
+    card.innerHTML=`  
+      <div class="row">  
+        <div>  
+          <div class="name">${escapeHtml(ownerName)}</div>  
+          <div class="amount">${rupiah(item.nominalPengajuan)}</div>  
+          <div class="meta">  
+            Owner UID: ${escapeHtml(item.ownerUid || "-")}<br>  
+            Pengajuan: ${formatDate(item.createdAt)}<br>  
+            ID Pengajuan: ${escapeHtml(item.id)}  
+          </div>  
+        </div>  
+        <span class="badge">MENUNGGU</span>  
+      </div>  
+      <div class="actions">  
+        <button class="action approve" data-action="approve" data-id="${item.id}">  
+          SETUJUI  
+        </button>  
+        <button class="action reject" data-action="reject" data-id="${item.id}">  
+          TOLAK  
+        </button>  
+      </div>  
+    `;  
+    list.appendChild(card);  
+  }  
+  
+  list.querySelectorAll("button[data-action]").forEach(btn=>{  
+    btn.addEventListener("click",async()=>{  
+      const id=btn.dataset.id;  
+      const action=btn.dataset.action;  
+      if(action==="approve") await processApplication(id,true,btn);  
+      else await processApplication(id,false,btn);  
+    });  
+  });  
+}  
+  
+function escapeHtml(v){  
+  return String(v??"").replace(/[&<>"']/g,c=>({  
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"  
+  }[c]));  
+}  
+  
+async function processApplication(id,approve,clickedBtn){  
+  const item=pendingData.find(x=>x.id===id);  
+  if(!item) return;  
+  
+  const actionText=approve?"menyetujui":"menolak";  
+  const nominal=Number(item.nominalPengajuan)||0;  
+  
+  if(!nominal){  
+    show("Nominal pengajuan tidak valid.","error");  
+    return;  
+  }  
+  
+  let reason="";  
+  if(!approve){  
+    reason=prompt("Alasan penolakan (opsional):") || "";  
+  }else{  
+    const ok=confirm(  
+      "Tambahkan limit "+rupiah(nominal)+" untuk Owner ini?\n\n"+  
+      "Nominal ini akan DITAMBAHKAN ke limit yang sudah ada."  
+    );  
+    if(!ok) return;  
+  }  
+  
+  const card=clickedBtn.closest(".pending");  
+  card.querySelectorAll("button").forEach(b=>b.disabled=true);  
+  clickedBtn.textContent=approve?"MEMPROSES...":"MEMPROSES...";  
+  
+  try{  
+    await runTransaction(db,async(tx)=>{  
+      const appRef=doc(db,"limitApplications",id);  
+      const appSnap=await tx.get(appRef);  
+  
+      if(!appSnap.exists()) throw new Error("Pengajuan tidak ditemukan.");  
+  
+      const application=appSnap.data();  
+      if(application.status!=="MENUNGGU"){  
+        throw new Error("Pengajuan ini sudah diproses.");  
+      }  
+  
+      const ownerUid=application.ownerUid;  
+      const requested=Number(application.nominalPengajuan)||0;  
+      if(!ownerUid || requested<=0) throw new Error("Data pengajuan tidak valid.");  
+  
+      const limitRef=doc(db,"limits",ownerUid);  
+      const limitSnap=await tx.get(limitRef);  
+      const old=limitSnap.exists()?limitSnap.data():{};  
+  
+      const used=Number(old.limitTerpakai)||0;  
+      const oldApproved=Number(old.limitDisetujui)||0;  
+  
+      if(approve){  
+        // Pengajuan adalah TAMBAHAN limit, bukan mengganti limit lama.  
+        const newApproved=oldApproved+requested;  
+        const available=newApproved-used;  
+  
+        if(available<0){  
+          throw new Error(  
+            "Perhitungan limit tidak valid karena limit terpakai melebihi limit baru."  
+          );  
+        }  
+  
+        tx.set(limitRef,{  
+          ownerUid,  
+          limitDisetujui:newApproved,  
+          limitTerpakai:used,  
+          limitTersedia:available,  
+          status:"DISETUJUI",  
+          updatedAt:serverTimestamp()  
+        },{merge:true});  
+  
+        tx.update(appRef,{  
+          status:"DISETUJUI",  
+          nominalDisetujui:requested,  
+          nominalTambahan:requested,  
+          limitSebelum:oldApproved,  
+          limitSesudah:newApproved,  
+          limitTerpakai:used,  
+          limitTersediaSesudah:available,  
+          processedBy:auth.currentUser.uid,  
+          processedAt:serverTimestamp()  
+        });  
+      }else{  
+        tx.update(appRef,{  
+          status:"DITOLAK",  
+          alasanPenolakan:reason,  
+          processedBy:auth.currentUser.uid,  
+          processedAt:serverTimestamp()  
+        });  
+      }  
+    });  
+  
+    show(approve  
+      ?"Pengajuan limit berhasil disetujui."  
+      :"Pengajuan limit berhasil ditolak."  
+    );  
+  
+    await load();  
+  
+  }catch(err){  
+    console.error(err);  
+    show(  
+      "Gagal "+actionText+" pengajuan: "+  
+      (err.message||"Periksa Firestore Rules."),  
+      "error"  
+    );  
+    card.querySelectorAll("button").forEach(b=>b.disabled=false);  
+    clickedBtn.textContent=approve?"SETUJUI":"TOLAK";  
+  }  
+}  
+  
+$("refreshBtn").addEventListener("click",load);  
+onAuthStateChanged(auth,async user=>{  
+  if(!user){  
+    location.href="index.html";  
+    return;  
+  }  
+  
+  currentUser=user;  
+  
+  try{  
+    const ok=await isSuperadmin(user);  
+    if(!ok){  
+      alert("Akses hanya untuk Superadmin.");  
+      location.href="index.html";  
+      return;  
+    }  
+  
+    await load();  
+  }catch(e){  
+    console.error(e);  
+    show("Gagal memeriksa akses Superadmin.","error");  
+  }  
+});  
+</script>  </body>  
+</html>  
